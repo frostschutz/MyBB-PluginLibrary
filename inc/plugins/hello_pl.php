@@ -65,8 +65,8 @@ function hello_pl_install()
      *
      *   PluginLibrary is not loaded automatically. Load it when required.
      *
-     *   - use require_once to load the Plugin Library
-     *   - use the global variable $PL to access Plugin Library functions
+     *   - use require_once to load PluginLibrary
+     *   - use the global variable $PL to access PluginLibrary functions
      *
      */
     require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
