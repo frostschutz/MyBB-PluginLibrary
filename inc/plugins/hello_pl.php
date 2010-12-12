@@ -61,7 +61,7 @@ function hello_pl_install()
     }
 
     /**
-     * LOADING THE PluginLibrary
+     * LOADING
      *
      *   PluginLibrary is not loaded automatically. Load it when required.
      *
