@@ -71,6 +71,20 @@ function hello_pl_install()
      */
     require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
     global $PL;
+
+    /**
+     * VERSION CHECK
+     *
+     *   Only needed if you need at least a specific version of PluginLibrary.
+     *
+     *   - compare $PL->version to the version number you need.
+     *   - same procedure as DEPENDENCY CHECK
+     */
+    if($PL->version < 1)
+    {
+        flash_message("The selected plugin could not be installed because <a href=\"https://github.com/frostschutz/PluginLibrary\">PluginLibrary</a> is too old.", "error");
+        admin_redirect("index.php?module=config-plugins");
+    }
 }
 
 function hello_pl_uninstall()
