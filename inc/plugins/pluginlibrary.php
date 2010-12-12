@@ -76,14 +76,15 @@ class PluginLibrary
 
     /**
      * Take care of inserting / updating settings.
-     * Names and settings must be unique (i.e. use the google_seo_ prefix).
+     * Names and settings must be unique (i.e. use the plugin_ prefix).
      *
      * @param string Internal group name.
      * @param string Group title that will be shown to the admin.
      * @param string Group description that will show up in the group overview.
      * @param array The list of settings to be added to that group.
+     * @param bool Generate language file. (Developer option, default false)
      */
-    function google_seo_settings($name, $title, $description, $list)
+    function settings($name, $title, $description, $list, $makelang=false)
     {
         global $db;
 
@@ -96,7 +97,7 @@ class PluginLibrary
                        'description' => $db->escape_string($description),
                        'disporder' => $row['disporder']+1);
 
-        if(defined("GOOGLESEO_GENERATE_LANG"))
+        if($makelang)
         {
             echo htmlspecialchars("\$l['setting_group_{$group['name']}'] = \"".addcslashes($title, '\"$')."\";", ENT_COMPAT, "UTF-8")."<br>";
             echo htmlspecialchars("\$l['setting_group_{$group['name']}_desc'] = \"".addcslashes($description, '\"$')."\";", ENT_COMPAT, "UTF-8")."<br>";
@@ -135,7 +136,7 @@ class PluginLibrary
         // Create and/or update settings.
         foreach($list as $key => $value)
         {
-            if(defined("GOOGLESEO_GENERATE_LANG"))
+            if($makelang)
             {
                 echo htmlspecialchars("\$l['setting_{$key}'] = \"".addcslashes($value['title'], '\"$')."\";", ENT_COMPAT, "UTF-8")."<br>";
                 echo htmlspecialchars("\$l['setting_{$key}_desc'] = \"".addcslashes($value['description'], '\"$')."\";", ENT_COMPAT, "UTF-8")."<br>";
@@ -181,6 +182,11 @@ class PluginLibrary
 
         // Rebuild the settings file.
         rebuild_settings();
+
+        if($makelang)
+        {
+            exit;
+        }
     }
 }
 
