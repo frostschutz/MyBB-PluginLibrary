@@ -42,10 +42,15 @@ function pluginlibrary_info()
 
 function pluginlibrary_is_installed()
 {
+    // Don't try this at home.
+    return false;
 }
 
 function pluginlibrary_install()
 {
+    // Avoid unnecessary activation as a plugin with a friendly success message.
+    flash_message("The selected plugin does not have to be activated.", 'success');
+    admin_redirect("index.php?module=config-plugins");
 }
 
 function pluginlibrary_uninstall()
