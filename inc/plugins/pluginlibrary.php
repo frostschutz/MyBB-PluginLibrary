@@ -65,5 +65,18 @@ function pluginlibrary_deactivate()
 {
 }
 
+/* --- PluginLibrary class: --- */
+
+class PluginLibrary
+{
+    /**
+     * Version number.
+     */
+    public $version = 1;
+}
+
+global $PL;
+$PL = new PluginLibrary();
+
 /* --- End of file. --- */
 ?>
