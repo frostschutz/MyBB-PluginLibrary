@@ -68,12 +68,6 @@ function hello_pl_install()
      *   - use require_once to load the Plugin Library
      *   - use the global variable $PL to access Plugin Library functions
      *
-     *   It is safe to load PluginLibrary,
-     *
-     *   - in your plugin_install() function after the DEPENDENCY CHECK
-     *   - in any other function of your plugin
-     *
-     *   It is not safe to load PluginLibrary outside of a function.
      */
     require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
     global $PL;
