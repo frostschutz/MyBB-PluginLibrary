@@ -26,6 +26,16 @@ if(!defined("IN_MYBB"))
 
 function hello_pl_info()
 {
+    return array(
+        "name"          => "Hello PluginLibrary!",
+        "description"   => "A sample plugin for developers that demonstrates the features of the PluginLibrary.",
+        "website"       => "https://github.com/frostschutz/PluginLibrary",
+        "author"        => "Andreas Klauer",
+        "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
+        "version"       => "hello_pl.php",
+        "guid"          => "",
+        "compatibility" => "*"
+        );
 }
 
 function hello_pl_is_installed()
