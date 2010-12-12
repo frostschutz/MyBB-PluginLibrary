@@ -73,6 +73,115 @@ class PluginLibrary
      * Version number.
      */
     public $version = 1;
+
+    /**
+     * Take care of inserting / updating settings.
+     * Names and settings must be unique (i.e. use the google_seo_ prefix).
+     *
+     * @param string Internal group name.
+     * @param string Group title that will be shown to the admin.
+     * @param string Group description that will show up in the group overview.
+     * @param array The list of settings to be added to that group.
+     */
+    function google_seo_settings($name, $title, $description, $list)
+    {
+        global $db;
+
+        $query = $db->query("SELECT MAX(disporder) as disporder
+                             FROM ".TABLE_PREFIX."settinggroups");
+        $row = $db->fetch_array($query);
+
+        $group = array('name' => $name,
+                       'title' => $db->escape_string($title),
+                       'description' => $db->escape_string($description),
+                       'disporder' => $row['disporder']+1);
+
+        if(defined("GOOGLESEO_GENERATE_LANG"))
+        {
+            echo htmlspecialchars("\$l['setting_group_{$group['name']}'] = \"".addcslashes($title, '\"$')."\";", ENT_COMPAT, "UTF-8")."<br>";
+            echo htmlspecialchars("\$l['setting_group_{$group['name']}_desc'] = \"".addcslashes($description, '\"$')."\";", ENT_COMPAT, "UTF-8")."<br>";
+        }
+
+        // Create settings group if it does not exist.
+        $query = $db->query("SELECT gid
+                             FROM ".TABLE_PREFIX."settinggroups
+                             WHERE name='$name'");
+
+        if($row = $db->fetch_array($query))
+        {
+            // It exists, get the gid.
+            $gid = $row['gid'];
+
+            // Update title and description.
+            $db->update_query("settinggroups",
+                              $group,
+                              "gid='$gid'");
+        }
+
+        else
+        {
+            // It does not exist, create it and get the gid.
+            $db->insert_query("settinggroups",
+                              $group);
+
+            $gid = $db->insert_id();
+        }
+
+        // Deprecate all the old entries.
+        $db->update_query("settings",
+                          array("description" => "DELETEMARKER"),
+                          "gid='$gid'");
+
+        // Create and/or update settings.
+        foreach($list as $key => $value)
+        {
+            if(defined("GOOGLESEO_GENERATE_LANG"))
+            {
+                echo htmlspecialchars("\$l['setting_{$key}'] = \"".addcslashes($value['title'], '\"$')."\";", ENT_COMPAT, "UTF-8")."<br>";
+                echo htmlspecialchars("\$l['setting_{$key}_desc'] = \"".addcslashes($value['description'], '\"$')."\";", ENT_COMPAT, "UTF-8")."<br>";
+            }
+
+            // Set default values for value:
+            $value = array_map(array($db, 'escape_string'), $value);
+
+            $disporder += 1;
+
+            $value = array_merge(
+                array('optionscode' => 'yesno',
+                      'value' => '0',
+                      'disporder' => $disporder),
+                $value);
+
+            $value['name'] = "$key";
+            $value['gid'] = $gid;
+
+            $query = $db->query("SELECT sid FROM ".TABLE_PREFIX."settings
+                                 WHERE gid='$gid'
+                                 AND name='{$value['name']}'");
+
+            if($row = $db->fetch_array($query))
+            {
+                // It exists, update it, but keep value intact.
+                unset($value['value']);
+                $db->update_query("settings",
+                                  $value,
+                                  "gid='$gid' AND name='{$value['name']}'");
+            }
+
+            else
+            {
+                // It doesn't exist, create it.
+                $db->insert_query("settings", $value);
+            }
+        }
+
+        // Delete deprecated entries.
+        $db->delete_query("settings",
+                          "gid='$gid' AND description='DELETEMARKER'");
+
+        // Rebuild the settings file.
+        rebuild_settings();
+    }
 }
 
 global $PL;
