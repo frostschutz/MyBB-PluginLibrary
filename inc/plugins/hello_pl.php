@@ -44,6 +44,22 @@ function hello_pl_is_installed()
 
 function hello_pl_install()
 {
+    /**
+     * DEPENDENCY CHECK
+     *
+     *   If PluginLibrary is missing but required by your plugin,
+     *
+     *   - use flash_message() to give the user a friendly error message,
+     *     preferably including a download link to the missing dependency.
+     *
+     *   - use admin_redirect() to cancel the installation.
+     *
+     */
+    if(!file_exists(MYBB_ROOT."inc/plugins/pluginlibrary.php"))
+    {
+        flash_message("The selected plugin could not be installed because <a href=\"https://github.com/frostschutz/PluginLibrary\">PluginLibrary</a> is missing.", 'error');
+        admin_redirect("index.php?module=config-plugins");
+    }
 }
 
 function hello_pl_uninstall()
