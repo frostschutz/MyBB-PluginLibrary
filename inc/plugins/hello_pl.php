@@ -50,6 +50,12 @@ function hello_pl_info()
 
 function hello_pl_is_installed()
 {
+    global $settings;
+
+    if(isset($settings['hello_pl_foobar']))
+    {
+        return true;
+    }
 }
 
 function hello_pl_install()
