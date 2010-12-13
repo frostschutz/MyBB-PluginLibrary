@@ -74,6 +74,8 @@ class PluginLibrary
      */
     public $version = 1;
 
+    /* --- Setting groups and settings: --- */
+
     /**
      * Create and/or update setting group and settings.
      *
@@ -191,7 +193,7 @@ class PluginLibrary
      * Delete setting groups and settings.
      *
      * @param string Internal unique group name.
-     * @param bool All groups and settings starting with prefix.
+     * @param bool Also delete groups starting with name_.
      */
     function delete_settings($name, $greedy=false)
     {
@@ -217,6 +219,41 @@ class PluginLibrary
 
         // Rebuild the settings file.
         rebuild_settings();
+    }
+
+    /* --- Cache: --- */
+
+    /**
+     * Delete cache.
+     *
+     * @param string Cache name or title.
+     * @param bool Also delete caches starting with name_.
+     */
+    function delete_cache($name, $greedy=false)
+    {
+        global $db, $cache;
+
+        $name = $db->escape_string($name);
+        $where = "title='{$name}'";
+
+        if($greedy)
+        {
+            $where .= "OR title LIKE '{$name}_%'";
+        }
+
+        // Handle specialized cache handlers.
+        if(is_object($cache->handler))
+        {
+            $query = $db->simple_select("datacache", "title", $where);
+
+            while($row = $db->fetch_array($query))
+            {
+                $cache->handler->delete($row['title']);
+            }
+        }
+
+        // Delete database cache (always present).
+        $db->delete_query("datacache", $where);
     }
 }
 

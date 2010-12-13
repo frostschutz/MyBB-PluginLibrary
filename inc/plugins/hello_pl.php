@@ -170,6 +170,19 @@ function hello_pl_activate()
 
 function hello_pl_deactivate()
 {
+    require_once PLUGINLIBRARY;
+    global $PL;
+
+    /**
+     * DELETE CACHE
+     *
+     * $PL->delete_cache(name, greedy)
+     *
+     * Delete one or more caches.
+     */
+    $PL->delete_cache("hello_pl"
+                      // , true /* optional, multiple caches */
+        );
 }
 
 ?>
