@@ -88,8 +88,8 @@ class PluginLibrary
     {
         global $db;
 
-        $query = $db->query("SELECT MAX(disporder) as disporder
-                             FROM ".TABLE_PREFIX."settinggroups");
+        $query = $db->simple_select("settinggroups",
+                                    "MAX(disporder) AS disporder");
         $row = $db->fetch_array($query);
 
         $group = array('name' => $name,
@@ -104,9 +104,7 @@ class PluginLibrary
         }
 
         // Create settings group if it does not exist.
-        $query = $db->query("SELECT gid
-                             FROM ".TABLE_PREFIX."settinggroups
-                             WHERE name='$name'");
+        $query = $db->simple_select("settinggroups", "gid", "name='$name'");
 
         if($row = $db->fetch_array($query))
         {
@@ -114,18 +112,13 @@ class PluginLibrary
             $gid = $row['gid'];
 
             // Update title and description.
-            $db->update_query("settinggroups",
-                              $group,
-                              "gid='$gid'");
+            $db->update_query("settinggroups", $group, "gid='$gid'");
         }
 
         else
         {
             // It does not exist, create it and get the gid.
-            $db->insert_query("settinggroups",
-                              $group);
-
-            $gid = $db->insert_id();
+            $gid = $db->insert_query("settinggroups", $group);
         }
 
         // Deprecate all the old entries.
@@ -156,9 +149,8 @@ class PluginLibrary
             $value['name'] = "$key";
             $value['gid'] = $gid;
 
-            $query = $db->query("SELECT sid FROM ".TABLE_PREFIX."settings
-                                 WHERE gid='$gid'
-                                 AND name='{$value['name']}'");
+            $query = $db->simple_select("settings", "sid",
+                                        "gid='$gid' AND name='{$value['name']}'");
 
             if($row = $db->fetch_array($query))
             {
