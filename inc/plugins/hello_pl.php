@@ -93,6 +93,45 @@ function hello_pl_uninstall()
 
 function hello_pl_activate()
 {
+    require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
+    global $PL;
+
+    /**
+     * SETTINGS
+     *
+     * $PL->settings(name, title, description, list)
+     *
+     * Create a setting group with any number of settings with $PL->settings()
+     * If the setting group already exists, the settings are updated properly.
+     *
+     */
+    $PL->settings("hello_pl",
+                  "Hello PluginLibrary!",
+                  "Setting group for the Hello PluginLibrary sample plugin.",
+                  array(
+                      "yesno_no" => array(
+                          "title" => "Simple Yes/No setting",
+                          "description" => "The default is no.",
+                          ),
+                      "yesno_yes" => array(
+                          "title" => "Yes/No setting",
+                          "description" => "This one is set to yes.",
+                          "value" => 1,
+                          ),
+                      "text" => array(
+                          "title" => "Text setting",
+                          "description" => "Give me a word.",
+                          "optionscode" => "text",
+                          ),
+                      "textarea" => array(
+                          "title" => "Text area",
+                          "description" => "Multiple lines.",
+                          "optionscode" => "textarea",
+                          "value" => "line1\nline2",
+                          ),
+                      )
+                      , true /* optional,  prints a language file */
+        );
 }
 
 function hello_pl_deactivate()
