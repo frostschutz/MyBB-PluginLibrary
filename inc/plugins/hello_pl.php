@@ -27,7 +27,7 @@ if(!defined("IN_MYBB"))
 /**
  * DEFINE PLUGINLIBRARY
  *
- * Define the path to the plugin library, if it isn't defined yet.
+ *   Define the path to the plugin library, if it isn't defined yet.
  */
 if(!defined("PLUGINLIBRARY"))
 {
@@ -65,10 +65,10 @@ function hello_pl_install()
      *
      *   If PluginLibrary is missing but required by your plugin,
      *
+     *   - use file_exists(PLUGINLIBRARY) to check if it's there
      *   - use flash_message() to give the user a friendly error message,
      *     preferably including a download link to the missing dependency.
      *   - use admin_redirect() to cancel the installation.
-     *
      */
     if(!file_exists(PLUGINLIBRARY))
     {
@@ -83,7 +83,6 @@ function hello_pl_install()
      *
      *   - use require_once to load PluginLibrary
      *   - use the global variable $PL to access PluginLibrary functions
-     *
      */
     require_once PLUGINLIBRARY;
     global $PL;
@@ -114,7 +113,6 @@ function hello_pl_uninstall()
      * $PL->delete_settings(name, greedy)
      *
      * Delete one or more setting groups and their settings.
-     *
      */
     $PL->delete_settings("hello_pl"
                          // , true /* optional, multiple groups */
@@ -133,7 +131,6 @@ function hello_pl_activate()
      *
      * Create a setting group with any number of settings with $PL->settings()
      * If the setting group already exists, the settings are updated properly.
-     *
      */
     $PL->settings("hello_pl", // group name and settings prefix
                   "Hello PluginLibrary!",
