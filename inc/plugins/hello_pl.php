@@ -130,7 +130,7 @@ function hello_pl_activate()
                           "value" => "line1\nline2",
                           ),
                       )
-                      , true /* optional,  prints a language file */
+                  // , true /* optional,  prints a language file */
         );
 }
 
