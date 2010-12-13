@@ -28,7 +28,6 @@ if(!defined("IN_MYBB"))
  * DEFINE PLUGINLIBRARY
  *
  * Define the path to the plugin library, if it isn't defined yet.
- *
  */
 if(!defined("PLUGINLIBRARY"))
 {
@@ -130,27 +129,31 @@ function hello_pl_activate()
      * If the setting group already exists, the settings are updated properly.
      *
      */
-    $PL->settings("hello_pl",
+    $PL->settings("hello_pl", // group name and settings prefix
                   "Hello PluginLibrary!",
                   "Setting group for the Hello PluginLibrary sample plugin.",
                   array(
-                      "yesno_no" => array(
-                          "title" => "Simple Yes/No setting",
-                          "description" => "The default is no.",
+                      "foobar" => array(
+                          "title" => "Foo Bar",
+                          "description" => "The setting name depends on the prefix (hello_pl) and the key (foobar). The name of this setting is hello_pl_foobar.",
                           ),
-                      "yesno_yes" => array(
+                      "no" => array(
+                          "title" => "Simple Yes/No setting",
+                          "description" => "The default is no. The name of this setting is hello_pl_no.",
+                          ),
+                      "yes" => array(
                           "title" => "Yes/No setting",
-                          "description" => "This one is set to yes.",
+                          "description" => "This one is set to yes. The name of this setting is hello_pl_yes.",
                           "value" => 1,
                           ),
                       "text" => array(
                           "title" => "Text setting",
-                          "description" => "Give me a word.",
+                          "description" => "Give me a word. The name of this setting is hello_pl_text.",
                           "optionscode" => "text",
                           ),
                       "textarea" => array(
-                          "title" => "Text area",
-                          "description" => "Multiple lines.",
+                          "title" => "Text area (hello_pl_textarea)",
+                          "description" => "Multiple lines. The name of this setting is hello_pl_textarea.",
                           "optionscode" => "textarea",
                           "value" => "line1\nline2",
                           ),
