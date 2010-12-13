@@ -88,6 +88,8 @@ class PluginLibrary
     {
         global $db;
 
+        /* Setting group: */
+
         if($makelang)
         {
             header("Content-Type: text/plain; charset=UTF-8");
@@ -96,50 +98,53 @@ class PluginLibrary
             echo "\$l['setting_group_{$name}_desc'] = \"".addcslashes($description, '\\"$')."\";\n";
         }
 
-        $query = $db->simple_select("settinggroups",
-                                    "MAX(disporder) AS disporder");
-        $row = $db->fetch_array($query);
-
-        $group = array('name' => $name,
+        // Group array for inserts/updates.
+        $group = array('name' => $db->escape_string($name),
                        'title' => $db->escape_string($title),
-                       'description' => $db->escape_string($description),
-                       'disporder' => $row['disporder']+1);
+                       'description' => $db->escape_string($description));
 
-        // Create settings group if it does not exist.
-        $query = $db->simple_select("settinggroups", "gid", "name='$name'");
+        // Check if the group already exists.
+        $query = $db->simple_select("settinggroups", "gid", "name='${group['name']}'");
 
         if($row = $db->fetch_array($query))
         {
-            // It exists, get the gid.
+            // We already have a group. Update title and description.
             $gid = $row['gid'];
-
-            // Update title and description.
-            $db->update_query("settinggroups", $group, "gid='$gid'");
+            $db->update_query("settinggroups", $group, "gid='{$gid}'");
         }
 
         else
         {
-            // It does not exist, create it and get the gid.
+            // We don't have a group. Create one with proper disporder.
+            $query = $db->simple_select("settinggroups", "MAX(disporder) AS disporder");
+            $row = $db->fetch_array($query);
+            $group['disporder'] = $row['disporder'] + 1;
             $gid = $db->insert_query("settinggroups", $group);
         }
 
+        /* Settings: */
+
         // Deprecate all the old entries.
         $db->update_query("settings",
-                          array("description" => "DELETEMARKER"),
+                          array("description" => "PLUGINLIBRARYDELETEMARKER"),
                           "gid='$gid'");
 
         // Create and/or update settings.
         foreach($list as $key => $value)
         {
+            // Prefix all keys with group name.
+            $key = "{$name}_{$key}";
+
             if($makelang)
             {
                 echo "\$l['setting_{$key}'] = \"".addcslashes($value['title'], '\\"$')."\";\n";
                 echo "\$l['setting_{$key}_desc'] = \"".addcslashes($value['description'], '\\"$')."\";\n";
             }
 
-            // Set default values for value:
+            // Escape input values.
             $value = array_map(array($db, 'escape_string'), $value);
 
+            // Add missing default values.
             $disporder += 1;
 
             $value = array_merge(
@@ -148,19 +153,18 @@ class PluginLibrary
                       'disporder' => $disporder),
                 $value);
 
-            $value['name'] = "$key";
+            $value['name'] = $db->escape_string($key);
             $value['gid'] = $gid;
 
-            $query = $db->simple_select("settings", "sid",
+            // Check if the setting already exists.
+            $query = $db->simple_select('settings', 'sid',
                                         "gid='$gid' AND name='{$value['name']}'");
 
             if($row = $db->fetch_array($query))
             {
                 // It exists, update it, but keep value intact.
                 unset($value['value']);
-                $db->update_query("settings",
-                                  $value,
-                                  "gid='$gid' AND name='{$value['name']}'");
+                $db->update_query("settings", $value, "sid='{$row['sid']}'");
             }
 
             else
@@ -172,7 +176,7 @@ class PluginLibrary
 
         // Delete deprecated entries.
         $db->delete_query("settings",
-                          "gid='$gid' AND description='DELETEMARKER'");
+                          "gid='$gid' AND description='PLUGINLIBRARYDELETEMARKER'");
 
         // Rebuild the settings file.
         rebuild_settings();
