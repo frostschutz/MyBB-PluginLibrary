@@ -24,6 +24,17 @@ if(!defined("IN_MYBB"))
     die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
 
+/**
+ * DEFINE PLUGINLIBRARY
+ *
+ * Define the path to the plugin library, if it isn't defined yet.
+ *
+ */
+if(!defined("PLUGINLIBRARY"))
+{
+    define("PLUGINLIBRARY", MYBB_ROOT."inc/plugins/pluginlibrary.php");
+}
+
 function hello_pl_info()
 {
     return array(
@@ -54,7 +65,7 @@ function hello_pl_install()
      *   - use admin_redirect() to cancel the installation.
      *
      */
-    if(!file_exists(MYBB_ROOT."inc/plugins/pluginlibrary.php"))
+    if(!file_exists(PLUGINLIBRARY))
     {
         flash_message("The selected plugin could not be installed because <a href=\"https://github.com/frostschutz/PluginLibrary\">PluginLibrary</a> is missing.", "error");
         admin_redirect("index.php?module=config-plugins");
@@ -69,7 +80,7 @@ function hello_pl_install()
      *   - use the global variable $PL to access PluginLibrary functions
      *
      */
-    require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
+    require_once PLUGINLIBRARY;
     global $PL;
 
     /**
@@ -89,7 +100,7 @@ function hello_pl_install()
 
 function hello_pl_uninstall()
 {
-    require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
+    require_once PLUGINLIBRARY;
     global $PL;
 
     /**
@@ -107,7 +118,7 @@ function hello_pl_uninstall()
 
 function hello_pl_activate()
 {
-    require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
+    require_once PLUGINLIBRARY;
     global $PL;
 
     /**
