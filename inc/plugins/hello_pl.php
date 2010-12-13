@@ -89,6 +89,20 @@ function hello_pl_install()
 
 function hello_pl_uninstall()
 {
+    require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
+    global $PL;
+
+    /**
+     * DELETE SETTINGS
+     *
+     * $PL->delete_settings(name, greedy)
+     *
+     * Delete one or more setting groups and their settings.
+     *
+     */
+    $PL->delete_settings("hello_pl"
+                         // , true /* optional, multiple groups */
+        );
 }
 
 function hello_pl_activate()

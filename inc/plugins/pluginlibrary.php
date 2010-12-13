@@ -75,10 +75,9 @@ class PluginLibrary
     public $version = 1;
 
     /**
-     * Take care of inserting / updating settings.
-     * Names and settings must be unique (i.e. use the plugin_ prefix).
+     * Create and/or update setting group and settings.
      *
-     * @param string Internal group name.
+     * @param string Internal unique group name and setting prefix.
      * @param string Group title that will be shown to the admin.
      * @param string Group description that will show up in the group overview.
      * @param array The list of settings to be added to that group.
@@ -186,6 +185,38 @@ class PluginLibrary
             echo "\n?>\n";
             exit;
         }
+    }
+
+    /**
+     * Delete setting groups and settings.
+     *
+     * @param string Internal unique group name.
+     * @param bool All groups and settings starting with prefix.
+     */
+    function delete_settings($name, $greedy=false)
+    {
+        global $db;
+
+        $name = $db->escape_string($name);
+        $where = "name='{$name}'";
+
+        if($greedy)
+        {
+            $where .= " OR name LIKE '{$name}_%'";
+        }
+
+        // Query the setting groups.
+        $query = $db->simple_select('settinggroups', 'gid', $where);
+
+        // Delete the group and all its settings.
+        while($gid = $db->fetch_field($query, 'gid'))
+        {
+            $db->delete_query('settinggroups', "gid='{$gid}'");
+            $db->delete_query('settings', "gid='{$gid}'");
+        }
+
+        // Rebuild the settings file.
+        rebuild_settings();
     }
 }
 
