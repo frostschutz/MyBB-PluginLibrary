@@ -40,21 +40,6 @@ function hello_pl_info()
 
 function hello_pl_is_installed()
 {
-    require_once MYBB_ROOT."inc/plugins/pluginlibrary.php";
-    global $PL;
-
-    /**
-     * SETTINGGROUP EXISTS
-     *
-     * $PL->settinggroup_exists(name)
-     *
-     * Returns the gid of the group, if it exists.
-     */
-
-    if($PL->settinggroup_exists("hello_pl"))
-    {
-        return true;
-    }
 }
 
 function hello_pl_install()

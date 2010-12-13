@@ -218,22 +218,6 @@ class PluginLibrary
         // Rebuild the settings file.
         rebuild_settings();
     }
-
-    /**
-     * Check if a setting group exists.
-     *
-     * @param string Internal unique group name.
-     * @return int group id
-     */
-    function settinggroup_exists($name)
-    {
-        global $db;
-
-        $name = $db->escape_string($name);
-        $query = $db->simple_select('settinggroups', 'gid', "name='{$name}'");
-
-        return $db->fetch_field($query, 'gid');
-    }
 }
 
 global $PL;
