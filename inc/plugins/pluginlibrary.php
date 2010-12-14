@@ -255,6 +255,118 @@ class PluginLibrary
         // Delete database cache (always present).
         $db->delete_query("datacache", $where);
     }
+
+    /* --- Corefile edits: --- */
+
+    function simple_core_edit($name, $file, $edit)
+    {
+        $args = func_get_args();
+        array_shift($args); // $name
+        array_shift($args); // $file
+
+        // read the file
+        $contents = file_get_contents(MYBB_ROOT.$file);
+        $original = $contents;
+
+        if(!$contents)
+        {
+            // Could not read the file.
+            return false;
+        }
+
+        // apply the edits
+        while($edit = array_shift($args))
+        {
+            // Initialize variables for this edit.
+            $search = (array)$edit['search'];
+            $reversesearch = array_reverse($search);
+            $matches = array();
+            $stop = 0;
+
+            // Find the pattern matches.
+            do
+            {
+                // forward search (determine smallest stop)
+                foreach($search as $value)
+                {
+                    $stop = strpos($contents, $value, $stop);
+
+                    if($stop === false || (string)$value === "")
+                    {
+                        break 2; /* exit foreach and do-while */
+                    }
+
+                    $stop += strlen($value);
+                }
+
+                /* Match is complete, but possibly larger than it needs to be. */
+
+                // backward search (determine largest start)
+                $start = $stop;
+
+                foreach($reversesearch as $value)
+                {
+                    $start = strrpos($contents, $value, -strlen($contents)+$start);
+                }
+
+                /* Match is complete and smallest possible. */
+
+                // Bump to line boundaries.
+                $nl = strrpos($contents, "\n", -strlen($contents)+$start);
+                $start = ($nl === false ? 0 : $nl + 1);
+
+                $nl = strpos($contents, "\n", $stop-1);
+                $stop = ($nl === false ? strlen($contents) : $nl);
+
+                /* Add the match to the list. */
+                $matches[$start] = $stop;
+            } while(1);
+
+            // No matches? Bail out to prevent incomplete edits.
+            if(!count($matches))
+            {
+                return false;
+            }
+
+            // Apply the edits.
+            $pos = 0;
+            $text = array();
+
+            foreach($matches as $start => $stop)
+            {
+                // outside match
+                $text[] = substr($contents, $pos, $start-$pos);
+
+                // insert before
+                $text[] = $edit['before'];
+
+                // match
+                $text[] = substr($contents, $start, $stop-$start+1);
+                $pos = $stop + 1;
+
+                // Special case: no newline at the end of the file.
+                if($pos == strlen($contents)+1)
+                {
+                    $text[] = "\n";
+                }
+
+                // insert after
+                $text[] = $edit['after'];
+            }
+
+            if($pos < strlen($contents))
+            {
+                $text[] = substr($contents, $pos);
+            }
+
+            $contents = implode("", $text);
+        } /* while $edit */
+
+        if($original != $contents)
+        {
+            return $contents;
+        }
+    }
 }
 
 global $PL;
