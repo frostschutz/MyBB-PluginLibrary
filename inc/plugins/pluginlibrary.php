@@ -258,6 +258,27 @@ class PluginLibrary
 
     /* --- Corefile edits: --- */
 
+    function _comment($comment, $code)
+    {
+        if(!strlen($code)) return "";
+        if(substr($code, -1) == "\n") { $code = substr($code, 0, -1); }
+        $code = str_replace("\n", "\n{$comment}", "\n{$code}");
+        return substr($code, 1)."\n";
+    }
+
+    function _uncomment($comment, $code)
+    {
+        if(!strlen($code)) return "";
+        $code = "\n{$code}";
+        $code = str_replace("\n{$comment}", "\n", $code);
+        return substr($code, 1);
+    }
+
+    function _zapcomment($comment, $code)
+    {
+        return preg_replace("#".preg_quote($comment, "#").".*\n?#m", "", $code);
+    }
+
     function simple_core_edit($name, $file, $edit)
     {
         $args = func_get_args();
