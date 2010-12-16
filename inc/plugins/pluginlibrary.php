@@ -131,48 +131,54 @@ class PluginLibrary
                           "gid='$gid'");
 
         // Create and/or update settings.
-        foreach($list as $key => $value)
+        foreach($list as $key => $setting)
         {
             // Prefix all keys with group name.
             $key = "{$name}_{$key}";
 
             if($makelang)
             {
-                echo "\$l['setting_{$key}'] = \"".addcslashes($value['title'], '\\"$')."\";\n";
-                echo "\$l['setting_{$key}_desc'] = \"".addcslashes($value['description'], '\\"$')."\";\n";
+                echo "\$l['setting_{$key}'] = \"".addcslashes($setting['title'], '\\"$')."\";\n";
+                echo "\$l['setting_{$key}_desc'] = \"".addcslashes($setting['description'], '\\"$')."\";\n";
             }
 
             // Escape input values.
-            $value = array_map(array($db, 'escape_string'), $value);
+            $vsetting = array_map(array($db, 'escape_string'), $setting);
 
             // Add missing default values.
             $disporder += 1;
 
-            $value = array_merge(
+            $setting = array_merge(
                 array('optionscode' => 'yesno',
                       'value' => '0',
                       'disporder' => $disporder),
-                $value);
+                $setting);
 
-            $value['name'] = $db->escape_string($key);
-            $value['gid'] = $gid;
+            $setting['name'] = $db->escape_string($key);
+            $setting['gid'] = $gid;
 
             // Check if the setting already exists.
             $query = $db->simple_select('settings', 'sid',
-                                        "gid='$gid' AND name='{$value['name']}'");
+                                        "gid='$gid' AND name='{$setting['name']}'");
 
             if($row = $db->fetch_array($query))
             {
                 // It exists, update it, but keep value intact.
-                unset($value['value']);
-                $db->update_query("settings", $value, "sid='{$row['sid']}'");
+                unset($setting['value']);
+                $db->update_query("settings", $setting, "sid='{$row['sid']}'");
             }
 
             else
             {
                 // It doesn't exist, create it.
-                $db->insert_query("settings", $value);
+                $db->insert_query("settings", $setting);
             }
+        }
+
+        if($makelang)
+        {
+            echo "\n?>\n";
+            exit;
         }
 
         // Delete deprecated entries.
@@ -181,12 +187,6 @@ class PluginLibrary
 
         // Rebuild the settings file.
         rebuild_settings();
-
-        if($makelang)
-        {
-            echo "\n?>\n";
-            exit;
-        }
     }
 
     /**
