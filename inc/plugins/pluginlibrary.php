@@ -313,6 +313,14 @@ class PluginLibrary
             return false;
         }
 
+        // undo previous edits (in order to update them)
+        $inscmt = "/* + PL:{$name} + */ ";
+        $delcmt = "/* - PL:{$name} - /* ";
+
+        $original = $contents;
+        $contents = $this->_uncomment($delcmt, $contents);
+        $contents = $this->_zapcomment($inscmt, $contents);
+
         // match the edits
         $matches = array();
         $matchescount = 0;
@@ -378,9 +386,6 @@ class PluginLibrary
         } /* while $edit */
 
         // Apply the edits.
-        $inscmt = "/* + PL:{$name} + */ ";
-        $delcmt = "/* - PL:{$name} - /* ";
-
         $pos = 0;
         $text = array();
 
@@ -436,11 +441,11 @@ class PluginLibrary
             $text[] = substr($contents, $pos);
         }
 
-        $result = implode("", $text);
+        $contents = implode("", $text);
 
-        if($result != $contents)
+        if($contents != $original)
         {
-            return $result;
+            return $contents;
         }
     }
 }
