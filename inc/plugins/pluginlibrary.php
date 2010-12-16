@@ -260,17 +260,31 @@ class PluginLibrary
 
     function _comment($comment, $code)
     {
-        if(!strlen($code)) return "";
-        if(substr($code, -1) == "\n") { $code = substr($code, 0, -1); }
+        if(!strlen($code))
+        {
+            return "";
+        }
+
+        if(substr($code, -1) == "\n")
+        {
+            $code = substr($code, 0, -1);
+        }
+
         $code = str_replace("\n", "\n{$comment}", "\n{$code}");
+
         return substr($code, 1)."\n";
     }
 
     function _uncomment($comment, $code)
     {
-        if(!strlen($code)) return "";
+        if(!strlen($code))
+        {
+            return "";
+        }
+
         $code = "\n{$code}";
         $code = str_replace("\n{$comment}", "\n", $code);
+
         return substr($code, 1);
     }
 
@@ -288,6 +302,8 @@ class PluginLibrary
         // read the file
         $contents = file_get_contents(MYBB_ROOT.$file);
         $original = $contents;
+        $inscmt = "/* + PL:{$name} + */ ";
+        $delcmt = "/* - PL:{$name} - /* ";
 
         if(!$contents)
         {
@@ -359,20 +375,35 @@ class PluginLibrary
                 $text[] = substr($contents, $pos, $start-$pos);
 
                 // insert before
-                $text[] = $edit['before'];
+                $text[] = $this->_comment($inscmt, $edit['before']);
 
-                // match
-                $text[] = substr($contents, $start, $stop-$start+1);
+                // insert or replace match
+                $match = substr($contents, $start, $stop-$start+1);
                 $pos = $stop + 1;
 
-                // Special case: no newline at the end of the file.
-                if($pos == strlen($contents)+1)
+                if(isset($edit['replace']))
                 {
-                    $text[] = "\n";
+                    $text[] = $this->_comment($delcmt, $match);
+
+                    if(!strlen($edit['after']))
+                    {
+                        $text[] = $inscmt . "\n";
+                    }
+                }
+
+                else
+                {
+                    $text[] = $match;
+
+                    // Special case: no newline at the end of the file.
+                    if($pos == strlen($contents)+1)
+                    {
+                        $text[] = "\n";
+                    }
                 }
 
                 // insert after
-                $text[] = $edit['after'];
+                $text[] = $this->_comment($inscmt, $edit['after']);
             }
 
             if($pos < strlen($contents))
