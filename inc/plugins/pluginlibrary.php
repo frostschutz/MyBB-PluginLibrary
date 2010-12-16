@@ -290,7 +290,7 @@ class PluginLibrary
 
     function _zapcomment($comment, $code)
     {
-        return preg_replace("#".preg_quote($comment, "#").".*\n?#m", "", $code);
+        return preg_replace("#^".preg_quote($comment, "#").".*\n?#m", "", $code);
     }
 
     function simple_core_edit($name, $file, $edit)
@@ -306,9 +306,6 @@ class PluginLibrary
 
         // read the file
         $contents = file_get_contents(MYBB_ROOT.$file);
-        $original = $contents;
-        $inscmt = "/* + PL:{$name} + */ ";
-        $delcmt = "/* - PL:{$name} - /* ";
 
         if(!$contents)
         {
@@ -381,13 +378,23 @@ class PluginLibrary
         } /* while $edit */
 
         // Apply the edits.
+        $inscmt = "/* + PL:{$name} + */ ";
+        $delcmt = "/* - PL:{$name} - /* ";
+
         $pos = 0;
         $text = array();
+
+        ksort($matches);
 
         foreach($matches as $start => $val)
         {
             $stop = $val[0];
             $edit = $val[1];
+
+            if($start < $pos)
+            {
+                return $false;
+            }
 
             // outside match
             $text[] = substr($contents, $pos, $start-$pos);
@@ -429,11 +436,11 @@ class PluginLibrary
             $text[] = substr($contents, $pos);
         }
 
-        $contents = implode("", $text);
+        $result = implode("", $text);
 
-        if($original != $contents)
+        if($result != $contents)
         {
-            return $contents;
+            return $result;
         }
     }
 }
