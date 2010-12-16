@@ -299,6 +299,11 @@ class PluginLibrary
         array_shift($args); // $name
         array_shift($args); // $file
 
+        if(count($args) == 1 && is_array($edit) && isset($edit[0]))
+        {
+            $args = $edit;
+        }
+
         // read the file
         $contents = file_get_contents(MYBB_ROOT.$file);
         $original = $contents;
