@@ -293,7 +293,7 @@ class PluginLibrary
         return preg_replace("#^".preg_quote($comment, "#").".*\n?#m", "", $code);
     }
 
-    function simple_core_edit($name, $file, $edit)
+    function edit_core($name, $file, $edit)
     {
         $args = func_get_args();
         array_shift($args); // $name
