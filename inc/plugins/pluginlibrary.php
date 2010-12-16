@@ -258,6 +258,9 @@ class PluginLibrary
 
     /* --- Corefile edits: --- */
 
+    /**
+     * insert comment at the beginning of each line
+     */
     function _comment($comment, $code)
     {
         if(!strlen($code))
@@ -275,6 +278,9 @@ class PluginLibrary
         return substr($code, 1)."\n";
     }
 
+    /**
+     * remove comment at the beginning of each line
+     */
     function _uncomment($comment, $code)
     {
         if(!strlen($code))
@@ -288,108 +294,121 @@ class PluginLibrary
         return substr($code, 1);
     }
 
+    /**
+     * remove lines with comment at the beginning entirely
+     */
     function _zapcomment($comment, $code)
     {
         return preg_replace("#^".preg_quote($comment, "#").".*\n?#m", "", $code);
     }
 
-    function edit_core($name, $file, $edit)
+    /**
+     * align start and stop to newline characters in text
+     */
+    function _align($text, &$start, &$stop)
     {
-        $args = func_get_args();
-        array_shift($args); // $name
-        array_shift($args); // $file
+        // Align start to line boundary.
+        $nl = strrpos($text, "\n", -strlen($text)+$start);
+        $start = ($nl === false ? 0 : $nl + 1);
 
-        if(count($args) == 1 && is_array($edit) && isset($edit[0]))
+        // Align stop to line boundary.
+        $nl = strpos($text, "\n", $stop-1);
+        $stop = ($nl === false ? strlen($text) : $nl + 1);
+    }
+
+    /**
+     * in text find the smallest first match for a series of search strings
+     */
+    function _match($text, $search, &$start)
+    {
+        $stop = $start;
+
+        // forward search (determine smallest stop)
+        foreach($search as $needle)
         {
-            $args = $edit;
-        }
+            $stop = strpos($text, $needle, $stop);
 
-        // read the file
-        $contents = file_get_contents(MYBB_ROOT.$file);
-
-        if(!$contents)
-        {
-            // Could not read the file.
-            return false;
-        }
-
-        // undo previous edits (in order to update them)
-        $inscmt = "/* + PL:{$name} + */ ";
-        $delcmt = "/* - PL:{$name} - /* ";
-
-        $original = $contents;
-        $contents = $this->_uncomment($delcmt, $contents);
-        $contents = $this->_zapcomment($inscmt, $contents);
-
-        // match the edits
-        $matches = array();
-        $matchescount = 0;
-
-        while($edit = array_shift($args))
-        {
-            // Initialize variables for this edit.
-            $search = (array)$edit['search'];
-            $reversesearch = array_reverse($search);
-            $stop = 0;
-
-            // Find the pattern matches.
-            do
+            if($stop === false)
             {
-                // forward search (determine smallest stop)
-                foreach($search as $value)
-                {
-                    $stop = strpos($contents, $value, $stop);
-
-                    if($stop === false || (string)$value === "")
-                    {
-                        break 2; /* exit foreach and do-while */
-                    }
-
-                    $stop += strlen($value);
-                }
-
-                /* Match is complete, but possibly larger than it needs to be. */
-
-                // backward search (determine largest start)
-                $start = $stop;
-
-                foreach($reversesearch as $value)
-                {
-                    $start = strrpos($contents, $value, -strlen($contents)+$start);
-                }
-
-                /* Match is complete and smallest possible. */
-
-                // Bump to line boundaries.
-                $nl = strrpos($contents, "\n", -strlen($contents)+$start);
-                $start = ($nl === false ? 0 : $nl + 1);
-
-                $nl = strpos($contents, "\n", $stop-1);
-                $stop = ($nl === false ? strlen($contents) : $nl);
-
-                /* Add the match to the list. */
-                if(isset($matches[$start]))
-                {
-                    return false;
-                }
-
-                $matches[$start] = array($stop, $edit);
-            } while(1);
-
-            // No matches? Bail out to prevent incomplete edits.
-            if($matchescount == count($matches))
-            {
+                // we did not find out needle, so this does not match
                 return false;
             }
 
-            $matchescount = count($matches);
-        } /* while $edit */
+            $stop += strlen($needle);
+        }
 
-        // Apply the edits.
+        // backward search (determine largest start)
+        $start = $stop;
+
+        foreach(array_reverse($search) as $needle)
+        {
+            $start = strrpos($text, $needle, -strlen($text)+$start);
+        }
+
+        return $stop;
+    }
+
+    /**
+     * dissect text based on a series of edits
+     */
+    function _dissect($text, &$edits)
+    {
+        $matches = array();
+
+        foreach($edits as &$edit)
+        {
+            $search = (array)$edit['search'];
+            $start = 0;
+            $edit['matches'] = array();
+
+            while(($stop = $this->_match($text, $search, $start)) !== false)
+            {
+                $pos = $stop;
+                $this->_align($text, $start, $stop);
+
+                // to count the matches, and help debugging
+                $edit['matches'][] = array($start, $stop,
+                                           substr($text, $start, $stop-$start));
+
+                if(isset($matches['start']) ||
+                   count($edit['matches']) > 1 && !$edit['multi'])
+                {
+                    // collision or non-unique match
+                    return false;
+                }
+
+                $matches[$start] = array($stop, &$edit);
+                $start = $pos;
+            }
+
+            if(!count($edit['matches']) && !$edit['none'])
+            {
+                // pattern did not match
+                return false;
+            }
+        }
+
+        if(count($matches))
+        {
+            ksort($matches);
+            return $matches;
+        }
+    }
+
+    /**
+     * edit text (perform the actual string modification)
+     */
+    function _edit($text, &$edits, $ins='/**/', $del='/*/*')
+    {
+        $matches = $this->_dissect($text, $edits);
+
+        if(!$matches)
+        {
+            return false;
+        }
+
+        $result = array();
         $pos = 0;
-        $text = array();
-
-        ksort($matches);
 
         foreach($matches as $start => $val)
         {
@@ -398,55 +417,99 @@ class PluginLibrary
 
             if($start < $pos)
             {
-                return $false;
+                // something is overlapping
+                return false;
             }
 
-            // outside match
-            $text[] = substr($contents, $pos, $start-$pos);
+            // unmodified text before match
+            $result[] = substr($text, $pos, $start-$pos);
 
             // insert before
-            $text[] = $this->_comment($inscmt, $edit['before']);
+            $result[] = $this->_comment($ins, $edit['before']);
 
-            // insert or replace match
-            $match = substr($contents, $start, $stop-$start+1);
-            $pos = $stop + 1;
+            // original matched text
+            $match = substr($text, $start, $stop-$start);
+            $pos = $stop;
 
             if(isset($edit['replace']))
             {
-                $text[] = $this->_comment($delcmt, $match);
-
-                if(!strlen($edit['after']))
+                // insert match (commented out)
+                $result[] = $this->_comment($del, $match);
+                // insert replace
+                if(!strlen($edit['replace']) && !strlen($edit['after']))
                 {
-                    $text[] = $inscmt . "\n";
+                    $edit['replace'] = ' ';
                 }
+
+                $result[] = $this->_comment($ins, $edit['replace']);
             }
 
             else
             {
-                $text[] = $match;
-
-                // Special case: no newline at the end of the file.
-                if($pos == strlen($contents)+1)
-                {
-                    $text[] = "\n";
-                }
+                // insert match unmodified
+                $result[] = $match;
             }
 
             // insert after
-            $text[] = $this->_comment($inscmt, $edit['after']);
+            $result[] = $this->_comment($ins, $edit['after']);
         }
 
-        if($pos < strlen($contents))
+        // insert rest
+        $result[] = substr($text, $pos);
+
+        return implode("", $result);
+    }
+
+    /**
+     * edit core
+     */
+    function edit_core($name, $file, $edits)
+    {
+        $ins = "/* + PL:{$name} + */ ";
+        $del = "/* - PL:{$name} - /* ";
+
+        $text = file_get_contents(MYBB_ROOT.$file);
+        $result = $text;
+
+        if($text === false)
         {
-            $text[] = substr($contents, $pos);
+            return false;
         }
 
-        $contents = implode("", $text);
-
-        if($contents != $original)
+        if(!count($edits[0]))
         {
-            return $contents;
+            $edits = array($edits);
         }
+
+        // Step 1: remove old comments, if present.
+        $result = $this->_zapcomment($ins, $result);
+        $result = $this->_uncomment($del, $result);
+
+        // Step 2: prevent colliding edits by adding conditions.
+        $edits[] = array('search' => array('/* + PL:'),
+                         'multi' => true,
+                         'none' => true);
+        $edits[] = array('search' => array('/* - PL:'),
+                         'multi' => true,
+                         'none' => true);
+
+        // Step 3: perform edits.
+        $result = $this->_edit($result, $edits, $ins, $del);
+
+        if($result === false)
+        {
+            // edits couldn't be performed
+            return false;
+        }
+
+        if($result == $text)
+        {
+            // edit made no changes
+            return true;
+        }
+
+        // return the edited string
+        return $result;
     }
 }
 
