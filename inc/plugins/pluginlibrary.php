@@ -311,13 +311,15 @@ class PluginLibrary
             return false;
         }
 
-        // apply the edits
+        // match the edits
+        $matches = array();
+        $matchescount = 0;
+
         while($edit = array_shift($args))
         {
             // Initialize variables for this edit.
             $search = (array)$edit['search'];
             $reversesearch = array_reverse($search);
-            $matches = array();
             $stop = 0;
 
             // Find the pattern matches.
@@ -356,63 +358,73 @@ class PluginLibrary
                 $stop = ($nl === false ? strlen($contents) : $nl);
 
                 /* Add the match to the list. */
-                $matches[$start] = $stop;
+                if(isset($matches[$start]))
+                {
+                    return false;
+                }
+
+                $matches[$start] = array($stop, $edit);
             } while(1);
 
             // No matches? Bail out to prevent incomplete edits.
-            if(!count($matches))
+            if($matchescount == count($matches))
             {
                 return false;
             }
 
-            // Apply the edits.
-            $pos = 0;
-            $text = array();
-
-            foreach($matches as $start => $stop)
-            {
-                // outside match
-                $text[] = substr($contents, $pos, $start-$pos);
-
-                // insert before
-                $text[] = $this->_comment($inscmt, $edit['before']);
-
-                // insert or replace match
-                $match = substr($contents, $start, $stop-$start+1);
-                $pos = $stop + 1;
-
-                if(isset($edit['replace']))
-                {
-                    $text[] = $this->_comment($delcmt, $match);
-
-                    if(!strlen($edit['after']))
-                    {
-                        $text[] = $inscmt . "\n";
-                    }
-                }
-
-                else
-                {
-                    $text[] = $match;
-
-                    // Special case: no newline at the end of the file.
-                    if($pos == strlen($contents)+1)
-                    {
-                        $text[] = "\n";
-                    }
-                }
-
-                // insert after
-                $text[] = $this->_comment($inscmt, $edit['after']);
-            }
-
-            if($pos < strlen($contents))
-            {
-                $text[] = substr($contents, $pos);
-            }
-
-            $contents = implode("", $text);
+            $matchescount = count($matches);
         } /* while $edit */
+
+        // Apply the edits.
+        $pos = 0;
+        $text = array();
+
+        foreach($matches as $start => $val)
+        {
+            $stop = $val[0];
+            $edit = $val[1];
+
+            // outside match
+            $text[] = substr($contents, $pos, $start-$pos);
+
+            // insert before
+            $text[] = $this->_comment($inscmt, $edit['before']);
+
+            // insert or replace match
+            $match = substr($contents, $start, $stop-$start+1);
+            $pos = $stop + 1;
+
+            if(isset($edit['replace']))
+            {
+                $text[] = $this->_comment($delcmt, $match);
+
+                if(!strlen($edit['after']))
+                {
+                    $text[] = $inscmt . "\n";
+                }
+            }
+
+            else
+            {
+                $text[] = $match;
+
+                // Special case: no newline at the end of the file.
+                if($pos == strlen($contents)+1)
+                {
+                    $text[] = "\n";
+                }
+            }
+
+            // insert after
+            $text[] = $this->_comment($inscmt, $edit['after']);
+        }
+
+        if($pos < strlen($contents))
+        {
+            $text[] = substr($contents, $pos);
+        }
+
+        $contents = implode("", $text);
 
         if($original != $contents)
         {
