@@ -508,7 +508,14 @@ class PluginLibrary
             return true;
         }
 
-        // return the edited string
+        // try to write the file
+        if(@file_put_contents(MYBB_ROOT.$file, $result) !== false)
+        {
+            // changes successfully applied
+            return true;
+        }
+
+        // alternatively, return the string
         return $result;
     }
 }
