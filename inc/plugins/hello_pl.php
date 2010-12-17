@@ -113,7 +113,7 @@ function hello_pl_install()
      *   - compare $PL->version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL->version < 1)
+    if($PL->version < 0)
     {
         flash_message("The selected plugin could not be installed because <a href=\"https://github.com/frostschutz/PluginLibrary\">PluginLibrary</a> is too old.", "error");
         admin_redirect("index.php?module=config-plugins");

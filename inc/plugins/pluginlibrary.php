@@ -29,12 +29,12 @@ if(!defined("IN_MYBB"))
 function pluginlibrary_info()
 {
     return array(
-        "name"          => "PluginLibrary",
+        "name"          => "PluginLibrary BETA",
         "description"   => "A collection of useful functions used by other plugins.",
         "website"       => "https://github.com/frostschutz/PluginLibrary",
         "author"        => "Andreas Klauer",
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
-        "version"       => "1",
+        "version"       => "0",
         "guid"          => "",
         "compatibility" => "*"
         );
@@ -72,7 +72,7 @@ class PluginLibrary
     /**
      * Version number.
      */
-    public $version = 1;
+    public $version = 0;
 
     /* --- Setting groups and settings: --- */
 
