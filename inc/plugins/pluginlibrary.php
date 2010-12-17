@@ -312,7 +312,7 @@ class PluginLibrary
         $start = ($nl === false ? 0 : $nl + 1);
 
         // Align stop to line boundary.
-        $nl = strpos($text, "\n", $stop-1);
+        $nl = strpos($text, "\n", $stop);
         $stop = ($nl === false ? strlen($text) : $nl + 1);
     }
 
@@ -402,7 +402,7 @@ class PluginLibrary
     {
         $matches = $this->_dissect($text, $edits);
 
-        if(!$matches)
+        if($matches === false)
         {
             return false;
         }
@@ -463,7 +463,7 @@ class PluginLibrary
     /**
      * edit core
      */
-    function edit_core($name, $file, $edits)
+    function edit_core($name, $file, $edits=array())
     {
         $ins = "/* + PL:{$name} + */ ";
         $del = "/* - PL:{$name} - /* ";
@@ -476,7 +476,7 @@ class PluginLibrary
             return false;
         }
 
-        if(!count($edits[0]))
+        if(count($edits) && !count($edits[0]))
         {
             $edits = array($edits);
         }
