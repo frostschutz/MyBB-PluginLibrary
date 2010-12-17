@@ -168,7 +168,7 @@ function hello_pl_activate()
 function hello_pl_deactivate()
 {
     global $PL;
-    $PL or require(PLUGINLIBARY);
+    $PL or require(PLUGINLIBRARY);
 
     /**
      * DELETE CACHE
