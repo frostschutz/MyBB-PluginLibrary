@@ -34,9 +34,13 @@ if(!defined("PLUGINLIBRARY"))
     define("PLUGINLIBRARY", MYBB_ROOT."inc/plugins/pluginlibrary.php");
 }
 
+$plugins->add_hook("admin_config_plugins_begin", "hello_pl_edit");
+
 function hello_pl_info()
 {
-    return array(
+    global $mybb, $plugins_cache;
+
+    $info = array(
         "name"          => "Hello PluginLibrary!",
         "description"   => "A sample plugin for developers that demonstrates the features of the PluginLibrary.",
         "website"       => "https://github.com/frostschutz/PluginLibrary",
@@ -46,12 +50,26 @@ function hello_pl_info()
         "guid"          => "",
         "compatibility" => "*"
         );
+
+    // Display some extra information when installed and active.
+    if(hello_pl_is_installed() && $plugins_cache['active']['hello_pl'])
+    {
+        $editurl = "index.php?module=config-plugins&amp;hello_pl=edit&amp;my_post_key=".$mybb->post_code;
+        $undourl = "index.php?module=config-plugins&amp;hello_pl=undo&amp;my_post_key=".$mybb->post_code;
+
+        $info["description"] .= "<br /><a href=\"{$editurl}\">Make edits to hello_pl.php</a>.";
+        $info["description"] .= "    | <a href=\"{$undourl}\">Undo edits to hello_pl.php</a>.";
+    }
+
+    return $info;
 }
 
 function hello_pl_is_installed()
 {
     global $settings;
 
+    // This plugin creates settings on install. Check if setting exists.
+    // Another example would be $db->table_exists() for database tables.
     if(isset($settings['hello_pl_foobar']))
     {
         return true;
@@ -110,9 +128,9 @@ function hello_pl_uninstall()
     /**
      * DELETE SETTINGS
      *
-     * $PL->delete_settings(name, greedy)
+     *   $PL->delete_settings(name, greedy)
      *
-     * Delete one or more setting groups and their settings.
+     *   Delete one or more setting groups and their settings.
      */
     $PL->delete_settings("hello_pl"
                          // , true /* optional, multiple groups */
@@ -127,10 +145,10 @@ function hello_pl_activate()
     /**
      * SETTINGS
      *
-     * $PL->settings(name, title, description, list)
+     *   $PL->settings(name, title, description, list)
      *
-     * Create a setting group with any number of settings with $PL->settings()
-     * If the setting group already exists, the settings are updated properly.
+     *   Create a setting group with any number of settings with $PL->settings()
+     *   If the setting group already exists, the settings are updated properly.
      */
     $PL->settings("hello_pl", // group name and settings prefix
                   "Hello PluginLibrary!",
@@ -173,13 +191,75 @@ function hello_pl_deactivate()
     /**
      * DELETE CACHE
      *
-     * $PL->delete_cache(name, greedy)
+     *   $PL->delete_cache(name, greedy)
      *
-     * Delete one or more caches.
+     *   Delete one or more caches.
      */
     $PL->delete_cache("hello_pl"
                       // , true /* optional, multiple caches */
         );
+}
+
+function hello_pl_edit()
+{
+    global $mybb;
+
+    // Only perform edits if we were given the correct post key.
+    if($mybb->input['my_post_key'] != $mybb->post_code)
+    {
+        return;
+    }
+
+    global $PL;
+    $PL or require(PLUGINLIBRARY);
+
+    /**
+     * EDIT CORE
+     *
+     *   $PL->edit_core(name, file, search)
+     *
+     *   Make or update one or more changes to a core file.
+     *   Edits the file directly or, lacking permissions, returns a string.
+     */
+    if($mybb->input['hello_pl'] == 'edit')
+    {
+        $result = $PL->edit_core("hello_pl", "inc/plugins/hello_pl.php",
+                                 array('search' => array("\"name\"", "=>", "\"Hello PluginLibrary!\"", ","),
+                                       'replace' => "\"name\"=>\"Hello EditCore!\","));
+    }
+
+    else if($mybb->input['hello_pl'] == 'undo')
+    {
+        /**
+         * UNDO EDIT CORE
+         *
+         *   $PL->edit_core(name, file)
+         *
+         *   If you want to undo your changes, leave out the search.
+         *   This undoes your changes (updates your edits to change nothing).
+         */
+        $result = $PL->edit_core("hello_pl", "inc/plugins/hello_pl.php");
+    }
+
+    else
+    {
+        // bad input parameter
+        return;
+    }
+
+    if($result === true)
+    {
+        // redirect with success
+        flash_message("The file inc/plugins/hello_pl.php was modified successfully.", "success");
+        admin_redirect("index.php?module=config-plugins");
+    }
+
+    else
+    {
+        // redirect with failure (could offer the result string for download instead)
+        flash_message("The file inc/plugins/hello_pl.php could not be edited. Are the CHMOD settings correct?", "error");
+        admin_redirect("index.php?module=config-plugins");
+    }
 }
 
 ?>
