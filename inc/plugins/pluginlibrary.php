@@ -518,6 +518,53 @@ class PluginLibrary
         // return the string
         return $result;
     }
+
+    /* --- Group memberships and permissions: --- */
+
+    /**
+     * is_member
+     */
+    function is_member($search, $user=false)
+    {
+        global $mybb;
+
+        // Default to current user.
+        if(!$user)
+        {
+            $user = $mybb->user;
+        }
+
+        // Collect the groups the user is in.
+        $groups = explode(',', $user['additionalgroups']);
+        $groups[] = $user['usergroup'];
+
+        // Convert search to an array of group ids
+        if(is_array($search))
+        {
+            // already an array, do nothing
+        }
+
+        if(is_string($search))
+        {
+            $search = explode(',', $search);
+        }
+
+        else
+        {
+            // probably a single number
+            $search = (array)$search;
+        }
+
+        // Make sure we're comparing numbers.
+        $search = array_map('intval', $search);
+        $groups = array_map('intval', $groups);
+
+        // Remove 0 if present.
+        $groups = array_filter($groups);
+
+        // Return the group intersection.
+        return array_intersect($groups, $search);
+    }
 }
 
 global $PL;
