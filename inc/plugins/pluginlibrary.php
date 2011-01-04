@@ -463,7 +463,7 @@ class PluginLibrary
     /**
      * edit core
      */
-    function edit_core($name, $file, $edits=array())
+    function edit_core($name, $file, $edits=array(), $apply=false)
     {
         $ins = "/* + PL:{$name} + */ ";
         $del = "/* - PL:{$name} - /* ";
@@ -509,13 +509,13 @@ class PluginLibrary
         }
 
         // try to write the file
-        if(@file_put_contents(MYBB_ROOT.$file, $result) !== false)
+        if($apply && @file_put_contents(MYBB_ROOT.$file, $result) !== false)
         {
             // changes successfully applied
             return true;
         }
 
-        // alternatively, return the string
+        // return the string
         return $result;
     }
 }
