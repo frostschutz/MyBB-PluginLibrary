@@ -103,7 +103,7 @@ function hello_pl_install()
      *   - if $PL is not set, use require to load the PluginLibrary
      */
     global $PL;
-    $PL or require(PLUGINLIBRARY);
+    $PL or require_once(PLUGINLIBRARY);
 
     /**
      * VERSION CHECK
@@ -123,7 +123,7 @@ function hello_pl_install()
 function hello_pl_uninstall()
 {
     global $PL;
-    $PL or require(PLUGINLIBRARY);
+    $PL or require_once(PLUGINLIBRARY);
 
     /**
      * DELETE SETTINGS
@@ -140,7 +140,7 @@ function hello_pl_uninstall()
 function hello_pl_activate()
 {
     global $PL;
-    $PL or require(PLUGINLIBRARY);
+    $PL or require_once(PLUGINLIBRARY);
 
     /**
      * SETTINGS
@@ -186,7 +186,7 @@ function hello_pl_activate()
 function hello_pl_deactivate()
 {
     global $PL;
-    $PL or require(PLUGINLIBRARY);
+    $PL or require_once(PLUGINLIBRARY);
 
     /**
      * DELETE CACHE
@@ -211,7 +211,7 @@ function hello_pl_edit()
     }
 
     global $PL;
-    $PL or require(PLUGINLIBRARY);
+    $PL or require_once(PLUGINLIBRARY);
 
     /**
      * EDIT CORE
