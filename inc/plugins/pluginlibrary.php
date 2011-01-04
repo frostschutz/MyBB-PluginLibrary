@@ -519,7 +519,7 @@ class PluginLibrary
         return $result;
     }
 
-    /* --- Group memberships and permissions: --- */
+    /* --- Group memberships: --- */
 
     /**
      * is_member
@@ -560,10 +560,10 @@ class PluginLibrary
         $groups = array_map('intval', $groups);
 
         // Remove 0 if present.
-        $groups = array_filter($groups);
+        $search = array_filter($search);
 
         // Return the group intersection.
-        return array_intersect($groups, $search);
+        return array_intersect($search, $groups);
     }
 }
 
