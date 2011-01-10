@@ -565,6 +565,39 @@ class PluginLibrary
         // Return the group intersection.
         return array_intersect($search, $groups);
     }
+
+    /* --- String functions: --- */
+
+    /**
+     * url_append
+     */
+    function url_append($url, $params, $sep="&amp;", $encode=true)
+    {
+        if(strpos($url, '?') === false)
+        {
+            $separator = '?';
+        }
+
+        else
+        {
+            $separator = $sep;
+        }
+
+        $append = '';
+
+        foreach($params as $key => $value)
+        {
+            if($encode)
+            {
+                $value = urlencode($value);
+            }
+
+            $append .= "{$separator}{$key}={$value}";
+            $separator = $sep;
+        }
+
+        return $url.$append;
+    }
 }
 
 global $PL;
