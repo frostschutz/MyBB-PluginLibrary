@@ -524,7 +524,7 @@ class PluginLibrary
     /**
      * is_member
      */
-    function is_member($search, $user=false)
+    function is_member($groups, $user=false)
     {
         global $mybb;
 
@@ -535,35 +535,35 @@ class PluginLibrary
         }
 
         // Collect the groups the user is in.
-        $groups = explode(',', $user['additionalgroups']);
-        $groups[] = $user['usergroup'];
+        $memberships = explode(',', $user['additionalgroups']);
+        $memberships[] = $user['usergroup'];
 
         // Convert search to an array of group ids
-        if(is_array($search))
+        if(is_array($groups))
         {
             // already an array, do nothing
         }
 
-        if(is_string($search))
+        if(is_string($groups))
         {
-            $search = explode(',', $search);
+            $groups = explode(',', $groups);
         }
 
         else
         {
             // probably a single number
-            $search = (array)$search;
+            $groups = (array)$groups;
         }
 
         // Make sure we're comparing numbers.
-        $search = array_map('intval', $search);
         $groups = array_map('intval', $groups);
+        $memberships = array_map('intval', $memberships);
 
         // Remove 0 if present.
-        $search = array_filter($search);
+        $groups = array_filter($groups);
 
         // Return the group intersection.
-        return array_intersect($search, $groups);
+        return array_intersect($groups, $memberships);
     }
 
     /* --- String functions: --- */
