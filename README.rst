@@ -308,6 +308,35 @@ like this:
 
 You have to choose your patterns carefully, as you would do with regular expressions.
 
+Debugging
+:::::::::
+
+If an edit does not work (correctly) and you want to find out why, you can
+get some debug information by passing the edits by reference::
+
+    $edits = array('search' => 'echo "Hello world!";',
+                   'replace' => 'echo "Hello PluginLibrary!";');
+    $PL->edit_core('plugin_name', 'hello.php', &$edits);
+    print_r($edits);
+
+This will add a *matches* entry for each edit array, showing the byte positions
+and actually matched patterns::
+
+    [matches] => Array
+        (
+            [0] => Array
+                (
+                    [0] => 31
+                    [1] => 56
+                    [2] =>     echo "Hello world!";
+
+                )
+
+        )
+
+This should help you determine why the edit failed; it may have matched
+in the wrong place, more than once, or not at all.
+
 Groups and Permissions
 ######################
 
