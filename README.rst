@@ -308,6 +308,48 @@ like this:
 
 You have to choose your patterns carefully, as you would do with regular expressions.
 
+Groups and Permissions
+######################
+
+is_member
+---------
+
+**Description**:
+
+  *array* **is_member** (*mixed* $groups, *mixed* $user=false)
+
+  This function checks if a user is member of one or more groups.
+  Useful if your plugin has a setting to include/exclude one or more groups.
+
+**Parameters**:
+
+  **groups**
+    The group(s) the user should be checked against. Can be
+    a comma separated string of group IDs '1,2,3', or a number,
+    or an array of numbers.
+
+  **user** (optional)
+    The user that should be checked for group memberships.
+    By default, it's the current user. Alternatively, pass
+    the UID or get_user() array of another user.
+
+**Return value**:
+
+  This function returns an array of the group IDs you were
+  looking for and the user is actually a member of. If the
+  user wasn't a member of any of the groups, the returned
+  array will be empty.
+
+**Example**::
+
+  if($PL->is_member('3,4,6'))
+  {
+      show_secret_menu();
+  }
+
+This example checks whether the user is a super moderator, admin or moderator.
+
+
 .. function
    --------
 
