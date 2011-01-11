@@ -43,7 +43,8 @@ settings
 **Parameters**:
 
   **name**
-    The name of your plugin, which will also be used as prefix for your setting groups and settings.
+    The name of your plugin, which will also be used as prefix for your
+    setting groups and settings.
 
   **title**
     The title of the setting group.
@@ -52,12 +53,13 @@ settings
     The description of the setting group.
 
   **list**
-    An array of settings. Each key is a setting name (which will be prefixed by your plugin name),
-    and each value is a setting array with a title, description, and (optionally) optionscode, value.
+    An array of settings. Each key is a setting name (which will be
+    prefixed by your plugin name), and each value is a setting array
+    with a title, description, and (optionally) optionscode, value.
 
   **makelang** (optional)
-    If set, instead of creating the setting group and settings, a language file will be printed,
-    ready for inclusion in your plugin distribution.
+    If set, instead of creating the setting group and settings, a language
+    file will be printed, ready for inclusion in your plugin distribution.
 
 **Return value**:
 
@@ -155,7 +157,8 @@ delete_cache
   $value = $cache->read('plugin_name');
   $PL->delete_cache('plugin_name');
 
-This example shows how to create/update/read a cache (built-in MyBB functionality), and how to delete a cache using *PluginLibrary*.
+This example shows how to create/update/read a cache (built-in MyBB
+functionality), and how to delete a cache using *PluginLibrary*.
 
 Corefile Edits
 ##############
@@ -167,9 +170,9 @@ edit_core
 
   *mixed* **edit_core** (*string* $name, *string* $file, *array* $edits=array(), *bool* $apply=false)
 
-  This function makes, updates, and undoes changes to PHP/JS/CSS files. Using search patterns,
-  you can locate blocks of one or more code lines, and insert new code lines before/after,
-  or replace them.
+  This function makes, updates, and undoes simple, line based changes to PHP/JS/CSS files.
+  Using search patterns, it locates blocks of one or more lines of code, and inserts new code
+  before or after them, or replaces them.
 
 **Parameters**:
 
@@ -221,38 +224,110 @@ edit_core
   the edit was already in place (no change) or applied successfully, or a
   *string* with the successfully edited file contents.
 
-**Example**::
+**Example**:
 
-  $PL->function('example');
+Assume you have an input file hello.php with these contents::
 
-Description of the example.
+  <?php
+  function hello_world()
+  {
+      echo "Hello world!";
+  }
+  ?>
+
+If you want to change it to say "Hello PluginLibrary!" instead, you can edit it::
+
+  $PL->edit_core('plugin_name', 'hello.php',
+                 array('search' => 'echo "Hello world!";',
+                       'replace' => 'echo "Hello PluginLibrary!";'),
+                 true);
+
+If the file could be written to, it should then look like this::
+
+  <?php
+  function hello_world()
+  {
+  /* - PL:plugin_name - /*     echo "Hello world!";
+  /* + PL:plugin_name + */ echo "Hello PluginLibrary!";
+  }
+  ?>
 
 Search Patterns
 :::::::::::::::
 
-Explain search patterns somehow.
+A search pattern is an array of strings. A single string may also be used
+instead of an array with just one element. The strings do not have special
+characters, instead they are matched literally. For a pattern to match, each
+string has to match in the order of the array, however there may be any
+amount of characters between strings. A search pattern always finds the
+smallest possible match.
 
+In other words, the following search pattern::
 
-function
---------
+  array('foo', 'bar', 'baz')
 
-**Description**:
+Would be roughly equivalent to this regular expression::
 
-  *void* **function** (*type* $param)
+  foo.*bar.*baz
 
-  Description of the function.
+Here's how the above search pattern would match the following text:
 
-**Parameters**:
+  | foo bar foo bar
+  | bar **foo** baz **bar** foo
+  | and finally **baz**
+  | followed by more foo bar.
 
-  **param**
-    Explanation of the param.
+Another example using the search pattern array('{', '}'):
 
-**Return value**:
+  | function foobar($foo, $bar)
+  | {
+  |     if($foo > $bar)
+  |     **{**
+  |         foo($bar);
+  |         bar($foo);
+  |     **}**
+  | }
 
-  Explanation of the return value.
+Instead of matching the outer functions parentheses, it matches the inner
+ones because that match is smaller. However, it does not matter how much
+code there is between { } and what it looks like, and in most files there
+are { } everywhere, so this match is not very useful.
 
-**Example**::
+When designing your pattern, you should make sure that all elements
+you're matching are where you expect them to be, so you can achieve
+a unique, concise match. A missing, but ambigous element, especially
+at the beginning or end of the pattern, can cause the match to be a
+much larger region than you intended. Going back to the first
+example, if the **baz** you were looking for was missing, but if there
+was another **baz** later on in the file, the match could also look
+like this:
 
-  $PL->function('example');
+  | bar **foo** baz **bar** foo
+  | ...a thousand lines that do not contain foo or baz...
+  | and finally not the **baz** you were looking for
 
-Description of the example.
+You have to choose your patterns carefully, as you would do with regular expressions.
+
+.. function
+   --------
+
+   **Description**:
+
+     *void* **function** (*type* $param)
+
+     Description of the function.
+
+   **Parameters**:
+
+     **param**
+       Explanation of the param.
+
+   **Return value**:
+
+     Explanation of the return value.
+
+   **Example**::
+
+     $PL->function('example');
+
+   Description of the example.
