@@ -17,9 +17,25 @@ GNU Lesser General Public License, Version 3. This is the same
 license as MyBB itself uses, so if you can use MyBB, you should
 also be able to use *PluginLibrary*.
 
-*PluginLibrary* Copyright (C) 2011 Andreas Klauer (Andreas.Klauer@metamorpher.de)
+*PluginLibrary* is Copyright (C) 2011 Andreas Klauer (Andreas.Klauer@metamorpher.de)
 
 .. contents::
+  :backlinks: top
+
+Installation
+============
+
+  To install *PluginLibrary*, just upload *inc/plugins/pluginlibrary.php* to
+  your *inc/plugins/* folder.
+
+  For users, no other files are required and no further steps are necessary.
+
+  Developers may also be interested in *inc/plugins/hello_pl.php*
+  which is a sample plugin that demonstrates the features of *PluginLibrary*.
+
+.. note::
+  This documentation is intended for plugin developers.
+  If you are not making your own plugins, you don't need to read this.
 
 Function Reference
 ==================
@@ -27,8 +43,8 @@ Function Reference
 Settings
 ########
 
-settings
---------
+settings()
+----------
 
 **Description**:
 
@@ -98,8 +114,8 @@ The above example will result in a setting group called *plugin_name*,
 which contains four settings *plugin_name_no*, *plugin_name_yes*,
 *plugin_name_text* and *plugin_name_textarea*.
 
-delete_settings
----------------
+delete_settings()
+-----------------
 
 **Description**:
 
@@ -129,8 +145,8 @@ The above example will delete the setting group *plugin_name* and all its settin
 Cache
 #####
 
-delete_cache
-------------
+delete_cache()
+--------------
 
 **Description**:
 
@@ -163,8 +179,8 @@ functionality), and how to delete a cache using *PluginLibrary*.
 Corefile Edits
 ##############
 
-edit_core
----------
+edit_core()
+-----------
 
 **Description**:
 
@@ -340,8 +356,8 @@ in the wrong place, more than once, or not at all.
 Groups and Permissions
 ######################
 
-is_member
----------
+is_member()
+-----------
 
 **Description**:
 
@@ -381,8 +397,8 @@ This example checks whether the user is a super moderator, admin or moderator.
 String functions
 ################
 
-url_append
-----------
+url_append()
+------------
 
 **Description**:
 
