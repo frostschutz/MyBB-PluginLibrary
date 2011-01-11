@@ -349,6 +349,53 @@ is_member
 
 This example checks whether the user is a super moderator, admin or moderator.
 
+String functions
+################
+
+url_append
+----------
+
+**Description**:
+
+  *string* **url_append** (*string* $url, *array* $params, *string* $sep='&amp;', *bool* $encode=true)
+
+  Append one or more query parameters to an URL that may or may not
+  have an existing ?query. The parameters will be encoded properly.
+
+**Parameters**:
+
+  **url**
+    The URL that should be appended to. May also be a relative link.
+
+  **params**
+    Array of key => value pairs that should be appended to the URL.
+
+  **sep** (optional)
+    If the URL does not yet have any parameters, the first parameter will be separated by ?.
+    The subsequent parameters will be separated with &amp; which is what you usually need
+    for links that appear in HTML. You can pass a different separator (for example '&')
+    here for plain text links.
+
+  **encode** (optional)
+    If values in URLs contain special characters, they have to be urlencoded properly.
+    By default, this is done automatically for you. Set this to false if the values
+    you are passing are already encoded properly, so they won't be encoded twice.
+
+**Return value**:
+
+  This function returns the new URL as a string.
+
+**Example**::
+
+  $PL->url_append('http://domain.tld/something', array('foo' => 'bar', 'bar' => 'foo'));
+
+The result is '\http://domain.tld/something?foo=bar&amp;bar=foo'.
+
+::
+
+  $PL->url_append('showthread.php?tid=1', array('foo' => 'bar', 'bar' => 'foo'));
+
+The result is 'showthread.php?tid=1&amp;foo=bar&amp;bar=foo'.
 
 .. function
    --------
