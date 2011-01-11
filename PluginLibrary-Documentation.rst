@@ -1,10 +1,9 @@
-=================================
-PluginLibrary BETA 0 for MyBB 1.6
-=================================
+===================================
+ PluginLibrary BETA 0 for MyBB 1.6
+===================================
 
-----------------------------
 Documentation for Developers
-----------------------------
+============================
 
 *PluginLibrary* is not a stand-alone plugin, but rather a library of
 useful functions that can be used by plugins and plugin developers.
@@ -23,7 +22,7 @@ also be able to use *PluginLibrary*.
   :backlinks: top
 
 Installation
-============
+------------
 
   To install *PluginLibrary*, just upload *inc/plugins/pluginlibrary.php* to
   your *inc/plugins/* folder.
@@ -38,18 +37,91 @@ Installation
   If you are not making your own plugins, you don't need to read this.
 
 Integration into your Plugin
-============================
+----------------------------
 
-Hey, you're the developer. You figure it out.
+When integrating *PluginLibrary* into your plugin, you need to be aware of a
+few things.
+
+#. *PluginLibrary* may or may not be installed. If it's missing,
+   you should display a friendly message when the admin tries to activate your plugin.
+#. *PluginLibrary* may be installed, but not up to date. If you
+   require at least a specific version of *PluginLibrary*, you should
+   display a friendly message that it's too old.
+#. *PluginLibrary* is not a plugin and is not loaded automatically.
+   You have to load it before you can use it.
+
+The following sections show how you can do all of this, while keeping
+the code as simple as possible. There is also a sample plugin which
+demonstrates this.
+
+Define PLUGINLIBRARY
+~~~~~~~~~~~~~~~~~~~~
+
+Throughout your plugin, you will probably have to refer to the filename
+of *PluginLibrary* several times. Defining the filename at the beginning
+of your plugin will help keeping the code shorter later on.
+
+::
+
+  if(!defined("PLUGINLIBRARY"))
+  {
+      define("PLUGINLIBRARY", MYBB_ROOT."inc/plugins/pluginlibrary.php");
+  }
+
+Dependency Check
+~~~~~~~~~~~~~~~~
+
+If your plugin requires *PluginLibrary*, you should check whether it is
+installed or not in the *install()* or *activate()* routine of your plugin,
+and prevent the activation of your plugin if it's not present. Using the
+built-in functions *flash_message()* and *admin_redirect()*, you can display
+a friendly error message to the admin, preferably including a download link.
+
+::
+
+  if(!file_exists(PLUGINLIBRARY))
+  {
+      flash_message("PluginLibrary is missing.", "error");
+      admin_redirect("index.php?module=config-plugins");
+  }
+
+Load PluginLibrary On Demand
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Since *PluginLibrary* is not required in every request, it is not loaded
+automatically. Instead, you have to load it on demand whenever you want
+to use it. This can be done with an additional line of code.
+
+::
+
+  global $PL;
+  $PL or require_once(PLUGINLIBRARY);
+
+Version Check
+~~~~~~~~~~~~~
+
+If you require a specific version (for features added in a later
+version of *PluginLibrary*), in addition to the Dependency Check,
+you can also check the version number of *PluginLibrary*. The
+following example checks that *PluginLibrary* is at least version 1.
+
+::
+
+  if($PL->version < 1)
+  {
+      flash_message("PluginLibrary is too old.", "error");
+      admin_redirect("index.php?module=config-plugins");
+  }
+
 
 Function Reference
-==================
+------------------
 
 Settings
-########
+~~~~~~~~
 
 settings()
-----------
+++++++++++
 
 **Description**:
 
@@ -120,7 +192,7 @@ which contains four settings *plugin_name_no*, *plugin_name_yes*,
 *plugin_name_text* and *plugin_name_textarea*.
 
 delete_settings()
------------------
++++++++++++++++++
 
 **Description**:
 
@@ -148,10 +220,10 @@ delete_settings()
 The above example will delete the setting group *plugin_name* and all its settings.
 
 Cache
-#####
+~~~~~
 
 delete_cache()
---------------
+++++++++++++++
 
 **Description**:
 
@@ -182,10 +254,10 @@ This example shows how to create/update/read a cache (built-in MyBB
 functionality), and how to delete a cache using *PluginLibrary*.
 
 Corefile Edits
-##############
+~~~~~~~~~~~~~~
 
 edit_core()
------------
++++++++++++
 
 **Description**:
 
@@ -274,14 +346,14 @@ If the file could be written to, it should then look like this::
   ?>
 
 Search Patterns
-:::::::::::::::
+```````````````
 
 A search pattern is an array of strings. A single string may also be used
 instead of an array with just one element. The strings do not have special
-characters, instead they are matched literally. For a pattern to match, each
-string has to match in the order of the array, however there may be any
-amount of characters between strings. A search pattern always finds the
-smallest possible match.
+characters, instead they are matched literally and case-sensitive.
+For a pattern to match, each string has to match in the order
+of the array, however there may be any amount of characters between
+strings. A search pattern always finds the smallest possible match.
 
 In other words, the following search pattern::
 
@@ -294,9 +366,13 @@ Would be roughly equivalent to this regular expression::
 Here's how the above search pattern would match the following text:
 
   | foo bar foo bar
-  | bar **foo** baz **bar** foo
+  | bar **foo** and **bar** foo
   | and finally **baz**
-  | followed by more foo bar.
+  | followed by more baz bar foo.
+
+Note how the first occurence of foo and bar in the first line
+is ignored, as is baz in the last line. Instead, it finds the
+smallest possible match in lines between.
 
 Another example using the search pattern array('{', '}'):
 
@@ -330,7 +406,7 @@ like this:
 You have to choose your patterns carefully, as you would do with regular expressions.
 
 Debugging
-:::::::::
+`````````
 
 If an edit does not work (correctly) and you want to find out why, you can
 get some debug information by passing the edits by reference::
@@ -359,10 +435,10 @@ This should help you determine why the edit failed; it may have matched
 in the wrong place, more than once, or not at all.
 
 Groups and Permissions
-######################
+~~~~~~~~~~~~~~~~~~~~~~
 
 is_member()
------------
++++++++++++
 
 **Description**:
 
@@ -400,10 +476,10 @@ is_member()
 This example checks whether the user is a super moderator, admin or moderator.
 
 String functions
-################
+~~~~~~~~~~~~~~~~
 
 url_append()
-------------
+++++++++++++
 
 **Description**:
 
@@ -447,32 +523,34 @@ The result is '\http://domain.tld/something?foo=bar&amp;bar=foo'.
 
 The result is 'showthread.php?tid=1&amp;foo=bar&amp;bar=foo'.
 
+.. Template for additional functions:
+..
 .. function
-   --------
-
-   **Description**:
-
-     *void* **function** (*type* $param)
-
-     Description of the function.
-
-   **Parameters**:
-
-     **param**
-       Explanation of the param.
-
-   **Return value**:
-
-     Explanation of the return value.
-
-   **Example**::
-
-     $PL->function('example');
-
-   Description of the example.
+.. --------
+..
+.. **Description**:
+..
+..   *void* **function** (*type* $param)
+..
+..   Description of the function.
+..
+.. **Parameters**:
+..
+..   **param**
+..     Explanation of the param.
+..
+.. **Return value**:
+..
+..   Explanation of the return value.
+..
+.. **Example**::
+..
+..   $PL->function('example');
+..
+.. Description of the example.
 
 Sample Plugin
-=============
+-------------
 
 If you prefer code over documentation, here is a sample plugin file which
 demonstrates most of *PluginLibrary*'s features. This file is also
