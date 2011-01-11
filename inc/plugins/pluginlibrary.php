@@ -529,9 +529,20 @@ class PluginLibrary
         global $mybb;
 
         // Default to current user.
-        if(!$user)
+        if($user === false)
         {
             $user = $mybb->user;
+        }
+
+        else if(is_array($user))
+        {
+            // do nothing
+        }
+
+        else
+        {
+            // assume it's a UID
+            $user = get_user($user);
         }
 
         // Collect the groups the user is in.
