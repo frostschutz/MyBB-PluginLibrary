@@ -449,3 +449,14 @@ The result is 'showthread.php?tid=1&amp;foo=bar&amp;bar=foo'.
      $PL->function('example');
 
    Description of the example.
+
+Sample Plugin
+=============
+
+If you prefer code over documentation, here is a sample plugin file which
+demonstrates most of *PluginLibrary*'s features. This file is also
+included as *inc/plugins/hello_pl.php* in the *PluginLibrary* package.
+
+.. include:: inc/plugins/hello_pl.php
+  :literal:
+
