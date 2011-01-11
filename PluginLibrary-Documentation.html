@@ -1,0 +1,1142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.7: http://docutils.sourceforge.net/" />
+<title>PluginLibrary BETA 0 for MyBB 1.6</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 6253 2010-03-02 00:24:53Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: left }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="pluginlibrary-beta-0-for-mybb-1-6">
+<h1 class="title">PluginLibrary BETA 0 for MyBB 1.6</h1>
+<h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
+
+<p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
+useful functions that can be used by plugins and plugin developers.
+For example, it can help you manage settings of your plugin, or apply
+edits to core files. The list of <em>PluginLibrary</em>'s features is
+expected to grow over time and contributions are welcome.</p>
+<p><em>PluginLibrary</em> is Open Source Software, licensed under the
+GNU Lesser General Public License, Version 3. This is the same
+license as MyBB itself uses, so if you can use MyBB, you should
+also be able to use <em>PluginLibrary</em>.</p>
+<p><em>PluginLibrary</em> is Copyright (C) 2011 Andreas Klauer (<a class="reference external" href="mailto:Andreas.Klauer&#64;metamorpher.de">Andreas.Klauer&#64;metamorpher.de</a>)</p>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#installation" id="id2">Installation</a></li>
+<li><a class="reference internal" href="#integration-into-your-plugin" id="id3">Integration into your Plugin</a><ul>
+<li><a class="reference internal" href="#define-pluginlibrary" id="id4">Define PLUGINLIBRARY</a></li>
+<li><a class="reference internal" href="#dependency-check" id="id5">Dependency Check</a></li>
+<li><a class="reference internal" href="#load-pluginlibrary-on-demand" id="id6">Load PluginLibrary On Demand</a></li>
+<li><a class="reference internal" href="#version-check" id="id7">Version Check</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#function-reference" id="id8">Function Reference</a><ul>
+<li><a class="reference internal" href="#settings" id="id9">Settings</a><ul>
+<li><a class="reference internal" href="#id1" id="id10">settings()</a></li>
+<li><a class="reference internal" href="#delete-settings" id="id11">delete_settings()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cache" id="id12">Cache</a><ul>
+<li><a class="reference internal" href="#delete-cache" id="id13">delete_cache()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#corefile-edits" id="id14">Corefile Edits</a><ul>
+<li><a class="reference internal" href="#edit-core" id="id15">edit_core()</a><ul>
+<li><a class="reference internal" href="#search-patterns" id="id16">Search Patterns</a></li>
+<li><a class="reference internal" href="#debugging" id="id17">Debugging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#groups-and-permissions" id="id18">Groups and Permissions</a><ul>
+<li><a class="reference internal" href="#is-member" id="id19">is_member()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#string-functions" id="id20">String functions</a><ul>
+<li><a class="reference internal" href="#url-append" id="id21">url_append()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sample-plugin" id="id22">Sample Plugin</a></li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h1><a class="toc-backref" href="#contents">Installation</a></h1>
+<blockquote>
+<p>To install <em>PluginLibrary</em>, just upload <em>inc/plugins/pluginlibrary.php</em> to
+your <em>inc/plugins/</em> folder.</p>
+<p>For users, no other files are required and no further steps are necessary.</p>
+<p>Developers may also be interested in <em>inc/plugins/hello_pl.php</em>
+which is a sample plugin that demonstrates the features of <em>PluginLibrary</em>.</p>
+</blockquote>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">This documentation is intended for plugin developers.
+If you are not making your own plugins, you don't need to read this.</p>
+</div>
+</div>
+<div class="section" id="integration-into-your-plugin">
+<h1><a class="toc-backref" href="#contents">Integration into your Plugin</a></h1>
+<p>When integrating <em>PluginLibrary</em> into your plugin, you need to be aware of a
+few things.</p>
+<ol class="arabic simple">
+<li><em>PluginLibrary</em> may or may not be installed. If it's missing,
+you should display a friendly message when the admin tries to activate your plugin.</li>
+<li><em>PluginLibrary</em> may be installed, but not up to date. If you
+require at least a specific version of <em>PluginLibrary</em>, you should
+display a friendly message that it's too old.</li>
+<li><em>PluginLibrary</em> is not a plugin and is not loaded automatically.
+You have to load it before you can use it.</li>
+</ol>
+<p>The following sections show how you can do all of this, while keeping
+the code as simple as possible. There is also a sample plugin which
+demonstrates this.</p>
+<div class="section" id="define-pluginlibrary">
+<h2><a class="toc-backref" href="#contents">Define PLUGINLIBRARY</a></h2>
+<p>Throughout your plugin, you will probably have to refer to the filename
+of <em>PluginLibrary</em> several times. Defining the filename at the beginning
+of your plugin will help keeping the code shorter later on.</p>
+<pre class="literal-block">
+if(!defined(&quot;PLUGINLIBRARY&quot;))
+{
+    define(&quot;PLUGINLIBRARY&quot;, MYBB_ROOT.&quot;inc/plugins/pluginlibrary.php&quot;);
+}
+</pre>
+</div>
+<div class="section" id="dependency-check">
+<h2><a class="toc-backref" href="#contents">Dependency Check</a></h2>
+<p>If your plugin requires <em>PluginLibrary</em>, you should check whether it is
+installed or not in the <em>install()</em> or <em>activate()</em> routine of your plugin,
+and prevent the activation of your plugin if it's not present. Using the
+built-in functions <em>flash_message()</em> and <em>admin_redirect()</em>, you can display
+a friendly error message to the admin, preferably including a download link.</p>
+<pre class="literal-block">
+if(!file_exists(PLUGINLIBRARY))
+{
+    flash_message(&quot;PluginLibrary is missing.&quot;, &quot;error&quot;);
+    admin_redirect(&quot;index.php?module=config-plugins&quot;);
+}
+</pre>
+</div>
+<div class="section" id="load-pluginlibrary-on-demand">
+<h2><a class="toc-backref" href="#contents">Load PluginLibrary On Demand</a></h2>
+<p>Since <em>PluginLibrary</em> is not required in every request, it is not loaded
+automatically. Instead, you have to load it on demand whenever you want
+to use it. This can be done with an additional line of code.</p>
+<pre class="literal-block">
+global $PL;
+$PL or require_once(PLUGINLIBRARY);
+</pre>
+</div>
+<div class="section" id="version-check">
+<h2><a class="toc-backref" href="#contents">Version Check</a></h2>
+<p>If you require a specific version (for features added in a later
+version of <em>PluginLibrary</em>), in addition to the Dependency Check,
+you can also check the version number of <em>PluginLibrary</em>. The
+following example checks that <em>PluginLibrary</em> is at least version 1.</p>
+<pre class="literal-block">
+if($PL-&gt;version &lt; 1)
+{
+    flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
+    admin_redirect(&quot;index.php?module=config-plugins&quot;);
+}
+</pre>
+</div>
+</div>
+<div class="section" id="function-reference">
+<h1><a class="toc-backref" href="#contents">Function Reference</a></h1>
+<div class="section" id="settings">
+<h2><a class="toc-backref" href="#contents">Settings</a></h2>
+<div class="section" id="id1">
+<h3><a class="toc-backref" href="#contents">settings()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>void</em> <strong>settings</strong> (<em>string</em> $name, <em>string</em> $title, <em>string</em> $description, <em>array</em> $list, <em>bool</em> $makelang=false)</p>
+<p>This function creates a setting group and a list of settings.
+If the setting group already exists, the settings inside this group
+will be updated to their new names and descriptions, while keeping
+their custom values intact. Settings that no longer exist will be
+removed. Optionally, it also generates a language file for your settings.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>name</strong></dt>
+<dd>The name of your plugin, which will also be used as prefix for your
+setting groups and settings.</dd>
+<dt><strong>title</strong></dt>
+<dd>The title of the setting group.</dd>
+<dt><strong>description</strong></dt>
+<dd>The description of the setting group.</dd>
+<dt><strong>list</strong></dt>
+<dd>An array of settings. Each key is a setting name (which will be
+prefixed by your plugin name), and each value is a setting array
+with a title, description, and (optionally) optionscode, value.</dd>
+<dt><strong>makelang</strong> (optional)</dt>
+<dd>If set, instead of creating the setting group and settings, a language
+file will be printed, ready for inclusion in your plugin distribution.</dd>
+</dl>
+</blockquote>
+<p><strong>Return value</strong>:</p>
+<blockquote>
+This function does not have a return value.</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$PL-&gt;settings('plugin_name',
+              'Group Title',
+              'Group Description',
+              array(
+                  'no' =&gt; array(
+                      'title' =&gt; 'Simple Yes/No Setting',
+                      'description' =&gt; 'The default is no.',
+                      ),
+                  'yes' =&gt; array(
+                      'title' =&gt; 'Simple Yes/No Setting',
+                      'description' =&gt; 'This one is set to yes.',
+                      'value' =&gt; 1,
+                      ),
+                  'text' =&gt; array(
+                      'title' =&gt; 'Text setting',
+                      'description' =&gt; 'Enter some text here.',
+                      'optionscode' =&gt; 'text',
+                      ),
+                  'textarea' =&gt; array(
+                      'title' =&gt; 'Text area setting',
+                      'description' =&gt; 'Enter multiple lines of text.',
+                      'optionscode' =&gt; 'textarea',
+                      'value' =&gt; 'Default value for this setting.',
+                      ),
+                  )
+    );
+</pre>
+<p>The above example will result in a setting group called <em>plugin_name</em>,
+which contains four settings <em>plugin_name_no</em>, <em>plugin_name_yes</em>,
+<em>plugin_name_text</em> and <em>plugin_name_textarea</em>.</p>
+</div>
+<div class="section" id="delete-settings">
+<h3><a class="toc-backref" href="#contents">delete_settings()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>void</em> <strong>delete_settings</strong> (<em>string</em> $name, <em>bool</em> $greedy=false)</p>
+<p>This function deletes one (or more) setting groups and settings.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>name</strong></dt>
+<dd>The name of your plugin or setting group.</dd>
+<dt><strong>greedy</strong> (optional)</dt>
+<dd>If set, delete all groups that start with <em>name</em>.
+Useful if your plugin has more than just one setting group.</dd>
+</dl>
+</blockquote>
+<p><strong>Return value</strong>:</p>
+<blockquote>
+This function does not have a return value.</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$PL-&gt;delete_settings('plugin_name');
+</pre>
+<p>The above example will delete the setting group <em>plugin_name</em> and all its settings.</p>
+</div>
+</div>
+<div class="section" id="cache">
+<h2><a class="toc-backref" href="#contents">Cache</a></h2>
+<div class="section" id="delete-cache">
+<h3><a class="toc-backref" href="#contents">delete_cache()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>void</em> <strong>delete_cache</strong> (<em>string</em> $name, <em>bool</em> $greedy=false)</p>
+<p>This function safely deletes one (or more) caches.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>name</strong></dt>
+<dd>The name of your plugin or cache.</dd>
+<dt><strong>greedy</strong> (optional)</dt>
+<dd>If set, delete all caches that start with <em>name</em>.
+Useful if your plugin uses several caches.</dd>
+</dl>
+</blockquote>
+<p><strong>Return value</strong>:</p>
+<blockquote>
+This function does not have a return value.</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$cache-&gt;update('plugin_name', $value);
+$value = $cache-&gt;read('plugin_name');
+$PL-&gt;delete_cache('plugin_name');
+</pre>
+<p>This example shows how to create/update/read a cache (built-in MyBB
+functionality), and how to delete a cache using <em>PluginLibrary</em>.</p>
+</div>
+</div>
+<div class="section" id="corefile-edits">
+<h2><a class="toc-backref" href="#contents">Corefile Edits</a></h2>
+<div class="section" id="edit-core">
+<h3><a class="toc-backref" href="#contents">edit_core()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>mixed</em> <strong>edit_core</strong> (<em>string</em> $name, <em>string</em> $file, <em>array</em> $edits=array(), <em>bool</em> $apply=false)</p>
+<p>This function makes, updates, and undoes simple, line based changes to PHP/JS/CSS files.
+Using search patterns, it locates blocks of one or more lines of code, and inserts new code
+before or after them, or replaces them.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>name</strong></dt>
+<dd>Name of your plugin or prefix. It will be used to identify your changes and to detect
+conflicts with edits made by other plugins.</dd>
+<dt><strong>file</strong></dt>
+<dd>Filename (path relative to MYBB_ROOT) of the file that should be edited.</dd>
+<dt><strong>edits</strong> (optional)</dt>
+<dd><p class="first">One or more arrays that describe edits that should be applied to the file.
+Each array may have several keys. Only <em>search</em> is mandatory. Previous
+edits will be undone and thus updated. If <em>edits</em> is omitted or empty,
+only the undo step will be performed.</p>
+<dl class="last docutils">
+<dt><em>search</em></dt>
+<dd>The search pattern which is responsible for locating the code that should be modified.
+Detailed explanation on how search patterns work, see below.</dd>
+<dt><em>before</em></dt>
+<dd>Lines that should be inserted <em>before</em> the located code.</dd>
+<dt><em>after</em></dt>
+<dd>Lines that should be inserted <em>after</em> the located code.</dd>
+<dt><em>replace</em></dt>
+<dd>Lines that should <em>replace</em> the located code.</dd>
+<dt><em>multi</em></dt>
+<dd>If set, allow the search pattern to match more than once.
+By default, the edit has to be a unique match.</dd>
+<dt><em>none</em></dt>
+<dd>If set, allow the search pattern to not match at all.
+By default, the edit is mandatory to match.</dd>
+<dt><em>matches</em> (debugging only)</dt>
+<dd>For debugging purposes, <em>edits</em> can be passed by reference, in which case
+an entry <em>matches</em> will be created, showing how often and in which lines
+a match was found.</dd>
+</dl>
+</dd>
+<dt><strong>apply</strong> (optional)</dt>
+<dd>If set, try to apply the changes directly to the file (requires write permissions).</dd>
+</dl>
+</blockquote>
+<p><strong>Return value</strong>:</p>
+<blockquote>
+This function returns <em>false</em> if the edit could not be performed, <em>true</em> if
+the edit was already in place (no change) or applied successfully, or a
+<em>string</em> with the successfully edited file contents.</blockquote>
+<p><strong>Example</strong>:</p>
+<p>Assume you have an input file hello.php with these contents:</p>
+<pre class="literal-block">
+&lt;?php
+function hello_world()
+{
+    echo &quot;Hello world!&quot;;
+}
+?&gt;
+</pre>
+<p>If you want to change it to say &quot;Hello PluginLibrary!&quot; instead, you can edit it:</p>
+<pre class="literal-block">
+$PL-&gt;edit_core('plugin_name', 'hello.php',
+               array('search' =&gt; 'echo &quot;Hello world!&quot;;',
+                     'replace' =&gt; 'echo &quot;Hello PluginLibrary!&quot;;'),
+               true);
+</pre>
+<p>If the file could be written to, it should then look like this:</p>
+<pre class="literal-block">
+&lt;?php
+function hello_world()
+{
+/* - PL:plugin_name - /*     echo &quot;Hello world!&quot;;
+/* + PL:plugin_name + */ echo &quot;Hello PluginLibrary!&quot;;
+}
+?&gt;
+</pre>
+<div class="section" id="search-patterns">
+<h4><a class="toc-backref" href="#contents">Search Patterns</a></h4>
+<p>A search pattern is an array of strings. A single string may also be used
+instead of an array with just one element. The strings do not have special
+characters, instead they are matched literally and case-sensitive.
+For a pattern to match, each string has to match in the order
+of the array, however there may be any amount of characters between
+strings. A search pattern always finds the smallest possible match.</p>
+<p>In other words, the following search pattern:</p>
+<pre class="literal-block">
+array('foo', 'bar', 'baz')
+</pre>
+<p>Would be roughly equivalent to this regular expression:</p>
+<pre class="literal-block">
+foo.*bar.*baz
+</pre>
+<p>Here's how the above search pattern would match the following text:</p>
+<blockquote>
+<div class="line-block">
+<div class="line">foo bar foo bar</div>
+<div class="line">bar <strong>foo</strong> and <strong>bar</strong> foo</div>
+<div class="line">and finally <strong>baz</strong></div>
+<div class="line">followed by more baz bar foo.</div>
+</div>
+</blockquote>
+<p>Note how the first occurence of foo and bar in the first line
+is ignored, as is baz in the last line. Instead, it finds the
+smallest possible match in lines between.</p>
+<p>Another example using the search pattern array('{', '}'):</p>
+<blockquote>
+<div class="line-block">
+<div class="line">function foobar($foo, $bar)</div>
+<div class="line">{</div>
+<div class="line-block">
+<div class="line">if($foo &gt; $bar)</div>
+<div class="line"><strong>{</strong></div>
+<div class="line-block">
+<div class="line">foo($bar);</div>
+<div class="line">bar($foo);</div>
+</div>
+<div class="line"><strong>}</strong></div>
+</div>
+<div class="line">}</div>
+</div>
+</blockquote>
+<p>Instead of matching the outer functions parentheses, it matches the inner
+ones because that match is smaller. However, it does not matter how much
+code there is between { } and what it looks like, and in most files there
+are { } everywhere, so this match is not very useful.</p>
+<p>When designing your pattern, you should make sure that all elements
+you're matching are where you expect them to be, so you can achieve
+a unique, concise match. A missing, but ambigous element, especially
+at the beginning or end of the pattern, can cause the match to be a
+much larger region than you intended. Going back to the first
+example, if the <strong>baz</strong> you were looking for was missing, but if there
+was another <strong>baz</strong> later on in the file, the match could also look
+like this:</p>
+<blockquote>
+<div class="line-block">
+<div class="line">bar <strong>foo</strong> baz <strong>bar</strong> foo</div>
+<div class="line">...a thousand lines that do not contain foo or baz...</div>
+<div class="line">and finally not the <strong>baz</strong> you were looking for</div>
+</div>
+</blockquote>
+<p>You have to choose your patterns carefully, as you would do with regular expressions.</p>
+</div>
+<div class="section" id="debugging">
+<h4><a class="toc-backref" href="#contents">Debugging</a></h4>
+<p>If an edit does not work (correctly) and you want to find out why, you can
+get some debug information by passing the edits by reference:</p>
+<pre class="literal-block">
+$edits = array('search' =&gt; 'echo &quot;Hello world!&quot;;',
+               'replace' =&gt; 'echo &quot;Hello PluginLibrary!&quot;;');
+$PL-&gt;edit_core('plugin_name', 'hello.php', &amp;$edits);
+print_r($edits);
+</pre>
+<p>This will add a <em>matches</em> entry for each edit array, showing the byte positions
+and actually matched patterns:</p>
+<pre class="literal-block">
+[matches] =&gt; Array
+    (
+        [0] =&gt; Array
+            (
+                [0] =&gt; 31
+                [1] =&gt; 56
+                [2] =&gt;     echo &quot;Hello world!&quot;;
+
+            )
+
+    )
+</pre>
+<p>This should help you determine why the edit failed; it may have matched
+in the wrong place, more than once, or not at all.</p>
+</div>
+</div>
+</div>
+<div class="section" id="groups-and-permissions">
+<h2><a class="toc-backref" href="#contents">Groups and Permissions</a></h2>
+<div class="section" id="is-member">
+<h3><a class="toc-backref" href="#contents">is_member()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>array</em> <strong>is_member</strong> (<em>mixed</em> $groups, <em>mixed</em> $user=false)</p>
+<p>This function checks if a user is member of one or more groups.
+Useful if your plugin has a setting to include/exclude one or more groups.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>groups</strong></dt>
+<dd>The group(s) the user should be checked against. Can be
+a comma separated string of group IDs '1,2,3', or a number,
+or an array of numbers.</dd>
+<dt><strong>user</strong> (optional)</dt>
+<dd>The user that should be checked for group memberships.
+By default, it's the current user. Alternatively, pass
+the UID or get_user() array of another user.</dd>
+</dl>
+</blockquote>
+<p><strong>Return value</strong>:</p>
+<blockquote>
+This function returns an array of the group IDs you were
+looking for and the user is actually a member of. If the
+user wasn't a member of any of the groups, the returned
+array will be empty.</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+if($PL-&gt;is_member('3,4,6'))
+{
+    show_secret_menu();
+}
+</pre>
+<p>This example checks whether the user is a super moderator, admin or moderator.</p>
+</div>
+</div>
+<div class="section" id="string-functions">
+<h2><a class="toc-backref" href="#contents">String functions</a></h2>
+<div class="section" id="url-append">
+<h3><a class="toc-backref" href="#contents">url_append()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>string</em> <strong>url_append</strong> (<em>string</em> $url, <em>array</em> $params, <em>string</em> $sep='&amp;amp;', <em>bool</em> $encode=true)</p>
+<p>Append one or more query parameters to an URL that may or may not
+have an existing ?query. The parameters will be encoded properly.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>url</strong></dt>
+<dd>The URL that should be appended to. May also be a relative link.</dd>
+<dt><strong>params</strong></dt>
+<dd>Array of key =&gt; value pairs that should be appended to the URL.</dd>
+<dt><strong>sep</strong> (optional)</dt>
+<dd>If the URL does not yet have any parameters, the first parameter will be separated by ?.
+The subsequent parameters will be separated with &amp;amp; which is what you usually need
+for links that appear in HTML. You can pass a different separator (for example '&amp;')
+here for plain text links.</dd>
+<dt><strong>encode</strong> (optional)</dt>
+<dd>If values in URLs contain special characters, they have to be urlencoded properly.
+By default, this is done automatically for you. Set this to false if the values
+you are passing are already encoded properly, so they won't be encoded twice.</dd>
+</dl>
+</blockquote>
+<p><strong>Return value</strong>:</p>
+<blockquote>
+This function returns the new URL as a string.</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$PL-&gt;url_append('http://domain.tld/something', array('foo' =&gt; 'bar', 'bar' =&gt; 'foo'));
+</pre>
+<p>The result is 'http://domain.tld/something?foo=bar&amp;amp;bar=foo'.</p>
+<pre class="literal-block">
+$PL-&gt;url_append('showthread.php?tid=1', array('foo' =&gt; 'bar', 'bar' =&gt; 'foo'));
+</pre>
+<p>The result is 'showthread.php?tid=1&amp;amp;foo=bar&amp;amp;bar=foo'.</p>
+<!-- Template for additional functions: -->
+<!--  -->
+<!-- function -->
+<!-- - - - - - - - - -->
+<!--  -->
+<!-- **Description**: -->
+<!--  -->
+<!-- *void* **function** (*type* $param) -->
+<!--  -->
+<!-- Description of the function. -->
+<!--  -->
+<!-- **Parameters**: -->
+<!--  -->
+<!-- **param** -->
+<!-- Explanation of the param. -->
+<!--  -->
+<!-- **Return value**: -->
+<!--  -->
+<!-- Explanation of the return value. -->
+<!--  -->
+<!-- **Example**:: -->
+<!--  -->
+<!-- $PL->function('example'); -->
+<!--  -->
+<!-- Description of the example. -->
+</div>
+</div>
+</div>
+<div class="section" id="sample-plugin">
+<h1><a class="toc-backref" href="#contents">Sample Plugin</a></h1>
+<p>If you prefer code over documentation, here is a sample plugin file which
+demonstrates most of <em>PluginLibrary</em>'s features. This file is also
+included as <em>inc/plugins/hello_pl.php</em> in the <em>PluginLibrary</em> package.</p>
+<pre class="literal-block">
+&lt;?php
+/**
+ * This file is part of PluginLibrary for MyBB.
+ * Copyright (C) 2011 Andreas Klauer &lt;Andreas.Klauer&#64;metamorpher.de&gt;
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ *
+ */
+
+// Disallow direct access to this file for security reasons
+if(!defined(&quot;IN_MYBB&quot;))
+{
+    die(&quot;Direct initialization of this file is not allowed.&lt;br /&gt;&lt;br /&gt;Please make sure IN_MYBB is defined.&quot;);
+}
+
+/**
+ * DEFINE PLUGINLIBRARY
+ *
+ *   Define the path to the plugin library, if it isn't defined yet.
+ */
+if(!defined(&quot;PLUGINLIBRARY&quot;))
+{
+    define(&quot;PLUGINLIBRARY&quot;, MYBB_ROOT.&quot;inc/plugins/pluginlibrary.php&quot;);
+}
+
+$plugins-&gt;add_hook(&quot;admin_config_plugins_begin&quot;, &quot;hello_pl_edit&quot;);
+
+function hello_pl_info()
+{
+    global $mybb, $plugins_cache;
+
+    $info = array(
+        &quot;name&quot;          =&gt; &quot;Hello PluginLibrary!&quot;,
+        &quot;description&quot;   =&gt; &quot;A sample plugin for developers that demonstrates the features of the PluginLibrary.&quot;,
+        &quot;website&quot;       =&gt; &quot;https://github.com/frostschutz/PluginLibrary&quot;,
+        &quot;author&quot;        =&gt; &quot;Andreas Klauer&quot;,
+        &quot;authorsite&quot;    =&gt; &quot;mailto:Andreas.Klauer&#64;metamorpher.de&quot;,
+        &quot;version&quot;       =&gt; &quot;hello_pl.php&quot;,
+        &quot;guid&quot;          =&gt; &quot;&quot;,
+        &quot;compatibility&quot; =&gt; &quot;*&quot;
+        );
+
+    // Display some extra information when installed and active.
+    if(hello_pl_is_installed() &amp;&amp; $plugins_cache['active']['hello_pl'])
+    {
+        $editurl = &quot;index.php?module=config-plugins&amp;amp;hello_pl=edit&amp;amp;my_post_key=&quot;.$mybb-&gt;post_code;
+        $undourl = &quot;index.php?module=config-plugins&amp;amp;hello_pl=undo&amp;amp;my_post_key=&quot;.$mybb-&gt;post_code;
+
+        $info[&quot;description&quot;] .= &quot;&lt;br /&gt;&lt;a href=\&quot;{$editurl}\&quot;&gt;Make edits to hello_pl.php&lt;/a&gt;.&quot;;
+        $info[&quot;description&quot;] .= &quot;    | &lt;a href=\&quot;{$undourl}\&quot;&gt;Undo edits to hello_pl.php&lt;/a&gt;.&quot;;
+    }
+
+    return $info;
+}
+
+function hello_pl_is_installed()
+{
+    global $settings;
+
+    // This plugin creates settings on install. Check if setting exists.
+    // Another example would be $db-&gt;table_exists() for database tables.
+    if(isset($settings['hello_pl_foobar']))
+    {
+        return true;
+    }
+}
+
+function hello_pl_install()
+{
+    /**
+     * DEPENDENCY CHECK
+     *
+     *   If PluginLibrary is missing but required by your plugin,
+     *
+     *   - use file_exists(PLUGINLIBRARY) to check if it's there
+     *   - use flash_message() to give the user a friendly error message,
+     *     preferably including a download link to the missing dependency.
+     *   - use admin_redirect() to cancel the installation.
+     */
+    if(!file_exists(PLUGINLIBRARY))
+    {
+        flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;https://github.com/frostschutz/PluginLibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is missing.&quot;, &quot;error&quot;);
+        admin_redirect(&quot;index.php?module=config-plugins&quot;);
+    }
+
+    /**
+     * LOADING
+     *
+     *   PluginLibrary is not loaded automatically. Load it when required.
+     *
+     *   - use the global variable $PL to access PluginLibrary functions
+     *   - if $PL is not set, use require to load the PluginLibrary
+     */
+    global $PL;
+    $PL or require_once(PLUGINLIBRARY);
+
+    /**
+     * VERSION CHECK
+     *
+     *   Only needed if you need at least a specific version of PluginLibrary.
+     *
+     *   - compare $PL-&gt;version to the version number you need.
+     *   - same procedure as DEPENDENCY CHECK
+     */
+    if($PL-&gt;version &lt; 0)
+    {
+        flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;https://github.com/frostschutz/PluginLibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
+        admin_redirect(&quot;index.php?module=config-plugins&quot;);
+    }
+}
+
+function hello_pl_uninstall()
+{
+    global $PL;
+    $PL or require_once(PLUGINLIBRARY);
+
+    /**
+     * DELETE SETTINGS
+     *
+     *   $PL-&gt;delete_settings(name, greedy)
+     *
+     *   Delete one or more setting groups and their settings.
+     */
+    $PL-&gt;delete_settings(&quot;hello_pl&quot;
+                         // , true /* optional, multiple groups */
+        );
+}
+
+function hello_pl_activate()
+{
+    global $PL;
+    $PL or require_once(PLUGINLIBRARY);
+
+    /**
+     * SETTINGS
+     *
+     *   $PL-&gt;settings(name, title, description, list)
+     *
+     *   Create a setting group with any number of settings with $PL-&gt;settings()
+     *   If the setting group already exists, the settings are updated properly.
+     */
+    $PL-&gt;settings(&quot;hello_pl&quot;, // group name and settings prefix
+                  &quot;Hello PluginLibrary!&quot;,
+                  &quot;Setting group for the Hello PluginLibrary sample plugin.&quot;,
+                  array(
+                      &quot;foobar&quot; =&gt; array(
+                          &quot;title&quot; =&gt; &quot;Foo Bar&quot;,
+                          &quot;description&quot; =&gt; &quot;The setting name depends on the prefix (hello_pl) and the key (foobar). The name of this setting is hello_pl_foobar.&quot;,
+                          ),
+                      &quot;no&quot; =&gt; array(
+                          &quot;title&quot; =&gt; &quot;Simple Yes/No setting&quot;,
+                          &quot;description&quot; =&gt; &quot;The default is no. The name of this setting is hello_pl_no.&quot;,
+                          ),
+                      &quot;yes&quot; =&gt; array(
+                          &quot;title&quot; =&gt; &quot;Yes/No setting&quot;,
+                          &quot;description&quot; =&gt; &quot;This one is set to yes. The name of this setting is hello_pl_yes.&quot;,
+                          &quot;value&quot; =&gt; 1,
+                          ),
+                      &quot;text&quot; =&gt; array(
+                          &quot;title&quot; =&gt; &quot;Text setting&quot;,
+                          &quot;description&quot; =&gt; &quot;Give me a word. The name of this setting is hello_pl_text.&quot;,
+                          &quot;optionscode&quot; =&gt; &quot;text&quot;,
+                          ),
+                      &quot;textarea&quot; =&gt; array(
+                          &quot;title&quot; =&gt; &quot;Text area (hello_pl_textarea)&quot;,
+                          &quot;description&quot; =&gt; &quot;Multiple lines. The name of this setting is hello_pl_textarea.&quot;,
+                          &quot;optionscode&quot; =&gt; &quot;textarea&quot;,
+                          &quot;value&quot; =&gt; &quot;line1\nline2&quot;,
+                          ),
+                      )
+                  // , true /* optional,  prints a language file */
+        );
+}
+
+function hello_pl_deactivate()
+{
+    global $PL;
+    $PL or require_once(PLUGINLIBRARY);
+
+    /**
+     * DELETE CACHE
+     *
+     *   $PL-&gt;delete_cache(name, greedy)
+     *
+     *   Delete one or more caches.
+     */
+    $PL-&gt;delete_cache(&quot;hello_pl&quot;
+                      // , true /* optional, multiple caches */
+        );
+}
+
+function hello_pl_edit()
+{
+    global $mybb;
+
+    // Only perform edits if we were given the correct post key.
+    if($mybb-&gt;input['my_post_key'] != $mybb-&gt;post_code)
+    {
+        return;
+    }
+
+    global $PL;
+    $PL or require_once(PLUGINLIBRARY);
+
+    /**
+     * EDIT CORE
+     *
+     *   $PL-&gt;edit_core(name, file, search)
+     *
+     *   Make or update one or more changes to a core file.
+     *   Edits the file directly or, lacking permissions, returns a string.
+     */
+    if($mybb-&gt;input['hello_pl'] == 'edit')
+    {
+        $result = $PL-&gt;edit_core(&quot;hello_pl&quot;, &quot;inc/plugins/hello_pl.php&quot;,
+                                 array('search' =&gt; array(&quot;\&quot;name\&quot;&quot;, &quot;=&gt;&quot;, &quot;\&quot;Hello PluginLibrary!\&quot;&quot;, &quot;,&quot;),
+                                       'replace' =&gt; &quot;\&quot;name\&quot;=&gt;\&quot;Hello EditCore!\&quot;,&quot;));
+    }
+
+    else if($mybb-&gt;input['hello_pl'] == 'undo')
+    {
+        /**
+         * UNDO EDIT CORE
+         *
+         *   $PL-&gt;edit_core(name, file)
+         *
+         *   If you want to undo your changes, leave out the search.
+         *   This undoes your changes (updates your edits to change nothing).
+         */
+        $result = $PL-&gt;edit_core(&quot;hello_pl&quot;, &quot;inc/plugins/hello_pl.php&quot;);
+    }
+
+    else
+    {
+        // bad input parameter
+        return;
+    }
+
+    if($result === true)
+    {
+        // redirect with success
+        flash_message(&quot;The file inc/plugins/hello_pl.php was modified successfully.&quot;, &quot;success&quot;);
+        admin_redirect(&quot;index.php?module=config-plugins&quot;);
+    }
+
+    else
+    {
+        // redirect with failure (could offer the result string for download instead)
+        flash_message(&quot;The file inc/plugins/hello_pl.php could not be edited. Are the CHMOD settings correct?&quot;, &quot;error&quot;);
+        admin_redirect(&quot;index.php?module=config-plugins&quot;);
+    }
+}
+
+?&gt;
+
+</pre>
+</div>
+</div>
+</body>
+</html>
