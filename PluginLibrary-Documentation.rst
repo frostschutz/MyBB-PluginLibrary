@@ -37,6 +37,11 @@ Installation
   This documentation is intended for plugin developers.
   If you are not making your own plugins, you don't need to read this.
 
+Integration into your Plugin
+============================
+
+Hey, you're the developer. You figure it out.
+
 Function Reference
 ==================
 
