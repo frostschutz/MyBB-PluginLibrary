@@ -74,6 +74,11 @@ class PluginLibrary
      */
     public $version = 0;
 
+    /**
+     * Cache handler.
+     */
+    public $cachehandler;
+
     /* --- Setting groups and settings: --- */
 
     /**
@@ -224,36 +229,113 @@ class PluginLibrary
     /* --- Cache: --- */
 
     /**
+     * Obtain a non-database cache handler.
+     */
+    function _cache_handler()
+    {
+        global $cache;
+
+        if(is_object($cache->handler))
+        {
+            return $cache->handler;
+        }
+
+        if(is_object($this->cachehandler))
+        {
+            return $this->cachehandler;
+        }
+
+        // Fall back to disk handler.
+        require_once MYBB_ROOT.'/inc/cachehandlers/disk.php';
+        $this->cachehandler = new diskCacheHandler();
+        return $this->cachehandler;
+    }
+
+    /**
+     * Read on-demand cache.
+     */
+    function cache_read($name)
+    {
+        global $cache;
+
+        if(isset($cache->cache[$name]))
+        {
+            return $cache->cache[$name];
+        }
+
+        $handler = $this->_cache_handler();
+        $contents = $handler->fetch($name);
+        $cache->cache[$name] = $contents;
+
+        return $contents;
+    }
+
+    /**
+     * Write on-demand cache.
+     */
+    function cache_update($name, $contents)
+    {
+        global $cache;
+
+        $handler = $this->_cache_handler();
+        $cache->cache[$name] = $contents;
+
+        return $handler->put($name, $contents);
+    }
+
+    /**
      * Delete cache.
      *
      * @param string Cache name or title.
      * @param bool Also delete caches starting with name_.
      */
-    function delete_cache($name, $greedy=false)
+    function cache_delete($name, $greedy=false)
     {
         global $db, $cache;
 
-        $name = $db->escape_string($name);
-        $where = "title='{$name}'";
+        // Prepare for database query.
+        $dbname = $db->escape_string($name);
+        $where = "title='{$dbname}'";
 
+        // Delete on-demand or handler cache.
+        $handler = $this->_cache_handler();
+        $handler->delete($name);
+
+        // Greedy?
         if($greedy)
         {
-            $where .= "OR title LIKE '{$name}_%'";
-        }
+            // Collect possible additional names...
 
-        // Handle specialized cache handlers.
-        if(is_object($cache->handler))
-        {
-            $query = $db->simple_select("datacache", "title", $where);
+            // ...from the currently loaded cache...
+            $keys = array_keys($cache->cache);
+            $name .= '_';
+
+            foreach($keys as $key)
+            {
+                if(strpos($key, $name) === 0)
+                {
+                    $names[$key] = 0;
+                }
+            }
+
+            // ...from the database...
+            $where .= " OR title LIKE '{$name}_%'";
+            $query = $db->simple_select('datacache', 'title', $where);
 
             while($row = $db->fetch_array($query))
             {
-                $cache->handler->delete($row['title']);
+                $names[$row['title']] = 0;
+            }
+
+            // ...and delete them all.
+            foreach($names as $key=>$val)
+            {
+                $handler->delete($key);
             }
         }
 
-        // Delete database cache (always present).
-        $db->delete_query("datacache", $where);
+        // Delete database caches too.
+        $db->delete_query('datacache', $where);
     }
 
     /* --- Corefile edits: --- */
