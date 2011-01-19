@@ -513,17 +513,16 @@ class PluginLibrary
             $match = substr($text, $start, $stop-$start);
             $pos = $stop;
 
-            if(isset($edit['replace']))
+            if($edit['replace'])
             {
                 // insert match (commented out)
                 $result[] = $this->_comment($del, $match);
-                // insert replace
-                if(!strlen($edit['replace']) && !strlen($edit['after']))
-                {
-                    $edit['replace'] = ' ';
-                }
 
-                $result[] = $this->_comment($ins, $edit['replace']);
+                // make sure something will be inserted afterwards (uncomment)
+                if(!strlen($edit['after']))
+                {
+                    $edit['after'] = ' ';
+                }
             }
 
             else
