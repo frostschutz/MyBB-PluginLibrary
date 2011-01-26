@@ -470,11 +470,8 @@ class PluginLibrary
             }
         }
 
-        if(count($matches))
-        {
-            ksort($matches);
-            return $matches;
-        }
+        ksort($matches);
+        return $matches;
     }
 
     /**
