@@ -48,7 +48,7 @@ function hello_pl_info()
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
         "version"       => "hello_pl.php",
         "guid"          => "",
-        "compatibility" => "*"
+        "compatibility" => "16*"
         );
 
     // Display some extra information when installed and active.
