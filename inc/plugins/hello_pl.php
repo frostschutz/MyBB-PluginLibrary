@@ -43,7 +43,7 @@ function hello_pl_info()
     $info = array(
         "name"          => "Hello PluginLibrary!",
         "description"   => "A sample plugin for developers that demonstrates the features of the PluginLibrary.",
-        "website"       => "https://github.com/frostschutz/PluginLibrary",
+        "website"       => "http://mods.mybb.com/view/pluginlibrary",
         "author"        => "Andreas Klauer",
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
         "version"       => "hello_pl.php",
@@ -103,7 +103,7 @@ function hello_pl_install()
      *   - if $PL is not set, use require to load the PluginLibrary
      */
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
      * VERSION CHECK
@@ -123,16 +123,16 @@ function hello_pl_install()
 function hello_pl_uninstall()
 {
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
-     * DELETE SETTINGS
+     * SETTINGS DELETE
      *
-     *   $PL->delete_settings(name, greedy)
+     *   $PL->settings_delete(name, greedy)
      *
      *   Delete one or more setting groups and their settings.
      */
-    $PL->delete_settings("hello_pl"
+    $PL->settings_delete("hello_pl"
                          // , true /* optional, multiple groups */
         );
 }
@@ -140,7 +140,7 @@ function hello_pl_uninstall()
 function hello_pl_activate()
 {
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
      * SETTINGS
@@ -186,16 +186,16 @@ function hello_pl_activate()
 function hello_pl_deactivate()
 {
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
-     * DELETE CACHE
+     * CACHE DELETE
      *
-     *   $PL->delete_cache(name, greedy)
+     *   $PL->cache_delete(name, greedy)
      *
      *   Delete one or more caches.
      */
-    $PL->delete_cache("hello_pl"
+    $PL->cache_delete("hello_pl"
                       // , true /* optional, multiple caches */
         );
 }
@@ -211,12 +211,12 @@ function hello_pl_edit()
     }
 
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
      * EDIT CORE
      *
-     *   $PL->edit_core(name, file, search)
+     *   $PL->edit_core(name, file, search, apply)
      *
      *   Make or update one or more changes to a core file.
      *   Edits the file directly or, lacking permissions, returns a string.
@@ -225,7 +225,9 @@ function hello_pl_edit()
     {
         $result = $PL->edit_core("hello_pl", "inc/plugins/hello_pl.php",
                                  array('search' => array("\"name\"", "=>", "\"Hello PluginLibrary!\"", ","),
-                                       'replace' => "\"name\"=>\"Hello EditCore!\","));
+                                       'replace' => "\"name\"=>\"Hello EditCore!\","),
+                                 true // optional, try to apply the change
+            );
     }
 
     else if($mybb->input['hello_pl'] == 'undo')
@@ -238,7 +240,10 @@ function hello_pl_edit()
          *   If you want to undo your changes, leave out the search.
          *   This undoes your changes (updates your edits to change nothing).
          */
-        $result = $PL->edit_core("hello_pl", "inc/plugins/hello_pl.php");
+        $result = $PL->edit_core("hello_pl", "inc/plugins/hello_pl.php",
+                                 array(), // leave search empty, i.e. no edits
+                                 true // optional, try to apply the change
+            );
     }
 
     else
