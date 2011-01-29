@@ -65,7 +65,7 @@ function hello_pl_info()
          * Append parameters to an URL that may or may not have ?query.
          */
 
-        $editurl = $PL->url_append("index.php?module=config-plugins"
+        $editurl = $PL->url_append("index.php?module=config-plugins",
                                    array("hello_pl" => "edit",
                                          "my_post_key" => $mybb->post_code));
         $undourl = $PL->url_append("index.php",
