@@ -200,7 +200,7 @@ class PluginLibrary
      * @param string Internal unique group name.
      * @param bool Also delete groups starting with name_.
      */
-    function delete_settings($name, $greedy=false)
+    function settings_delete($name, $greedy=false)
     {
         global $db;
 
