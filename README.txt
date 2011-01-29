@@ -10,6 +10,6 @@ Users:
 
 Developers:
 
-  Please refer to PluginLibrary-Documentation.html/pdf/txt and / or
+  Please refer to PluginLibrary-Documentation.html and / or
   to the sample plugin inc/plugins/hello_pl.php for detailed information
   on how to use PluginLibrary with your own plugins.
