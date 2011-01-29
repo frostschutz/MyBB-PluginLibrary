@@ -1042,7 +1042,7 @@ function hello_pl_install()
      */
     if(!file_exists(PLUGINLIBRARY))
     {
-        flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;https://github.com/frostschutz/PluginLibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is missing.&quot;, &quot;error&quot;);
+        flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;http://mods.mybb.com/view/pluginlibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is missing.&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
     }
 
@@ -1067,7 +1067,7 @@ function hello_pl_install()
      */
     if($PL-&gt;version &lt; 0)
     {
-        flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;https://github.com/frostschutz/PluginLibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
+        flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;http://mods.mybb.com/view/pluginlibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
     }
 }
