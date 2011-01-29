@@ -454,6 +454,7 @@ class PluginLibrary
 
                 if(isset($matches[$start]))
                 {
+                    $matches[$start][1]['error'] = 'match collides with another edit';
                     $edit['error'] = 'match collides with another edit';
                     return false;
                 }
