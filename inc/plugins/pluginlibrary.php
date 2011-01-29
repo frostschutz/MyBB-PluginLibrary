@@ -497,13 +497,17 @@ class PluginLibrary
         foreach($matches as $start => $val)
         {
             $stop = $val[0];
-            $edit = $val[1];
+            $edit = &$val[1];
 
             if($start < $pos)
             {
                 $edit['error'] = 'match overlaps with another edit';
+                $previous_edit['error'] = 'match overlaps with another edit';
                 return false;
             }
+
+            // Keep previous edit for overlapping detection
+            $previous_edit = &$edit;
 
             // unmodified text before match
             $result[] = substr($text, $pos, $start-$pos);
