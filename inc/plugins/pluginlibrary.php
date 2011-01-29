@@ -72,7 +72,7 @@ class PluginLibrary
     /**
      * Version number.
      */
-    public $version = 0;
+    public $version = 1;
 
     /**
      * Cache handler.
