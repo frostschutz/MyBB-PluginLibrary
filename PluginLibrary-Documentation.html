@@ -338,7 +338,7 @@ also be able to use <em>PluginLibrary</em>.</p>
 <li><a class="reference internal" href="#function-reference" id="id8">Function Reference</a><ul>
 <li><a class="reference internal" href="#settings" id="id9">Settings</a><ul>
 <li><a class="reference internal" href="#id1" id="id10">settings()</a></li>
-<li><a class="reference internal" href="#delete-settings" id="id11">delete_settings()</a></li>
+<li><a class="reference internal" href="#settings-delete" id="id11">settings_delete()</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#cache" id="id12">Cache</a><ul>
@@ -521,11 +521,11 @@ $PL-&gt;settings('plugin_name',
 which contains four settings <em>plugin_name_no</em>, <em>plugin_name_yes</em>,
 <em>plugin_name_text</em> and <em>plugin_name_textarea</em>.</p>
 </div>
-<div class="section" id="delete-settings">
-<h3><a class="toc-backref" href="#contents">delete_settings()</a></h3>
+<div class="section" id="settings-delete">
+<h3><a class="toc-backref" href="#contents">settings_delete()</a></h3>
 <p><strong>Description</strong>:</p>
 <blockquote>
-<p><em>void</em> <strong>delete_settings</strong> (<em>string</em> $name, <em>bool</em> $greedy=false)</p>
+<p><em>void</em> <strong>settings_delete</strong> (<em>string</em> $name, <em>bool</em> $greedy=false)</p>
 <p>This function deletes one (or more) setting groups and settings.</p>
 </blockquote>
 <p><strong>Parameters</strong>:</p>
@@ -543,7 +543,7 @@ Useful if your plugin has more than just one setting group.</dd>
 This function does not have a return value.</blockquote>
 <p><strong>Example</strong>:</p>
 <pre class="literal-block">
-$PL-&gt;delete_settings('plugin_name');
+$PL-&gt;settings_delete('plugin_name');
 </pre>
 <p>The above example will delete the setting group <em>plugin_name</em> and all its settings.</p>
 </div>
@@ -976,7 +976,7 @@ function hello_pl_info()
     $info = array(
         &quot;name&quot;          =&gt; &quot;Hello PluginLibrary!&quot;,
         &quot;description&quot;   =&gt; &quot;A sample plugin for developers that demonstrates the features of the PluginLibrary.&quot;,
-        &quot;website&quot;       =&gt; &quot;https://github.com/frostschutz/PluginLibrary&quot;,
+        &quot;website&quot;       =&gt; &quot;http://mods.mybb.com/view/pluginlibrary&quot;,
         &quot;author&quot;        =&gt; &quot;Andreas Klauer&quot;,
         &quot;authorsite&quot;    =&gt; &quot;mailto:Andreas.Klauer&#64;metamorpher.de&quot;,
         &quot;version&quot;       =&gt; &quot;hello_pl.php&quot;,
@@ -1036,7 +1036,7 @@ function hello_pl_install()
      *   - if $PL is not set, use require to load the PluginLibrary
      */
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
      * VERSION CHECK
@@ -1056,16 +1056,16 @@ function hello_pl_install()
 function hello_pl_uninstall()
 {
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
-     * DELETE SETTINGS
+     * SETTINGS DELETE
      *
-     *   $PL-&gt;delete_settings(name, greedy)
+     *   $PL-&gt;settings_delete(name, greedy)
      *
      *   Delete one or more setting groups and their settings.
      */
-    $PL-&gt;delete_settings(&quot;hello_pl&quot;
+    $PL-&gt;settings_delete(&quot;hello_pl&quot;
                          // , true /* optional, multiple groups */
         );
 }
@@ -1073,7 +1073,7 @@ function hello_pl_uninstall()
 function hello_pl_activate()
 {
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
      * SETTINGS
@@ -1119,16 +1119,16 @@ function hello_pl_activate()
 function hello_pl_deactivate()
 {
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
-     * DELETE CACHE
+     * CACHE DELETE
      *
-     *   $PL-&gt;delete_cache(name, greedy)
+     *   $PL-&gt;cache_delete(name, greedy)
      *
      *   Delete one or more caches.
      */
-    $PL-&gt;delete_cache(&quot;hello_pl&quot;
+    $PL-&gt;cache_delete(&quot;hello_pl&quot;
                       // , true /* optional, multiple caches */
         );
 }
@@ -1144,12 +1144,12 @@ function hello_pl_edit()
     }
 
     global $PL;
-    $PL or require_once(PLUGINLIBRARY);
+    $PL or require_once PLUGINLIBRARY;
 
     /**
      * EDIT CORE
      *
-     *   $PL-&gt;edit_core(name, file, search)
+     *   $PL-&gt;edit_core(name, file, search, apply)
      *
      *   Make or update one or more changes to a core file.
      *   Edits the file directly or, lacking permissions, returns a string.
@@ -1158,7 +1158,9 @@ function hello_pl_edit()
     {
         $result = $PL-&gt;edit_core(&quot;hello_pl&quot;, &quot;inc/plugins/hello_pl.php&quot;,
                                  array('search' =&gt; array(&quot;\&quot;name\&quot;&quot;, &quot;=&gt;&quot;, &quot;\&quot;Hello PluginLibrary!\&quot;&quot;, &quot;,&quot;),
-                                       'replace' =&gt; &quot;\&quot;name\&quot;=&gt;\&quot;Hello EditCore!\&quot;,&quot;));
+                                       'replace' =&gt; &quot;\&quot;name\&quot;=&gt;\&quot;Hello EditCore!\&quot;,&quot;),
+                                 true // optional, try to apply the change
+            );
     }
 
     else if($mybb-&gt;input['hello_pl'] == 'undo')
@@ -1171,7 +1173,10 @@ function hello_pl_edit()
          *   If you want to undo your changes, leave out the search.
          *   This undoes your changes (updates your edits to change nothing).
          */
-        $result = $PL-&gt;edit_core(&quot;hello_pl&quot;, &quot;inc/plugins/hello_pl.php&quot;);
+        $result = $PL-&gt;edit_core(&quot;hello_pl&quot;, &quot;inc/plugins/hello_pl.php&quot;,
+                                 array(), // leave search empty, i.e. no edits
+                                 true // optional, try to apply the change
+            );
     }
 
     else
