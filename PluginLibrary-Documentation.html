@@ -987,6 +987,25 @@ function hello_pl_info()
     // Display some extra information when installed and active.
     if(hello_pl_is_installed() &amp;&amp; $plugins_cache['active']['hello_pl'])
     {
+        global $PL;
+        $PL or require_once PLUGINLIBRARY;
+
+        /**
+         * URL APPEND
+         *
+         * $PL-&gt;url_append($url, $params, $sep, $encode)
+         *
+         * Append parameters to an URL that may or may not have ?query.
+         */
+
+        $editurl = $PL-&gt;url_append(&quot;index.php?module=config-plugins&quot;
+                                   array(&quot;hello_pl&quot; =&gt; &quot;edit&quot;,
+                                         &quot;my_post_key&quot; =&gt; $mybb-&gt;post_code));
+        $undourl = $PL-&gt;url_append(&quot;index.php&quot;,
+                                   array(&quot;module&quot; =&gt; &quot;config-plugins&quot;,
+                                         &quot;hello_pl&quot; =&gt; &quot;undo&quot;,
+                                         &quot;my_post_key&quot; =&gt; $mybb-&gt;post_code));
+
         $editurl = &quot;index.php?module=config-plugins&amp;amp;hello_pl=edit&amp;amp;my_post_key=&quot;.$mybb-&gt;post_code;
         $undourl = &quot;index.php?module=config-plugins&amp;amp;hello_pl=undo&amp;amp;my_post_key=&quot;.$mybb-&gt;post_code;
 
