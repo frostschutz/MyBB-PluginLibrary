@@ -109,7 +109,7 @@ function hello_pl_install()
      */
     if(!file_exists(PLUGINLIBRARY))
     {
-        flash_message("The selected plugin could not be installed because <a href=\"https://github.com/frostschutz/PluginLibrary\">PluginLibrary</a> is missing.", "error");
+        flash_message("The selected plugin could not be installed because <a href=\"http://mods.mybb.com/view/pluginlibrary\">PluginLibrary</a> is missing.", "error");
         admin_redirect("index.php?module=config-plugins");
     }
 
@@ -134,7 +134,7 @@ function hello_pl_install()
      */
     if($PL->version < 0)
     {
-        flash_message("The selected plugin could not be installed because <a href=\"https://github.com/frostschutz/PluginLibrary\">PluginLibrary</a> is too old.", "error");
+        flash_message("The selected plugin could not be installed because <a href=\"http://mods.mybb.com/view/pluginlibrary\">PluginLibrary</a> is too old.", "error");
         admin_redirect("index.php?module=config-plugins");
     }
 }
