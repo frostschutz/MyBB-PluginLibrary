@@ -1,6 +1,6 @@
-===================================
- PluginLibrary BETA 0 for MyBB 1.6
-===================================
+==============================
+ PluginLibrary 1 for MyBB 1.6
+==============================
 
 Documentation for Developers
 ============================
@@ -191,12 +191,12 @@ The above example will result in a setting group called *plugin_name*,
 which contains four settings *plugin_name_no*, *plugin_name_yes*,
 *plugin_name_text* and *plugin_name_textarea*.
 
-delete_settings()
+settings_delete()
 +++++++++++++++++
 
 **Description**:
 
-  *void* **delete_settings** (*string* $name, *bool* $greedy=false)
+  *void* **settings_delete** (*string* $name, *bool* $greedy=false)
 
   This function deletes one (or more) setting groups and settings.
 
@@ -215,19 +215,82 @@ delete_settings()
 
 **Example**::
 
-  $PL->delete_settings('plugin_name');
+  $PL->settings_delete('plugin_name');
 
 The above example will delete the setting group *plugin_name* and all its settings.
 
 Cache
 ~~~~~
 
-delete_cache()
+cache_read()
+++++++++++++
+
+**Description**:
+
+  *mixed* **cache_read** (*string* $name)
+
+  This function reads an on-demand cache and returns its value (if present).
+  Note that on-demand cache is allowed to vanish any time.
+
+**Parameters**:
+
+  **name**
+    The name of the cache.
+
+**Return value**:
+
+  Returns the contents that were previously stored, or false.
+
+**Example**::
+
+  $cache = $PL->cache_read('my_plugin_cache');
+
+  if($cache)
+  {
+      echo $cache;
+  }
+
+Reads and prints the contents of the previous cache, if present.
+
+cache_update()
 ++++++++++++++
 
 **Description**:
 
-  *void* **delete_cache** (*string* $name, *bool* $greedy=false)
+  *bool* **cache_update** (*string* $name, *mixed* $contents)
+
+  This function creates or updates an on-demand cache with contents.
+  Unlike MyBB's built-in $cache, it does not use the database nor
+  does it load the cache automatically. Instead it uses a more
+  specialized cache handler (by default: disk) directly, and you
+  have to load the cache on demand using $PL->cache_read().
+
+**Parameters**:
+
+  **name**
+    The name of the cache.
+
+  **contents**
+    The contents of the cache.
+
+**Return value**:
+
+  Returns true on success and false on failure.
+
+**Example**::
+
+  $PL->update_cache('my_plugin_cache', $somedata);
+
+This example stores $somedata in a cache called my_plugin_cache.
+This cache will not be loaded automatically, but has to be loaded
+on demand using $PL->cache_read().
+
+cache_delete()
+++++++++++++++
+
+**Description**:
+
+  *void* **cache_delete** (*string* $name, *bool* $greedy=false)
 
   This function safely deletes one (or more) caches.
 
@@ -248,7 +311,7 @@ delete_cache()
 
   $cache->update('plugin_name', $value);
   $value = $cache->read('plugin_name');
-  $PL->delete_cache('plugin_name');
+  $PL->cache_delete('plugin_name');
 
 This example shows how to create/update/read a cache (built-in MyBB
 functionality), and how to delete a cache using *PluginLibrary*.
@@ -526,7 +589,7 @@ The result is 'showthread.php?tid=1&amp;foo=bar&amp;bar=foo'.
 .. Template for additional functions:
 ..
 .. function
-.. --------
+.. ++++++++
 ..
 .. **Description**:
 ..
