@@ -424,7 +424,7 @@ class PluginLibrary
 
         foreach(array_reverse($search) as $needle)
         {
-            $start = strrpos($text, $needle, -strlen($text)+$start);
+            $start = strrpos($text, $needle, -strlen($text)+$start-strlen($needle));
         }
 
         return $stop;
