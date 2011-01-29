@@ -31,7 +31,7 @@ function pluginlibrary_info()
     return array(
         "name"          => "PluginLibrary",
         "description"   => "A collection of useful functions for other plugins.",
-        "website"       => "https://github.com/frostschutz/PluginLibrary",
+        "website"       => "http://mods.mybb.com/view/pluginlibrary",
         "author"        => "Andreas Klauer",
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
         "version"       => "1",
