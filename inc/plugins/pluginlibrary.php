@@ -452,10 +452,15 @@ class PluginLibrary
                 $edit['matches'][] = array($start, $stop,
                                            substr($text, $start, $stop-$start));
 
-                if(isset($matches['start']) ||
-                   count($edit['matches']) > 1 && !$edit['multi'])
+                if(isset($matches[$start]))
                 {
-                    // collision or non-unique match
+                    $edit['error'] = 'match collides with another edit';
+                    return false;
+                }
+
+                else if(count($edit['matches']) > 1 && !$edit['multi'])
+                {
+                    $edit['error'] = 'multiple matches not allowed for this edit';
                     return false;
                 }
 
@@ -465,7 +470,7 @@ class PluginLibrary
 
             if(!count($edit['matches']) && !$edit['none'])
             {
-                // pattern did not match
+                $edit['error'] = 'zero matches not allowed for this edit';
                 return false;
             }
         }
@@ -496,7 +501,7 @@ class PluginLibrary
 
             if($start < $pos)
             {
-                // something is overlapping
+                $edit['error'] = 'match overlaps with another edit';
                 return false;
             }
 
