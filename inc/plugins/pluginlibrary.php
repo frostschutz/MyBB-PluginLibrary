@@ -34,7 +34,7 @@ function pluginlibrary_info()
         "website"       => "http://mods.mybb.com/view/pluginlibrary",
         "author"        => "Andreas Klauer",
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
-        "version"       => "1",
+        "version"       => "2",
         "guid"          => "839e9d72e2875a51fccbc0257dfeda03",
         "compatibility" => "16*"
         );
@@ -72,7 +72,7 @@ class PluginLibrary
     /**
      * Version number.
      */
-    public $version = 1;
+    public $version = 2;
 
     /**
      * Cache handler.

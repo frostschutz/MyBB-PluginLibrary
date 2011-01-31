@@ -1,5 +1,5 @@
 ==============================
- PluginLibrary 1 for MyBB 1.6
+ PluginLibrary 2 for MyBB 1.6
 ==============================
 
 Documentation for Developers
