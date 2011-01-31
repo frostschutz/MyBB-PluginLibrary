@@ -356,7 +356,8 @@ edit_core()
       Lines that should be inserted *after* the located code.
 
     *replace*
-      Lines that should *replace* the located code.
+      Lines that should *replace* the located code, or empty string
+      or any true value if it should be removed (*replace* with nothing).
 
     *multi*
       If set, allow the search pattern to match more than once.
