@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.7: http://docutils.sourceforge.net/" />
-<title>PluginLibrary 1 for MyBB 1.6</title>
+<title>PluginLibrary 2 for MyBB 1.6</title>
 <style type="text/css">
 
 /*
@@ -310,8 +310,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pluginlibrary-1-for-mybb-1-6">
-<h1 class="title">PluginLibrary 1 for MyBB 1.6</h1>
+<div class="document" id="pluginlibrary-2-for-mybb-1-6">
+<h1 class="title">PluginLibrary 2 for MyBB 1.6</h1>
 <h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
 
 <p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
@@ -1074,7 +1074,7 @@ function hello_pl_install()
      *   - compare $PL-&gt;version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL-&gt;version &lt; 0)
+    if($PL-&gt;version &lt; 2)
     {
         flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;http://mods.mybb.com/view/pluginlibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
