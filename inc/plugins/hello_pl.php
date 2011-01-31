@@ -246,6 +246,7 @@ function hello_pl_edit()
                                  array('search' => array("\"name\"", "=>", "\"Hello PluginLibrary!\"", ","),
                                        'replace' => "\"name\"=>\"Hello EditCore!\","),
                                  true // optional, try to apply the change
+                                 // , $debug // optional, obtain debug info about the edits
             );
     }
 
