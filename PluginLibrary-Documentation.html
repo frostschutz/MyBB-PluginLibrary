@@ -646,7 +646,7 @@ functionality), and how to delete a cache using <em>PluginLibrary</em>.</p>
 <h3><a class="toc-backref" href="#contents">edit_core()</a></h3>
 <p><strong>Description</strong>:</p>
 <blockquote>
-<p><em>mixed</em> <strong>edit_core</strong> (<em>string</em> $name, <em>string</em> $file, <em>array</em> $edits=array(), <em>bool</em> $apply=false)</p>
+<p><em>mixed</em> <strong>edit_core</strong> (<em>string</em> $name, <em>string</em> $file, <em>array</em> $edits=array(), <em>bool</em> $apply=false, <em>array</em> &amp;$debug=null)</p>
 <p>This function makes, updates, and undoes simple, line based changes to PHP/JS/CSS files.
 Using search patterns, it locates blocks of one or more lines of code, and inserts new code
 before or after them, or replaces them.</p>
@@ -680,14 +680,23 @@ By default, the edit has to be a unique match.</dd>
 <dt><em>none</em></dt>
 <dd>If set, allow the search pattern to not match at all.
 By default, the edit is mandatory to match.</dd>
-<dt><em>matches</em> (debugging only)</dt>
+<dt><em>matches</em> (debugging only, see below)</dt>
 <dd>For debugging purposes, <em>edits</em> can be passed by reference, in which case
 an entry <em>matches</em> will be created, showing how often and in which lines
 a match was found.</dd>
+<dt><em>error</em> (debugging only, see below)</dt>
+<dd>Verbatim error message that explains why this edit failed</dd>
 </dl>
 </dd>
 <dt><strong>apply</strong> (optional)</dt>
 <dd>If set, try to apply the changes directly to the file (requires write permissions).</dd>
+<dt><strong>debug</strong> (optional)</dt>
+<dd><p class="first">If you want to obtain debug info about the edit, pass a variable here.
+It will be filled with the modified <strong>edits</strong> array that has the debug
+info included.</p>
+<p class="last">Before PluginLibrary 2, you could pass the $edits parameter as reference
+directly, however call_time_pass_reference is deprecated in PHP 5.3.</p>
+</dd>
 </dl>
 </blockquote>
 <p><strong>Return value</strong>:</p>
@@ -981,7 +990,7 @@ function hello_pl_info()
         &quot;authorsite&quot;    =&gt; &quot;mailto:Andreas.Klauer&#64;metamorpher.de&quot;,
         &quot;version&quot;       =&gt; &quot;hello_pl.php&quot;,
         &quot;guid&quot;          =&gt; &quot;&quot;,
-        &quot;compatibility&quot; =&gt; &quot;*&quot;
+        &quot;compatibility&quot; =&gt; &quot;16*&quot;
         );
 
     // Display some extra information when installed and active.

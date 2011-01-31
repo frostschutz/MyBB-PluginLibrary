@@ -324,7 +324,7 @@ edit_core()
 
 **Description**:
 
-  *mixed* **edit_core** (*string* $name, *string* $file, *array* $edits=array(), *bool* $apply=false)
+  *mixed* **edit_core** (*string* $name, *string* $file, *array* $edits=array(), *bool* $apply=false, *array* &$debug=null)
 
   This function makes, updates, and undoes simple, line based changes to PHP/JS/CSS files.
   Using search patterns, it locates blocks of one or more lines of code, and inserts new code
@@ -366,13 +366,24 @@ edit_core()
       If set, allow the search pattern to not match at all.
       By default, the edit is mandatory to match.
 
-    *matches* (debugging only)
+    *matches* (debugging only, see below)
       For debugging purposes, *edits* can be passed by reference, in which case
       an entry *matches* will be created, showing how often and in which lines
       a match was found.
 
+    *error* (debugging only, see below)
+      Verbatim error message that explains why this edit failed
+
   **apply** (optional)
     If set, try to apply the changes directly to the file (requires write permissions).
+
+  **debug** (optional)
+    If you want to obtain debug info about the edit, pass a variable here.
+    It will be filled with the modified **edits** array that has the debug
+    info included.
+
+    Before PluginLibrary 2, you could pass the $edits parameter as reference
+    directly, however call_time_pass_reference is deprecated in PHP 5.3.
 
 **Return value**:
 

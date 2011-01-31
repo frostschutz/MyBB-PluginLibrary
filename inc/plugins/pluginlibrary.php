@@ -557,7 +557,7 @@ class PluginLibrary
     /**
      * edit core
      */
-    function edit_core($name, $file, $edits=array(), $apply=false)
+    function edit_core($name, $file, $edits=array(), $apply=false, &$debug=null)
     {
         $ins = "/* + PL:{$name} + */ ";
         $del = "/* - PL:{$name} - /* ";
@@ -589,6 +589,9 @@ class PluginLibrary
 
         // Step 3: perform edits.
         $result = $this->_edit($result, $edits, $ins, $del);
+
+        // call_time_pass_reference :-(
+        $debug = $edits;
 
         if($result === false)
         {
