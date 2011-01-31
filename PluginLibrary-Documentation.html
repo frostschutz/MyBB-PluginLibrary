@@ -673,7 +673,8 @@ Detailed explanation on how search patterns work, see below.</dd>
 <dt><em>after</em></dt>
 <dd>Lines that should be inserted <em>after</em> the located code.</dd>
 <dt><em>replace</em></dt>
-<dd>Lines that should <em>replace</em> the located code.</dd>
+<dd>Lines that should <em>replace</em> the located code, or empty string
+or any true value if it should be removed (<em>replace</em> with nothing).</dd>
 <dt><em>multi</em></dt>
 <dd>If set, allow the search pattern to match more than once.
 By default, the edit has to be a unique match.</dd>
@@ -1188,6 +1189,7 @@ function hello_pl_edit()
                                  array('search' =&gt; array(&quot;\&quot;name\&quot;&quot;, &quot;=&gt;&quot;, &quot;\&quot;Hello PluginLibrary!\&quot;&quot;, &quot;,&quot;),
                                        'replace' =&gt; &quot;\&quot;name\&quot;=&gt;\&quot;Hello EditCore!\&quot;,&quot;),
                                  true // optional, try to apply the change
+                                 // , $debug // optional, obtain debug info about the edits
             );
     }
 
