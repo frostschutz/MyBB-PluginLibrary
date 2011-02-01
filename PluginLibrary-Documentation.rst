@@ -107,7 +107,7 @@ following example checks that *PluginLibrary* is at least version 1.
 
 ::
 
-  if($PL->version < 1)
+  if($PL->version < 2)
   {
       flash_message("PluginLibrary is too old.", "error");
       admin_redirect("index.php?module=config-plugins");

@@ -443,7 +443,7 @@ version of <em>PluginLibrary</em>), in addition to the Dependency Check,
 you can also check the version number of <em>PluginLibrary</em>. The
 following example checks that <em>PluginLibrary</em> is at least version 1.</p>
 <pre class="literal-block">
-if($PL-&gt;version &lt; 1)
+if($PL-&gt;version &lt; 2)
 {
     flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
     admin_redirect(&quot;index.php?module=config-plugins&quot;);
