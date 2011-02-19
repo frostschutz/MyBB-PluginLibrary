@@ -706,6 +706,230 @@ class PluginLibrary
 
         return $url.$append;
     }
+
+    /* --- XML: --- */
+
+    /**
+     * _xml_element
+     */
+    function _xml_tag($tag, $content, $indent=0)
+    {
+        $nl = "\n" . str_repeat(' ', $indent);
+        $result = '';
+
+        if(is_string($content))
+        {
+            // We can either htmlspecialchars,
+            $a = htmlspecialchars($content);
+
+            // or cdata (properly escaped),
+            $b = '<![CDATA['
+                .str_replace(']]>', ']]]]><![CDATA[>', $content)
+                .']]>';
+
+            // just pick whatever is shorter
+            $content = (strlen($a) <= strlen($b) ? $a : $b);
+
+            $result .= "{$nl}<{$tag}>{$content}</{$tag}>";
+        }
+
+        else if(is_bool($content))
+        {
+            $result .= "{$nl}<{$tag} type=\"BOOL\">{$content}</{$tag}>";
+        }
+
+        else if(is_int($content))
+        {
+            $result .= "{$nl}<{$tag} type=\"INT\">{$content}</{$tag}>";
+        }
+
+        else if(is_float($content))
+        {
+            $result .= "{$nl}<{$tag} type=\"FLOAT\">{$content}</{$tag}>";
+        }
+
+        else if(is_array($content))
+        {
+            $result .= "{$nl}<{$tag}>".$this->_xml_array($content, $indent+2)."{$nl}</{$tag}>";
+        }
+
+        return $result;
+    }
+
+    /**
+     * _xml_array
+     */
+    function _xml_array($array, $indent=0)
+    {
+        $nl = "\n".str_repeat(' ', $indent);
+        $nl2 = $nl.'  ';
+        $result = '';
+
+        foreach($array as $key => $value)
+        {
+            $key = $this->_xml_tag('key', $key, $indent+4);
+
+            if($key)
+            {
+                $value = $this->_xml_tag('value', $value, $indent+4);
+
+                if($value)
+                {
+                    $result .= "{$nl2}<element>{$key}{$value}{$nl2}</element>";
+                }
+            }
+        }
+
+        return "{$nl}<array>{$result}{$nl}</array>";
+    }
+
+    /**
+     * xml_export
+     */
+    function xml_export($data,
+                        $comment='MyBB PluginLibrary XML-Export :: {time}',
+                        $endcomment='End of file.')
+    {
+        $result = '';
+
+        if(is_array($data))
+        {
+            $xml = $this->_xml_array($data);
+        }
+
+        else
+        {
+            $xml = $this->_xml_tag('value', $data);
+        }
+
+        if($xml)
+        {
+            $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+            $time = date('c', TIME_NOW);
+
+            if($comment)
+            {
+                $comment = str_replace('{time}', $time, $comment);
+                $result .= "<!-- {$comment} -->";
+            }
+
+            $result .= $xml."\n";
+
+            if($endcomment)
+            {
+                $endcomment = str_replace('{time}', $time, $endcomment);
+                $result .= "<!-- {$endcomment} -->\n";
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * xml_import
+     */
+    function xml_import($xml, &$error=null)
+    {
+        $parser = xml_parser_create();
+        $stack = array();
+
+        if(xml_parse_into_struct($parser, $xml, $values))
+        {
+            foreach($values as $value)
+            {
+                // Convert data
+                switch(strtoupper($value['attributes']['TYPE']))
+                {
+                    case 'BOOL':
+                        $value['value'] = $value['value'] && true;
+                        break;
+                    case 'INT':
+                        $value['value'] = intval($value['value']);
+                        break;
+                    case 'FLOAT':
+                        $value['value'] = floatval($value['value']);
+                        break;
+                }
+
+                $input = strtolower("{$value['tag']}-{$value['type']}");
+
+                // Parse XML element (sloppy)
+                switch($input)
+                {
+                    case 'array-complete':
+                    case 'array-open':
+                        // Put array on stack
+                        array_unshift($stack, array());
+                        break;
+
+                    case 'element-close':
+                        // Put key, value in array
+                        // Remove value, key from stack
+                        $stack[2][$stack[1]] = $stack[0];
+                        array_shift($stack);
+                        array_shift($stack);
+                        break;
+
+                    case 'element-open':
+                        // Put key, value on stack
+                        array_unshift($stack, null, null);
+                        break;
+
+                    case 'key-complete':
+                        // Set key
+                        $stack[1] = $value['value'];
+                        break;
+
+                    case 'value-complete':
+                        // Set value
+                        $stack[0] = $value['value'];
+                        break;
+
+                    case 'value-open':
+                        // Remove value from stack (new array should follow)
+                        array_shift($stack);
+                        break;
+
+                    default:
+                        // Ignore others.
+                        break;
+                }
+
+                // If there is something wrong, quit early.
+                if(!sizeof($stack))
+                {
+                    break;
+                }
+            }
+
+            // The stack should contain a single value now
+            if(sizeof($stack) == 1)
+            {
+                $result = $stack[0];
+            }
+
+            else
+            {
+                $error = array('line' => -1,
+                               'code' => -1,
+                               'error' => -1,
+                               'message' => 'XML is valid, but there is no data to import.');
+            }
+        }
+
+        else
+        {
+            // collect error information for debugging purposes
+            $lines = explode("\n", $xml);
+            $error = array('line' => xml_get_current_line_number($parser),
+                           'code' => $lines[xml_get_current_line_number($parser)-1],
+                           'error' => xml_get_error_code($parser),
+                           'message' => xml_error_string(xml_get_error_code($parser)));
+        }
+
+        xml_parser_free($parser);
+        return $result;
+    }
 }
 
 global $PL;
