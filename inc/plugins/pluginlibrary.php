@@ -863,6 +863,10 @@ class PluginLibrary
                     case 'FLOAT':
                         $value['value'] = floatval($value['value']);
                         break;
+                    default:
+                        // Assume string. Mainly for NULL => ''.
+                        $value['value'] = strval($value['value']);
+                        break;
                 }
 
                 $input = strtolower("{$value['tag']}-{$value['type']}");
