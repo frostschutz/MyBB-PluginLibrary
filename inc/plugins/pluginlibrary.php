@@ -728,7 +728,7 @@ class PluginLibrary
                 .']]>';
 
             // just pick whatever is shorter
-            $content = (strlen($a) <= strlen($b) ? $a : $b);
+            $content = (strlen($a) < strlen($b) ? $a : $b);
 
             $result .= "{$nl}<{$tag}>{$content}</{$tag}>";
         }
@@ -786,9 +786,7 @@ class PluginLibrary
     /**
      * xml_export
      */
-    function xml_export($data,
-                        $comment='MyBB PluginLibrary XML-Export :: {time}',
-                        $endcomment='End of file.')
+    function xml_export($data, $filename=false, $comment='MyBB PluginLibrary XML-Export :: {time}', $endcomment='End of file.')
     {
         $result = '';
 
@@ -819,6 +817,22 @@ class PluginLibrary
             {
                 $endcomment = str_replace('{time}', $time, $endcomment);
                 $result .= "<!-- {$endcomment} -->\n";
+            }
+
+            if($filename)
+            {
+                // Filename encoding sucks.
+                $filename = trim(basename('/'.$filename));
+
+                // Output the XML directly.
+                @header('Content-Type: application/xml; charset=UTF-8');
+                @header('Expires: Sun, 20 Feb 2011 13:47:47 GMT'); // past
+                @header('Last-Modified: '.gmdate('D, d M Y H:i:s T'));
+                @header('Pragma: no-cache');
+                @header('Content-Disposition: attachment; filename="'.$filename.'"');
+                @header('Content-Length: '.strlen($xml));
+                echo $xml;
+                exit;
             }
         }
 
