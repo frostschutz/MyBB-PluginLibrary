@@ -707,8 +707,6 @@ class PluginLibrary
         return $url.$append;
     }
 
-    /* --- XML: --- */
-
     /**
      * _xml_element
      */

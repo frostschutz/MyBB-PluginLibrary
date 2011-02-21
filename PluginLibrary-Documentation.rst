@@ -1,5 +1,5 @@
 ==============================
- PluginLibrary 2 for MyBB 1.6
+ PluginLibrary 3 for MyBB 1.6
 ==============================
 
 Documentation for Developers
@@ -597,6 +597,85 @@ The result is '\http://domain.tld/something?foo=bar&amp;bar=foo'.
   $PL->url_append('showthread.php?tid=1', array('foo' => 'bar', 'bar' => 'foo'));
 
 The result is 'showthread.php?tid=1&amp;foo=bar&amp;bar=foo'.
+
+xml_export()
+++++++++++++
+
+**Description**:
+
+  *string* **xml_export** (*mixed* $data, *string* $filename=false, *string* $comment='MyBB PluginLibrary XML-Export :: {time}', *string* $endcomment='End of file.')
+
+  Export arbitrary data as XML, so it can be shared with other users.
+
+**Parameters**:
+
+  **data**
+    The data that should be exported. Allowed types are bool, int, float,
+    string and array. Arrays may be multi-dimensional, but they should
+    not contain any other types (object instances won't be exported),
+    and the array structure must not be self-referencing / recursive.
+
+  **filename** (optional)
+    If given, the exported XML will be offered as download instead of
+    returning the XML string. For this to work, headers must not be
+    already sent.
+
+  **comment** (optional)
+    By default the exported XML contains a short comment explaining
+    what the file is and when it was created. A custom comment can
+    be set here, or if the value is false, the comment can be omitted
+    entirely. In the given string, {time} will be replaced with the
+    current time and date.
+
+  **endcomment** (optional)
+    Another comment that is placed at the end of the file.
+
+**Return value**:
+
+  Unless the filename parameter was given, the data is returned as
+  XML string.
+
+**Example**::
+
+  $PL->xml_export($some_data, 'some_data.xml');
+
+Lets the user download $some_data as some_data.xml file.
+
+xml_import()
+++++++++++++
+
+**Description**:
+
+  *mixed* **xml_import** (*string* $xml, *array* &$error=null)
+
+  Import data that was previously exported with xml_export().
+
+.. note::
+  This really only works with XML files created by xml_export()
+  and nothing else. If you're looking for a generic XML parser,
+  try MyBB's *inc/class_xml.php* or PHP's XML Parser.
+
+**Parameters**:
+
+  **xml**
+    The string (or file contents) of the xml_export() data.
+
+  **error** (optional)
+    If you want debug info about what went wrong when parsing the XML data,
+    pass a variable here. It will be filled with an array that contains
+    line number, code in that line, XML Parser error code, and XML Parser
+    error message elements.
+
+**Return value**:
+
+  On success, whatever data was exported in the XML, will be returned.
+
+**Example**::
+
+  $xml = file_get_contents('some_data.xml');
+  $some_data = $PL->xml_import($xml);
+
+Loads $some_data from a file called some_data.xml.
 
 .. Template for additional functions:
 ..
