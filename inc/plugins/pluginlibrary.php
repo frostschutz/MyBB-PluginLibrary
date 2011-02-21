@@ -829,7 +829,7 @@ class PluginLibrary
                 @header('Pragma: no-cache');
                 @header('Content-Disposition: attachment; filename="'.$filename.'"');
                 @header('Content-Length: '.strlen($xml));
-                echo $xml;
+                echo $result;
                 exit;
             }
         }
