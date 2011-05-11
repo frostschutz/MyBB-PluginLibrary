@@ -148,7 +148,7 @@ class PluginLibrary
             }
 
             // Escape input values.
-            $vsetting = array_map(array($db, 'escape_string'), $setting);
+            $setting = array_map(array($db, 'escape_string'), $setting);
 
             // Add missing default values.
             $disporder += 1;
