@@ -327,6 +327,17 @@ class PluginLibrary
                 $names[$row['title']] = 0;
             }
 
+            // ...from the filesystem...
+            $start = strlen(MYBB_ROOT."cache/");
+            foreach((array)@glob(MYBB_ROOT."cache/{$name}*.php") as $filename)
+            {
+                if($filename)
+                {
+                    $filename = substr($filename, $start, strlen($filename)-4-$start);
+                    $names[$filename] = 0;
+                }
+            }
+
             // ...and delete them all.
             foreach($names as $key=>$val)
             {
