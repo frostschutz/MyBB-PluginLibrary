@@ -356,7 +356,12 @@ class PluginLibrary
      */
     function _comment($comment, $code)
     {
-        if(!strlen($code))
+        if(is_array($code))
+        {
+            $code = implode("\n", $code);
+        }
+
+        if(!is_string($code) || !strlen($code))
         {
             return "";
         }
@@ -531,21 +536,18 @@ class PluginLibrary
             $match = substr($text, $start, $stop-$start);
             $pos = $stop;
 
-            if($edit['replace'] || is_string($edit['replace']))
+            $dirty = 0;
+
+            if($edit['replace']
+               || is_string($edit['replace']) || is_array($edit['replace']))
             {
                 // insert match (commented out)
                 $result[] = $this->_comment($del, $match);
+                $result[] = $this->_comment($ins, $edit['replace']);
 
-                // Insert replacement, if it's a string
-                if(is_string($edit['replace']) && strlen($edit['replace']))
+                if(!strlen($result[count($result)-1]))
                 {
-                    $result[] = $this->_comment($ins, $edit['replace']);
-                }
-
-                // make sure something will be inserted afterwards (uncomment)
-                else if(!strlen($edit['after']))
-                {
-                    $edit['after'] = ' ';
+                    $dirty = 1; // still a comment open
                 }
             }
 
@@ -557,6 +559,12 @@ class PluginLibrary
 
             // insert after
             $result[] = $this->_comment($ins, $edit['after']);
+
+            if($dirty && !strlen($result[count($result)-1]))
+            {
+                // close open comment
+                $result[] = $ins;
+            }
         }
 
         // insert rest
