@@ -1,5 +1,5 @@
 ==============================
- PluginLibrary 3 for MyBB 1.6
+ PluginLibrary 4 for MyBB 1.6
 ==============================
 
 Documentation for Developers
@@ -85,6 +85,22 @@ a friendly error message to the admin, preferably including a download link.
       admin_redirect("index.php?module=config-plugins");
   }
 
+Version Check
+~~~~~~~~~~~~~
+
+If you require a specific version (for features added in a later
+version of *PluginLibrary*), in addition to the Dependency Check,
+you can also check the version number of *PluginLibrary*. The
+following example checks that *PluginLibrary* is at least version 4.
+
+::
+
+  if($PL->version < 4)
+  {
+      flash_message("PluginLibrary is too old.", "error");
+      admin_redirect("index.php?module=config-plugins");
+  }
+
 Load PluginLibrary On Demand
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -95,24 +111,7 @@ to use it. This can be done with an additional line of code.
 ::
 
   global $PL;
-  $PL or require_once(PLUGINLIBRARY);
-
-Version Check
-~~~~~~~~~~~~~
-
-If you require a specific version (for features added in a later
-version of *PluginLibrary*), in addition to the Dependency Check,
-you can also check the version number of *PluginLibrary*. The
-following example checks that *PluginLibrary* is at least version 1.
-
-::
-
-  if($PL->version < 2)
-  {
-      flash_message("PluginLibrary is too old.", "error");
-      admin_redirect("index.php?module=config-plugins");
-  }
-
+  $PL or require_once PLUGINLIBRARY;
 
 Function Reference
 ------------------
@@ -350,14 +349,14 @@ edit_core()
       Detailed explanation on how search patterns work, see below.
 
     *before*
-      Lines that should be inserted *before* the located code.
+      String or array of lines that should be inserted *before* the located code.
 
     *after*
-      Lines that should be inserted *after* the located code.
+      String or array of lines that should be inserted *after* the located code.
 
     *replace*
-      Lines that should *replace* the located code, or empty string
-      or any true value if it should be removed (*replace* with nothing).
+      String or array of lines that should *replace* the located code,
+      or empty string or any true value if it should be removed (*replace* with nothing).
 
     *multi*
       If set, allow the search pattern to match more than once.
@@ -419,6 +418,25 @@ If the file could be written to, it should then look like this::
   /* + PL:plugin_name + */ echo "Hello PluginLibrary!";
   }
   ?>
+
+The values *before*, *after*, *replace* can be given as either strings
+or arrays of strings.
+
+::
+
+  array('before' => "line1\nline2\nline3")
+
+is equivalent to
+
+::
+
+  array('before' =>
+      array(
+          "line1",
+          "line2",
+          "line3",
+      )
+  )
 
 Search Patterns
 ```````````````

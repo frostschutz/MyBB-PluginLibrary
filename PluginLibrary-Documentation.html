@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.7: http://docutils.sourceforge.net/" />
-<title>PluginLibrary 3 for MyBB 1.6</title>
+<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
+<title>PluginLibrary 4 for MyBB 1.6</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 6253 2010-03-02 00:24:53Z milde $
+:Id: $Id: html4css1.css 6511 2011-01-03 14:49:11Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -46,6 +46,10 @@ blockquote.epigraph {
 
 dl.docutils dd {
   margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
 
 /* Uncomment (and remove this text!) to get bold-faced definition list terms
 dl.docutils dt {
@@ -185,7 +189,7 @@ img.align-center, .figure.align-center, object.align-center {
 
 /* reset inner alignment in figures */
 div.align-right {
-  text-align: left }
+  text-align: inherit }
 
 /* div.align-center * { */
 /*   text-align: left } */
@@ -310,8 +314,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pluginlibrary-3-for-mybb-1-6">
-<h1 class="title">PluginLibrary 3 for MyBB 1.6</h1>
+<div class="document" id="pluginlibrary-4-for-mybb-1-6">
+<h1 class="title">PluginLibrary 4 for MyBB 1.6</h1>
 <h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
 
 <p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
@@ -331,8 +335,8 @@ also be able to use <em>PluginLibrary</em>.</p>
 <li><a class="reference internal" href="#integration-into-your-plugin" id="id3">Integration into your Plugin</a><ul>
 <li><a class="reference internal" href="#define-pluginlibrary" id="id4">Define PLUGINLIBRARY</a></li>
 <li><a class="reference internal" href="#dependency-check" id="id5">Dependency Check</a></li>
-<li><a class="reference internal" href="#load-pluginlibrary-on-demand" id="id6">Load PluginLibrary On Demand</a></li>
-<li><a class="reference internal" href="#version-check" id="id7">Version Check</a></li>
+<li><a class="reference internal" href="#version-check" id="id6">Version Check</a></li>
+<li><a class="reference internal" href="#load-pluginlibrary-on-demand" id="id7">Load PluginLibrary On Demand</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#function-reference" id="id8">Function Reference</a><ul>
@@ -428,6 +432,20 @@ if(!file_exists(PLUGINLIBRARY))
 }
 </pre>
 </div>
+<div class="section" id="version-check">
+<h2><a class="toc-backref" href="#contents">Version Check</a></h2>
+<p>If you require a specific version (for features added in a later
+version of <em>PluginLibrary</em>), in addition to the Dependency Check,
+you can also check the version number of <em>PluginLibrary</em>. The
+following example checks that <em>PluginLibrary</em> is at least version 4.</p>
+<pre class="literal-block">
+if($PL-&gt;version &lt; 4)
+{
+    flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
+    admin_redirect(&quot;index.php?module=config-plugins&quot;);
+}
+</pre>
+</div>
 <div class="section" id="load-pluginlibrary-on-demand">
 <h2><a class="toc-backref" href="#contents">Load PluginLibrary On Demand</a></h2>
 <p>Since <em>PluginLibrary</em> is not required in every request, it is not loaded
@@ -435,21 +453,7 @@ automatically. Instead, you have to load it on demand whenever you want
 to use it. This can be done with an additional line of code.</p>
 <pre class="literal-block">
 global $PL;
-$PL or require_once(PLUGINLIBRARY);
-</pre>
-</div>
-<div class="section" id="version-check">
-<h2><a class="toc-backref" href="#contents">Version Check</a></h2>
-<p>If you require a specific version (for features added in a later
-version of <em>PluginLibrary</em>), in addition to the Dependency Check,
-you can also check the version number of <em>PluginLibrary</em>. The
-following example checks that <em>PluginLibrary</em> is at least version 1.</p>
-<pre class="literal-block">
-if($PL-&gt;version &lt; 2)
-{
-    flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
-    admin_redirect(&quot;index.php?module=config-plugins&quot;);
-}
+$PL or require_once PLUGINLIBRARY;
 </pre>
 </div>
 </div>
@@ -671,12 +675,12 @@ only the undo step will be performed.</p>
 <dd>The search pattern which is responsible for locating the code that should be modified.
 Detailed explanation on how search patterns work, see below.</dd>
 <dt><em>before</em></dt>
-<dd>Lines that should be inserted <em>before</em> the located code.</dd>
+<dd>String or array of lines that should be inserted <em>before</em> the located code.</dd>
 <dt><em>after</em></dt>
-<dd>Lines that should be inserted <em>after</em> the located code.</dd>
+<dd>String or array of lines that should be inserted <em>after</em> the located code.</dd>
 <dt><em>replace</em></dt>
-<dd>Lines that should <em>replace</em> the located code, or empty string
-or any true value if it should be removed (<em>replace</em> with nothing).</dd>
+<dd>String or array of lines that should <em>replace</em> the located code,
+or empty string or any true value if it should be removed (<em>replace</em> with nothing).</dd>
 <dt><em>multi</em></dt>
 <dd>If set, allow the search pattern to match more than once.
 By default, the edit has to be a unique match.</dd>
@@ -733,6 +737,21 @@ function hello_world()
 /* + PL:plugin_name + */ echo &quot;Hello PluginLibrary!&quot;;
 }
 ?&gt;
+</pre>
+<p>The values <em>before</em>, <em>after</em>, <em>replace</em> can be given as either strings
+or arrays of strings.</p>
+<pre class="literal-block">
+array('before' =&gt; &quot;line1\nline2\nline3&quot;)
+</pre>
+<p>is equivalent to</p>
+<pre class="literal-block">
+array('before' =&gt;
+    array(
+        &quot;line1&quot;,
+        &quot;line2&quot;,
+        &quot;line3&quot;,
+    )
+)
 </pre>
 <div class="section" id="search-patterns">
 <h4><a class="toc-backref" href="#contents">Search Patterns</a></h4>
