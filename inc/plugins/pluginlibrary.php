@@ -723,7 +723,14 @@ class PluginLibrary
             $separator = $sep;
         }
 
-        return $url.$append;
+        $pos = strpos($url, '#');
+
+        if($pos === false)
+        {
+            $pos = strlen($url);
+        }
+
+        return substr_replace($url, $append, $pos, 0);
     }
 
     /**
