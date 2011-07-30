@@ -147,6 +147,15 @@ class PluginLibrary
                 echo "\$l['setting_{$key}_desc'] = \"".addcslashes($setting['description'], '\\"$')."\";\n";
             }
 
+            // Filter valid entries.
+            $setting = array_intersect_key($setting,
+                                           array(
+                                               'title' => 0,
+                                               'description' => 0,
+                                               'optionscode' => 0,
+                                               'value' => 0,
+                                               ));
+
             // Escape input values.
             $setting = array_map(array($db, 'escape_string'), $setting);
 
