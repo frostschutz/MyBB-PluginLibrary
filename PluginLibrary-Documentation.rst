@@ -1,5 +1,5 @@
 ==============================
- PluginLibrary 4 for MyBB 1.6
+ PluginLibrary 5 for MyBB 1.6
 ==============================
 
 Documentation for Developers
@@ -95,7 +95,7 @@ following example checks that *PluginLibrary* is at least version 4.
 
 ::
 
-  if($PL->version < 4)
+  if($PL->version < 5)
   {
       flash_message("PluginLibrary is too old.", "error");
       admin_redirect("index.php?module=config-plugins");

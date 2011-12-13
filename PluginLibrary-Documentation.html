@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.8: http://docutils.sourceforge.net/" />
-<title>PluginLibrary 4 for MyBB 1.6</title>
+<meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
+<title>PluginLibrary 5 for MyBB 1.6</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 6511 2011-01-03 14:49:11Z milde $
+:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -249,7 +249,7 @@ pre.address {
   margin-top: 0 ;
   font: inherit }
 
-pre.literal-block, pre.doctest-block {
+pre.literal-block, pre.doctest-block, pre.math {
   margin-left: 2em ;
   margin-right: 2em }
 
@@ -314,8 +314,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pluginlibrary-4-for-mybb-1-6">
-<h1 class="title">PluginLibrary 4 for MyBB 1.6</h1>
+<div class="document" id="pluginlibrary-5-for-mybb-1-6">
+<h1 class="title">PluginLibrary 5 for MyBB 1.6</h1>
 <h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
 
 <p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
@@ -439,7 +439,7 @@ version of <em>PluginLibrary</em>), in addition to the Dependency Check,
 you can also check the version number of <em>PluginLibrary</em>. The
 following example checks that <em>PluginLibrary</em> is at least version 4.</p>
 <pre class="literal-block">
-if($PL-&gt;version &lt; 4)
+if($PL-&gt;version &lt; 5)
 {
     flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
     admin_redirect(&quot;index.php?module=config-plugins&quot;);
