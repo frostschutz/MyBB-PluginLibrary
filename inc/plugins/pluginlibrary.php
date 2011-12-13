@@ -34,7 +34,7 @@ function pluginlibrary_info()
         "website"       => "http://mods.mybb.com/view/pluginlibrary",
         "author"        => "Andreas Klauer",
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
-        "version"       => "4",
+        "version"       => "5",
         "guid"          => "839e9d72e2875a51fccbc0257dfeda03",
         "compatibility" => "16*"
         );
@@ -72,7 +72,7 @@ class PluginLibrary
     /**
      * Version number.
      */
-    public $version = 4;
+    public $version = 5;
 
     /**
      * Cache handler.
@@ -572,7 +572,7 @@ class PluginLibrary
             if($dirty && !strlen($result[count($result)-1]))
             {
                 // close open comment
-                $result[] = $ins;
+                $result[] = "{$ins}\n";
             }
         }
 
