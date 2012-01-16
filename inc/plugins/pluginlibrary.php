@@ -237,8 +237,77 @@ class PluginLibrary
 
     /* --- Template groups and templates: --- */
 
-    function templates($prefix, $title, $list, $makelang=false)
+    function templates($prefix, $title, $list)
     {
+        global $db;
+
+        $group = array('prefix' => $db->escape_string($prefix),
+                       'title' => $db->escape_string($title));
+
+        // Update or create template group:
+        $query = $db->simple_select('templategroups', 'prefix', "prefix='{$group['prefix']}'");
+
+        if($db->fetch_array($query))
+        {
+            $db->update_query('templategroups', $group, "prefix='{$group['prefix']}'");
+        }
+
+        else
+        {
+            $db->insert_query('templategroups', $group);
+        }
+
+        // Query already existing templates.
+        $query = $db->simple_select('templates', 'tid,title,template',
+                                    "sid=-2 AND title LIKE '{$group['prefix']}_%'");
+
+        $templates = array();
+
+        while($row = $db->fetch_array($query))
+        {
+            $templates[$row['title']] = $row;
+        }
+
+        // Update or create templates.
+        foreach($list as $name => $code)
+        {
+            $name = "{$prefix}_{$name}";
+
+            $template = array('title' => $db->escape_string($name),
+                              'template' => $db->escape_string($code),
+                              'version' => 1,
+                              'sid' => -2,
+                              'dateline' => TIME_NOW);
+
+            // Update
+            if(array_key_exists($name, $templates))
+            {
+                if($templates[$name]['template'] !== $code)
+                {
+                    // Update version for custom templates if present
+                    $db->update_query('templates', array('version' => 0), "title='{$template['title']}'");
+
+                    // Update master template
+                    $db->update_query('templates', $template, "tid='{$templates[$name]['tid']}'");
+                }
+            }
+
+            // Create
+            else
+            {
+                $db->insert_query('templates', $template);
+            }
+
+            // Remove this template from the earlier queried list.
+            unset($templates[$name]);
+        }
+
+        // Remove no longer used templates.
+        foreach($templates as $name => $row)
+        {
+            $name = $db->escape_string($name);
+            $db->delete_query('templates', "title='{$name}'");
+        }
     }
 
     function templates_delete($prefix, $greedy=false)
