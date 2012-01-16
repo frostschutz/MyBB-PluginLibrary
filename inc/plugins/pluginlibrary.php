@@ -235,6 +235,43 @@ class PluginLibrary
         rebuild_settings();
     }
 
+    /* --- Template groups and templates: --- */
+
+    function templates($prefix, $title, $list, $makelang=false)
+    {
+    }
+
+    function templates_delete($prefix, $greedy=false)
+    {
+        global $db;
+
+        $prefix = $db->escape_string($prefix);
+        $where = "prefix='{$prefix}'";
+
+        if($greedy)
+        {
+            $where .= " OR prefix LIKE '{$prefix}%'";
+        }
+
+        // Query the template groups
+        $query = $db->simple_select('templategroups', 'prefix');
+
+        // Build where string for templates
+        $twhere = array();
+
+        while($row = $db->fetch_array($query))
+        {
+            $tprefix = $db->escape_string($row['prefix']);
+            $twhere[] = "title LIKE '{$tprefix}_%'";
+        }
+
+        // Delete template groups.
+        $db->delete_query('templategroups', $where);
+
+        // Delete templates belonging to template groups.
+        $db->delete_query('templates', implode(' OR ', $twhere));
+    }
+
     /* --- Cache: --- */
 
     /**
