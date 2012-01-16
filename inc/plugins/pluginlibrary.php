@@ -350,7 +350,7 @@ class PluginLibrary
         }
 
         // Query the template groups
-        $query = $db->simple_select('templategroups', 'prefix');
+        $query = $db->simple_select('templategroups', 'prefix', $where);
 
         // Build where string for templates
         $twhere = array();
