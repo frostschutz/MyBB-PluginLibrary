@@ -132,7 +132,7 @@ function hello_pl_install()
      *   - compare $PL->version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL->version < 2)
+    if($PL->version < 6)
     {
         flash_message("The selected plugin could not be installed because <a href=\"http://mods.mybb.com/view/pluginlibrary\">PluginLibrary</a> is too old.", "error");
         admin_redirect("index.php?module=config-plugins");
@@ -154,6 +154,15 @@ function hello_pl_uninstall()
     $PL->settings_delete("hello_pl"
                          // , true /* optional, multiple groups */
         );
+
+    /**
+     * TEMPLATES DELETE
+     *
+     *   $PL->templates_delete(prefix, greedy)
+     *
+     *   Delete one or more template groups and their templates.
+     */
+    $PL->templates_delete("hellopl");
 }
 
 function hello_pl_activate()
@@ -199,6 +208,23 @@ function hello_pl_activate()
                           ),
                       )
                   // , true /* optional,  prints a language file */
+        );
+
+    /**
+     * TEMPLATES
+     *
+     *   $PL->templates(prefix, title, list)
+     *
+     *   Create a template group with any number of templates with $PL->templates()
+     *   If the template group already exists, the templates are updated properly.
+     *   Templates edited by users will show up in MyBB's 'Find Updated Templates'
+     */
+    $PL->templates("hellopl", // template prefix, must not contain _
+                   "Hello Pluginlibrary!", // you can also use "<lang:your_language_variable>" here
+                   array(
+                       "" => "<p>This is the <b>hellopl</b> template...</p>",
+                       "example" => "<p>...and this is the <i>hellopl_example</i> template.</p>",
+                       )
         );
 }
 
