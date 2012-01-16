@@ -237,6 +237,13 @@ class PluginLibrary
 
     /* --- Template groups and templates: --- */
 
+    /**
+     * Create and update template group and templates.
+     *
+     * @param string Prefix for the template group
+     * @param string Title for the template group
+     * @param array List of templates to be added to this group.
+     */
     function templates($prefix, $title, $list)
     {
         global $db;
@@ -259,7 +266,7 @@ class PluginLibrary
 
         // Query already existing templates.
         $query = $db->simple_select('templates', 'tid,title,template',
-                                    "sid=-2 AND title LIKE '{$group['prefix']}_%'");
+                                    "sid=-2 AND title='{$group['prefix']}' OR title LIKE '{$group['prefix']}_%'");
 
         $templates = array();
 
@@ -271,7 +278,15 @@ class PluginLibrary
         // Update or create templates.
         foreach($list as $name => $code)
         {
-            $name = "{$prefix}_{$name}";
+            if(strlen($name))
+            {
+                $name = "{$prefix}_{$name}";
+            }
+
+            else
+            {
+                $name = "{$prefix}";
+            }
 
             $template = array('title' => $db->escape_string($name),
                               'template' => $db->escape_string($code),
@@ -331,7 +346,7 @@ class PluginLibrary
         while($row = $db->fetch_array($query))
         {
             $tprefix = $db->escape_string($row['prefix']);
-            $twhere[] = "title LIKE '{$tprefix}_%'";
+            $twhere[] = "title='{$tprefix}' OR title LIKE '{$tprefix}_%'";
         }
 
         // Delete template groups.
