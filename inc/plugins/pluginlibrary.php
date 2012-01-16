@@ -248,6 +248,12 @@ class PluginLibrary
     {
         global $db;
 
+        // Template prefix must not be empty, and must not contain _
+        if(!strlen($prefix) || strpos($prefix, '_') !== false)
+        {
+            trigger_error("Invalid template prefix", E_USER_ERROR);
+        }
+
         $group = array('prefix' => $db->escape_string($prefix),
                        'title' => $db->escape_string($title));
 
