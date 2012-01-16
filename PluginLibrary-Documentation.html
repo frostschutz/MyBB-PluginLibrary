@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
-<title>PluginLibrary 5 for MyBB 1.6</title>
+<title>PluginLibrary 6 for MyBB 1.6</title>
 <style type="text/css">
 
 /*
@@ -314,8 +314,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pluginlibrary-5-for-mybb-1-6">
-<h1 class="title">PluginLibrary 5 for MyBB 1.6</h1>
+<div class="document" id="pluginlibrary-6-for-mybb-1-6">
+<h1 class="title">PluginLibrary 6 for MyBB 1.6</h1>
 <h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
 
 <p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
@@ -331,47 +331,52 @@ also be able to use <em>PluginLibrary</em>.</p>
 <div class="contents topic" id="contents">
 <p class="topic-title first">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#installation" id="id2">Installation</a></li>
-<li><a class="reference internal" href="#integration-into-your-plugin" id="id3">Integration into your Plugin</a><ul>
-<li><a class="reference internal" href="#define-pluginlibrary" id="id4">Define PLUGINLIBRARY</a></li>
-<li><a class="reference internal" href="#dependency-check" id="id5">Dependency Check</a></li>
-<li><a class="reference internal" href="#version-check" id="id6">Version Check</a></li>
-<li><a class="reference internal" href="#load-pluginlibrary-on-demand" id="id7">Load PluginLibrary On Demand</a></li>
+<li><a class="reference internal" href="#installation" id="id3">Installation</a></li>
+<li><a class="reference internal" href="#integration-into-your-plugin" id="id4">Integration into your Plugin</a><ul>
+<li><a class="reference internal" href="#define-pluginlibrary" id="id5">Define PLUGINLIBRARY</a></li>
+<li><a class="reference internal" href="#dependency-check" id="id6">Dependency Check</a></li>
+<li><a class="reference internal" href="#version-check" id="id7">Version Check</a></li>
+<li><a class="reference internal" href="#load-pluginlibrary-on-demand" id="id8">Load PluginLibrary On Demand</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#function-reference" id="id8">Function Reference</a><ul>
-<li><a class="reference internal" href="#settings" id="id9">Settings</a><ul>
-<li><a class="reference internal" href="#id1" id="id10">settings()</a></li>
-<li><a class="reference internal" href="#settings-delete" id="id11">settings_delete()</a></li>
+<li><a class="reference internal" href="#function-reference" id="id9">Function Reference</a><ul>
+<li><a class="reference internal" href="#settings" id="id10">Settings</a><ul>
+<li><a class="reference internal" href="#id1" id="id11">settings()</a></li>
+<li><a class="reference internal" href="#settings-delete" id="id12">settings_delete()</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#cache" id="id12">Cache</a><ul>
-<li><a class="reference internal" href="#cache-read" id="id13">cache_read()</a></li>
-<li><a class="reference internal" href="#cache-update" id="id14">cache_update()</a></li>
-<li><a class="reference internal" href="#cache-delete" id="id15">cache_delete()</a></li>
+<li><a class="reference internal" href="#templates" id="id13">Templates</a><ul>
+<li><a class="reference internal" href="#id2" id="id14">templates()</a></li>
+<li><a class="reference internal" href="#templates-delete" id="id15">templates_delete()</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#corefile-edits" id="id16">Corefile Edits</a><ul>
-<li><a class="reference internal" href="#edit-core" id="id17">edit_core()</a><ul>
-<li><a class="reference internal" href="#search-patterns" id="id18">Search Patterns</a></li>
-<li><a class="reference internal" href="#debugging" id="id19">Debugging</a></li>
+<li><a class="reference internal" href="#cache" id="id16">Cache</a><ul>
+<li><a class="reference internal" href="#cache-read" id="id17">cache_read()</a></li>
+<li><a class="reference internal" href="#cache-update" id="id18">cache_update()</a></li>
+<li><a class="reference internal" href="#cache-delete" id="id19">cache_delete()</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a class="reference internal" href="#groups-and-permissions" id="id20">Groups and Permissions</a><ul>
-<li><a class="reference internal" href="#is-member" id="id21">is_member()</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#string-functions" id="id22">String functions</a><ul>
-<li><a class="reference internal" href="#url-append" id="id23">url_append()</a></li>
-<li><a class="reference internal" href="#xml-export" id="id24">xml_export()</a></li>
-<li><a class="reference internal" href="#xml-import" id="id25">xml_import()</a></li>
+<li><a class="reference internal" href="#corefile-edits" id="id20">Corefile Edits</a><ul>
+<li><a class="reference internal" href="#edit-core" id="id21">edit_core()</a><ul>
+<li><a class="reference internal" href="#search-patterns" id="id22">Search Patterns</a></li>
+<li><a class="reference internal" href="#debugging" id="id23">Debugging</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#sample-plugin" id="id26">Sample Plugin</a></li>
+<li><a class="reference internal" href="#groups-and-permissions" id="id24">Groups and Permissions</a><ul>
+<li><a class="reference internal" href="#is-member" id="id25">is_member()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#string-functions" id="id26">String functions</a><ul>
+<li><a class="reference internal" href="#url-append" id="id27">url_append()</a></li>
+<li><a class="reference internal" href="#xml-export" id="id28">xml_export()</a></li>
+<li><a class="reference internal" href="#xml-import" id="id29">xml_import()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sample-plugin" id="id30">Sample Plugin</a></li>
 </ul>
 </div>
 <div class="section" id="installation">
@@ -552,6 +557,83 @@ This function does not have a return value.</blockquote>
 $PL-&gt;settings_delete('plugin_name');
 </pre>
 <p>The above example will delete the setting group <em>plugin_name</em> and all its settings.</p>
+</div>
+</div>
+<div class="section" id="templates">
+<h2><a class="toc-backref" href="#contents">Templates</a></h2>
+<div class="section" id="id2">
+<h3><a class="toc-backref" href="#contents">templates()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>void</em> <strong>templates</strong> (<em>string</em> $prefix, <em>string</em> $title, <em>array</em> $list)</p>
+<p>This function creates a template group and a list of templates.
+If the template group already exists, the templates belonging to
+that group will be updated. Templates edited by the user will
+show up in MyBB's <em>Find Updated Templates</em> feature. Templates
+that no longer exist will be removed.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>prefix</strong></dt>
+<dd>The prefix used by templates in this group. Ideally related to
+your plugin name. Unlike setting groups, template prefix must
+not contain _. Make sure to use a unique prefix not used by
+anything else.</dd>
+<dt><strong>title</strong></dt>
+<dd>The title of your template group as it will show up in the
+template list. For translatable titles, you can use
+&lt;lang:your_language_key&gt; (make sure your plugin loads the
+language file in the Admin CP).</dd>
+<dt><strong>list</strong></dt>
+<dd>An array of templates. Each key is the template name (which
+will be prefixed unless it's an empty string), the value
+is the template code.</dd>
+</dl>
+</blockquote>
+<p><strong>Return Value</strong>:</p>
+<blockquote>
+This function does not have a return value.</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$PL-&gt;templates('myplugin',
+               'My Plugin',
+               array(
+                   '' =&gt; 'This is the myplugin template.',
+                   'example' =&gt; 'This is the myplugin_example template.',
+                   )
+    );
+</pre>
+<p>The above example creates a group which will show up as <em>My Plugin Templates</em>
+in the Admin CP, and contain two templates <em>myplugin</em> and <em>myplugin_example</em>.</p>
+</div>
+<div class="section" id="templates-delete">
+<h3><a class="toc-backref" href="#contents">templates_delete()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>void</em> <strong>templates_delete</strong> (<em>string</em> $prefix, <em>bool</em> $greedy=false)</p>
+<p>This function deletes one (or more) template groups and templates.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>prefix</strong></dt>
+<dd>The prefix of your template group.</dd>
+<dt><strong>greedy</strong> (optional)</dt>
+<dd>If set, delete all groups that start with your prefix.</dd>
+</dl>
+</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$PL-&gt;templates_delete('myplugin');
+</pre>
+<p>The above example deletes the template group <em>myplugin</em> as well as all templates
+that belong to this group.:</p>
+<pre class="literal-block">
+$PL-&gt;templates_delete('myplugin', true);
+</pre>
+<p>The above example deletes the template group <em>myplugin</em> as well as the groups
+<em>mypluginfoo</em> and <em>mypluginbar</em>, if they exist.</p>
 </div>
 </div>
 <div class="section" id="cache">
@@ -1170,7 +1252,7 @@ function hello_pl_install()
      *   - compare $PL-&gt;version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL-&gt;version &lt; 2)
+    if($PL-&gt;version &lt; 6)
     {
         flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;http://mods.mybb.com/view/pluginlibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
@@ -1192,6 +1274,15 @@ function hello_pl_uninstall()
     $PL-&gt;settings_delete(&quot;hello_pl&quot;
                          // , true /* optional, multiple groups */
         );
+
+    /**
+     * TEMPLATES DELETE
+     *
+     *   $PL-&gt;templates_delete(prefix, greedy)
+     *
+     *   Delete one or more template groups and their templates.
+     */
+    $PL-&gt;templates_delete(&quot;hellopl&quot;);
 }
 
 function hello_pl_activate()
@@ -1237,6 +1328,23 @@ function hello_pl_activate()
                           ),
                       )
                   // , true /* optional,  prints a language file */
+        );
+
+    /**
+     * TEMPLATES
+     *
+     *   $PL-&gt;templates(prefix, title, list)
+     *
+     *   Create a template group with any number of templates with $PL-&gt;templates()
+     *   If the template group already exists, the templates are updated properly.
+     *   Templates edited by users will show up in MyBB's 'Find Updated Templates'
+     */
+    $PL-&gt;templates(&quot;hellopl&quot;, // template prefix, must not contain _
+                   &quot;Hello Pluginlibrary!&quot;, // you can also use &quot;&lt;lang:your_language_variable&gt;&quot; here
+                   array(
+                       &quot;&quot; =&gt; &quot;&lt;p&gt;This is the &lt;b&gt;hellopl&lt;/b&gt; template...&lt;/p&gt;&quot;,
+                       &quot;example&quot; =&gt; &quot;&lt;p&gt;...and this is the &lt;i&gt;hellopl_example&lt;/i&gt; template.&lt;/p&gt;&quot;,
+                       )
         );
 }
 

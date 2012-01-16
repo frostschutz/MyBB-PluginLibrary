@@ -1,5 +1,5 @@
 ==============================
- PluginLibrary 5 for MyBB 1.6
+ PluginLibrary 6 for MyBB 1.6
 ==============================
 
 Documentation for Developers
@@ -217,6 +217,88 @@ settings_delete()
   $PL->settings_delete('plugin_name');
 
 The above example will delete the setting group *plugin_name* and all its settings.
+
+Templates
+~~~~~~~~~
+
+templates()
++++++++++++
+
+**Description**:
+
+  *void* **templates** (*string* $prefix, *string* $title, *array* $list)
+
+  This function creates a template group and a list of templates.
+  If the template group already exists, the templates belonging to
+  that group will be updated. Templates edited by the user will
+  show up in MyBB's *Find Updated Templates* feature. Templates
+  that no longer exist will be removed.
+
+**Parameters**:
+
+  **prefix**
+    The prefix used by templates in this group. Ideally related to
+    your plugin name. Unlike setting groups, template prefix must
+    not contain _. Make sure to use a unique prefix not used by
+    anything else.
+
+  **title**
+    The title of your template group as it will show up in the
+    template list. For translatable titles, you can use
+    <lang:your_language_key> (make sure your plugin loads the
+    language file in the Admin CP).
+
+  **list**
+    An array of templates. Each key is the template name (which
+    will be prefixed unless it's an empty string), the value
+    is the template code.
+
+**Return Value**:
+
+  This function does not have a return value.
+
+**Example**::
+
+  $PL->templates('myplugin',
+                 'My Plugin',
+                 array(
+                     '' => 'This is the myplugin template.',
+                     'example' => 'This is the myplugin_example template.',
+                     )
+      );
+
+The above example creates a group which will show up as *My Plugin Templates*
+in the Admin CP, and contain two templates *myplugin* and *myplugin_example*.
+
+
+templates_delete()
+++++++++++++++++++
+
+**Description**:
+
+  *void* **templates_delete** (*string* $prefix, *bool* $greedy=false)
+
+  This function deletes one (or more) template groups and templates.
+
+**Parameters**:
+
+  **prefix**
+    The prefix of your template group.
+
+  **greedy** (optional)
+    If set, delete all groups that start with your prefix.
+
+**Example**::
+
+  $PL->templates_delete('myplugin');
+
+The above example deletes the template group *myplugin* as well as all templates
+that belong to this group.::
+
+  $PL->templates_delete('myplugin', true);
+
+The above example deletes the template group *myplugin* as well as the groups
+*mypluginfoo* and *mypluginbar*, if they exist.
 
 Cache
 ~~~~~
