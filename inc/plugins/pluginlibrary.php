@@ -325,6 +325,12 @@ class PluginLibrary
         }
     }
 
+    /**
+     * Delete template group(s) and templates.
+     *
+     * @param string Prefix of the template group.
+     * @param bool Also delete other groups starting with the prefix.
+     */
     function templates_delete($prefix, $greedy=false)
     {
         global $db;
