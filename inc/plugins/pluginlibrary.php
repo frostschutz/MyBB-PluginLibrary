@@ -218,7 +218,8 @@ class PluginLibrary
 
         if($greedy)
         {
-            $where .= " OR name LIKE '{$name}_%'";
+            $lname = strtr($name, array('=' => '==', '_' => '=_', '%' => '=%'));
+            $where .= " OR name LIKE '{$lname}=_%' ESCAPE '='";
         }
 
         // Query the setting groups.
@@ -272,7 +273,7 @@ class PluginLibrary
 
         // Query already existing templates.
         $query = $db->simple_select('templates', 'tid,title,template',
-                                    "sid=-2 AND title='{$group['prefix']}' OR title LIKE '{$group['prefix']}_%'");
+                                    "sid=-2 AND title='{$group['prefix']}' OR title LIKE '{$group['prefix']}=_%' ESCAPE '='");
 
         $templates = array();
 
@@ -358,7 +359,7 @@ class PluginLibrary
         while($row = $db->fetch_array($query))
         {
             $tprefix = $db->escape_string($row['prefix']);
-            $twhere[] = "title='{$tprefix}' OR title LIKE '{$tprefix}_%'";
+            $twhere[] = "title='{$tprefix}' OR title LIKE '{$tprefix}=_%' ESCAPE '='";
         }
 
         // Delete template groups.
@@ -461,7 +462,10 @@ class PluginLibrary
             }
 
             // ...from the database...
-            $where .= " OR title LIKE '{$name}_%'";
+            $ldbname = strtr($dbname, array('%' => '=%',
+                                            '=' => '==',
+                                            '_' => '=_'));
+            $where .= " OR title LIKE '{$ldbname}=_%' ESCAPE '='";
             $query = $db->simple_select('datacache', 'title', $where);
 
             while($row = $db->fetch_array($query))
