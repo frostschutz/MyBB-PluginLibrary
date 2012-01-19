@@ -162,7 +162,9 @@ function hello_pl_uninstall()
      *
      *   Delete one or more template groups and their templates.
      */
-    $PL->templates_delete("hellopl");
+    $PL->templates_delete("hellopl"
+                          // , true /* optional, multiple groups */
+        );
 }
 
 function hello_pl_activate()
@@ -218,12 +220,15 @@ function hello_pl_activate()
      *   Create a template group with any number of templates with $PL->templates()
      *   If the template group already exists, the templates are updated properly.
      *   Templates edited by users will show up in MyBB's 'Find Updated Templates'
+     *
+     *   Note: prefix must not contain _ for templates.
      */
     $PL->templates("hellopl", // template prefix, must not contain _
                    "Hello Pluginlibrary!", // you can also use "<lang:your_language_variable>" here
                    array(
                        "" => "<p>This is the <b>hellopl</b> template...</p>",
                        "example" => "<p>...and this is the <i>hellopl_example</i> template.</p>",
+                       "other" => "Another template using {\$hellopl} and {\$hellopl_example}.",
                        )
         );
 }
