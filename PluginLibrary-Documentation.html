@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.8.1: http://docutils.sourceforge.net/" />
-<title>PluginLibrary 6 for MyBB 1.6</title>
+<title>PluginLibrary 7 for MyBB 1.6</title>
 <style type="text/css">
 
 /*
@@ -314,8 +314,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pluginlibrary-6-for-mybb-1-6">
-<h1 class="title">PluginLibrary 6 for MyBB 1.6</h1>
+<div class="document" id="pluginlibrary-7-for-mybb-1-6">
+<h1 class="title">PluginLibrary 7 for MyBB 1.6</h1>
 <h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
 
 <p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
@@ -444,7 +444,7 @@ version of <em>PluginLibrary</em>), in addition to the Dependency Check,
 you can also check the version number of <em>PluginLibrary</em>. The
 following example checks that <em>PluginLibrary</em> is at least version 4.</p>
 <pre class="literal-block">
-if($PL-&gt;version &lt; 5)
+if($PL-&gt;version &lt; 7)
 {
     flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
     admin_redirect(&quot;index.php?module=config-plugins&quot;);
@@ -1252,7 +1252,7 @@ function hello_pl_install()
      *   - compare $PL-&gt;version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL-&gt;version &lt; 6)
+    if($PL-&gt;version &lt; 7)
     {
         flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;http://mods.mybb.com/view/pluginlibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
@@ -1282,7 +1282,9 @@ function hello_pl_uninstall()
      *
      *   Delete one or more template groups and their templates.
      */
-    $PL-&gt;templates_delete(&quot;hellopl&quot;);
+    $PL-&gt;templates_delete(&quot;hellopl&quot;
+                          // , true /* optional, multiple groups */
+        );
 }
 
 function hello_pl_activate()
@@ -1338,12 +1340,15 @@ function hello_pl_activate()
      *   Create a template group with any number of templates with $PL-&gt;templates()
      *   If the template group already exists, the templates are updated properly.
      *   Templates edited by users will show up in MyBB's 'Find Updated Templates'
+     *
+     *   Note: prefix must not contain _ for templates.
      */
     $PL-&gt;templates(&quot;hellopl&quot;, // template prefix, must not contain _
                    &quot;Hello Pluginlibrary!&quot;, // you can also use &quot;&lt;lang:your_language_variable&gt;&quot; here
                    array(
                        &quot;&quot; =&gt; &quot;&lt;p&gt;This is the &lt;b&gt;hellopl&lt;/b&gt; template...&lt;/p&gt;&quot;,
                        &quot;example&quot; =&gt; &quot;&lt;p&gt;...and this is the &lt;i&gt;hellopl_example&lt;/i&gt; template.&lt;/p&gt;&quot;,
+                       &quot;other&quot; =&gt; &quot;Another template using {\$hellopl} and {\$hellopl_example}.&quot;,
                        )
         );
 }
