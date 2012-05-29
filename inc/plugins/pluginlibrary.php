@@ -362,11 +362,14 @@ class PluginLibrary
             $twhere[] = "title='{$tprefix}' OR title LIKE '{$tprefix}=_%' ESCAPE '='";
         }
 
-        // Delete template groups.
-        $db->delete_query('templategroups', $where);
+        if($twhere) // else there are no groups to delete
+        {
+            // Delete template groups.
+            $db->delete_query('templategroups', $where);
 
-        // Delete templates belonging to template groups.
-        $db->delete_query('templates', implode(' OR ', $twhere));
+            // Delete templates belonging to template groups.
+            $db->delete_query('templates', implode(' OR ', $twhere));
+        }
     }
 
     /* --- Cache: --- */
