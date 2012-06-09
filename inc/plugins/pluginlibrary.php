@@ -163,7 +163,8 @@ class PluginLibrary
             $disporder += 1;
 
             $setting = array_merge(
-                array('optionscode' => 'yesno',
+                array('description' => '',
+                      'optionscode' => 'yesno',
                       'value' => '0',
                       'disporder' => $disporder),
                 $setting);
