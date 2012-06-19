@@ -1004,7 +1004,7 @@ class PluginLibrary
                 @header('Last-Modified: '.gmdate('D, d M Y H:i:s T'));
                 @header('Pragma: no-cache');
                 @header('Content-Disposition: attachment; filename="'.$filename.'"');
-                @header('Content-Length: '.strlen($xml));
+                @header('Content-Length: '.strlen($result));
                 echo $result;
                 exit;
             }
