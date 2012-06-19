@@ -1,5 +1,5 @@
 ==============================
- PluginLibrary 7 for MyBB 1.6
+ PluginLibrary 8 for MyBB 1.6
 ==============================
 
 Documentation for Developers
@@ -95,7 +95,7 @@ following example checks that *PluginLibrary* is at least version 4.
 
 ::
 
-  if($PL->version < 7)
+  if($PL->version < 8)
   {
       flash_message("PluginLibrary is too old.", "error");
       admin_redirect("index.php?module=config-plugins");
@@ -812,4 +812,3 @@ included as *inc/plugins/hello_pl.php* in the *PluginLibrary* package.
 
 .. include:: inc/plugins/hello_pl.php
   :literal:
-

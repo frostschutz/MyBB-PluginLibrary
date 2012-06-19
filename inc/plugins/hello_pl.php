@@ -132,7 +132,7 @@ function hello_pl_install()
      *   - compare $PL->version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL->version < 7)
+    if($PL->version < 8)
     {
         flash_message("The selected plugin could not be installed because <a href=\"http://mods.mybb.com/view/pluginlibrary\">PluginLibrary</a> is too old.", "error");
         admin_redirect("index.php?module=config-plugins");
