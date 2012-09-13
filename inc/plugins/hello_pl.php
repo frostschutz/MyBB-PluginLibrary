@@ -165,11 +165,13 @@ function hello_pl_uninstall()
     $PL->templates_delete("hellopl"
                           // , true /* optional, multiple groups */
         );
+
+    $PL->stylesheet_delete('test.css');
 }
 
 function hello_pl_activate()
 {
-    global $PL;
+    global $PL, $mybb;
     $PL or require_once PLUGINLIBRARY;
 
     /**
@@ -231,6 +233,15 @@ function hello_pl_activate()
                        "other" => "Another template using {\$hellopl} and {\$hellopl_example}.",
                        )
         );
+
+    $css = <<<CSS
+body{
+    background: black;
+    color: red;
+}
+CSS;
+
+    $PL->stylesheet('test', $css);
 }
 
 function hello_pl_deactivate()

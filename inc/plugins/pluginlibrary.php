@@ -373,6 +373,118 @@ class PluginLibrary
         }
     }
 
+    /**
+     * Add a new stylesheet
+     * @param string Name of the stylehseet - lowercase version used for cache file.
+     * @param string Stylesheet content.
+     * @param string The files/actions the stylesheet is attached to. For global attachment, don't include this parameter.
+     */
+    function stylesheet($name, $stylesheet, $attachedto = '')
+    {
+        global $db, $mybb;
+
+        require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
+
+        // Check $name ends in .css and if not append it
+        $parts = explode('.', $name);
+
+        if ($parts[count($parts) -1] != 'css')
+        {
+            $name .= '.css';
+        }
+
+        // Check if stylesheet exists - if so, we only want to update the base version
+        $updateOnly = false;
+        $query = $db->simple_select('themestylesheets', 'sid', "name = '".$db->escape_string($name)."'");
+        if ($db->num_rows($query))
+        {
+            $updateOnly = true;
+        }
+
+        // Set up our insert
+        $insertArray = array(
+                             'name'         =>  $db->escape_string($name),
+                             'tid'          =>  1,
+                             'attachedto'   =>  $db->escape_string($attachedto),
+                             'stylesheet'   =>  $db->escape_string($stylesheet),
+                             'cachefile'    =>  $db->escape_string(strtolower($name)),
+                             'lastmodified' =>  TIME_NOW,
+                             );
+
+        // Get theme IDs
+        $themes = array();
+        $query = $db->simple_select('themes', 'tid', "tid != '1'");
+        while($theme_id = $db->fetch_array($query))
+        {
+            $themes[] = (int) $theme_id['tid'];
+        }
+
+        if ($updateOnly)
+        {
+            $sid = (int) $db->update_query('themestylesheets', $insertArray, 'name = \''.$db->escape_string($name).'\'');
+            if (!cache_stylesheet(1, $insertArray['name'], $insertArray['stylesheet']))
+            {
+                $db->update_query('themestylesheets', array('cachefile' => 'css.php?stylesheet='.$sid), "sid='{$sid}'", 1);
+            }
+
+            update_theme_stylesheet_list(1);
+        }
+        else
+        {
+            // Insert stylesheet
+            foreach($themes as $theme)
+            {
+                $insertArray['tid'] = (int) $theme;
+                $sid = (int) $db->insert_query('themestylesheets', $insertArray);
+
+                if (!cache_stylesheet($theme, $insertArray['name'], $insertArray['stylesheet']))
+                {
+                    $db->update_query('themestylesheets', array('cachefile' => 'css.php?stylesheet='.$sid), "sid='{$sid}'", 1);
+                }
+
+                update_theme_stylesheet_list($theme);
+            }
+        }
+    }
+
+    /**
+     * Remove a stylesheet
+     * @param string Stylesheet name
+     */
+    function stylesheet_delete($name)
+    {
+        global $db, $mybb;
+
+        // Check $name ends in .css and if not append it
+        $parts = explode('.', $name);
+
+        if ($parts[count($parts) -1] != 'css')
+        {
+            $name .= '.css';
+        }
+
+        $themesUpdated = array();
+        // Get all stylesheets matching $name
+        $query = $db->simple_select('themestylesheets', '*', "name = '".$db->escape_string($name)."'");
+        if ($db->num_rows($query) > 0)
+        {
+            // Remove the style
+            while ($stylesheet = $db->fetch_array($query))
+            {
+                $db->delete_query('themestylesheets', 'sid = \''.(int) $stylesheet['sid'].'\'', 1);
+                @unlink(MYBB_ROOT.'cache/themes/theme'.(int) $stylesheet['tid'].'/'.$stylesheet['cachefile']);
+
+                $themesUpdated[$stylesheet['tid']] = $stylesheet['tid'];
+            }
+        }
+
+        require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
+        foreach ($themesUpdated as $theme)
+        {
+            update_theme_stylesheet_list($theme);
+        }
+    }
+
     /* --- Cache: --- */
 
     /**
