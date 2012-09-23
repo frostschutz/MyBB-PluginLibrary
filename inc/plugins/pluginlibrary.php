@@ -443,76 +443,56 @@ class PluginLibrary
 
     /**
      * Add a new stylesheet
-     * @param string Name of the stylehseet - lowercase version used for cache file.
+     * @param string Name of the stylesheet - lowercase version used for cache file.
      * @param string Stylesheet content.
      * @param string The files/actions the stylesheet is attached to. For global attachment, don't include this parameter.
      */
-    function stylesheet($name, $stylesheet, $attachedto = '')
+    function stylesheet($name, $styles, $attachedto="")
     {
         global $db, $mybb;
 
-        require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
-
-        // Check $name ends in .css and if not append it
-        $parts = explode('.', $name);
-
-        if ($parts[count($parts) -1] != 'css')
+        // Build stylesheet data.
+        $tid = 1; // MyBB Master Style
+        if(substr($name, -4) != ".css")
         {
             $name .= '.css';
         }
+        $styles = $this->_build_css($styles);
+        $attachedto = $this->_build_attachedto($attachedto);
 
-        // Check if stylesheet exists - if so, we only want to update the base version
-        $updateOnly = false;
-        $query = $db->simple_select('themestylesheets', 'sid', "name = '".$db->escape_string($name)."'");
-        if ($db->num_rows($query))
+        $stylesheet = array(
+            'name' => $name,
+            'tid' => $tid,
+            'attachedto' => $attachedto,
+            'stylesheet' => $styles,
+            'cachefile' => $name,
+            'lastmodified' => TIME_NOW,
+            );
+
+        // Update or insert stylesheet.
+        $dbstylesheet = array_map(array($db, 'escape_string'), $stylesheet);
+
+        $query = $db->simple_select('themestylesheets', 'sid', "tid='{$tid}' AND cachefile='{$name}'");
+        $sid = intval($db->fetch_field($query, 'sid'));
+
+        if($sid)
         {
-            $updateOnly = true;
+            $db->update_query('themestylesheets', $dbstylesheet, "sid='$sid'");
         }
 
-        // Set up our insert
-        $insertArray = array(
-                             'name'         =>  $db->escape_string($name),
-                             'tid'          =>  1,
-                             'attachedto'   =>  $db->escape_string($attachedto),
-                             'stylesheet'   =>  $db->escape_string($stylesheet),
-                             'cachefile'    =>  $db->escape_string(strtolower($name)),
-                             'lastmodified' =>  TIME_NOW,
-                             );
-
-        // Get theme IDs
-        $themes = array();
-        $query = $db->simple_select('themes', 'tid', "tid != '1'");
-        while($theme_id = $db->fetch_array($query))
-        {
-            $themes[] = (int) $theme_id['tid'];
-        }
-
-        if ($updateOnly)
-        {
-            $sid = (int) $db->update_query('themestylesheets', $insertArray, 'name = \''.$db->escape_string($name).'\'');
-            if (!cache_stylesheet(1, $insertArray['name'], $insertArray['stylesheet']))
-            {
-                $db->update_query('themestylesheets', array('cachefile' => 'css.php?stylesheet='.$sid), "sid='{$sid}'", 1);
-            }
-
-            update_theme_stylesheet_list(1);
-        }
         else
         {
-            // Insert stylesheet
-            foreach($themes as $theme)
-            {
-                $insertArray['tid'] = (int) $theme;
-                $sid = (int) $db->insert_query('themestylesheets', $insertArray);
-
-                if (!cache_stylesheet($theme, $insertArray['name'], $insertArray['stylesheet']))
-                {
-                    $db->update_query('themestylesheets', array('cachefile' => 'css.php?stylesheet='.$sid), "sid='{$sid}'", 1);
-                }
-
-                update_theme_stylesheet_list($theme);
-            }
+            $sid = $db->insert_query('themestylesheets', $dbstylesheet);
+            $stylesheet['sid'] = intval($sid);
         }
+
+        // Create the stylesheet file directly.
+        // MyBB does not have a good function for this.
+        @file_put_contents(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$stylesheet['cachefile']}", $stylesheet['stylesheet']);
+
+        // Tell MyBB to update its theme stylesheet metadata.
+        require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
+        update_theme_stylesheet_list($stylesheet['tid']);
     }
 
     /**
