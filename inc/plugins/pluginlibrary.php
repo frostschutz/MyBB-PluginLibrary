@@ -373,6 +373,74 @@ class PluginLibrary
         }
     }
 
+    /* --- Stylesheets: --- */
+
+    /**
+     * build CSS string out of an [selector => [property => value]] array
+     */
+    function _build_css($styles)
+    {
+        if(is_array($styles))
+        {
+            $css = "";
+
+            foreach($styles as $selector => $properties)
+            {
+                $rule = "{$selector} {\n";
+
+                if(is_array($properties))
+                {
+                    foreach($properties as $property => $value)
+                    {
+                        $rule .= "\t{$property}: {$value};\n";
+                    }
+                }
+
+                else
+                {
+                    $rule .= "\t{$properties}\n";
+                }
+
+                $rule .= "}\n\n";
+                $css .= $rule;
+            }
+
+            $styles = $css;
+        }
+
+        return $styles;
+    }
+
+    /**
+     * build attachedto string out of an [file => [action, ]] array
+     */
+    function _build_attachedto($attachedto)
+    {
+        if(is_array($attachedto))
+        {
+            $result = array();
+
+            foreach($attachedto as $file => $actions)
+            {
+                if(is_array($actions))
+                {
+                    $actions = implode(",", $actions);
+                }
+
+                if($actions)
+                {
+                    $file = "{$file}?{$actions}";
+                }
+
+                $result[] = $file;
+            }
+
+            $attachedto = implode("|", $result);
+        }
+
+        return $attachedto;
+    }
+
     /**
      * Add a new stylesheet
      * @param string Name of the stylehseet - lowercase version used for cache file.
