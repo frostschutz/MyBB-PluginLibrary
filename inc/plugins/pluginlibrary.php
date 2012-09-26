@@ -447,6 +447,7 @@ class PluginLibrary
      */
     function _update_themes_stylesheets()
     {
+        global $mybb;
         $tid = 1; // MyBB Master Style
         require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
         update_theme_stylesheet_list($tid); // includes all children
@@ -460,7 +461,7 @@ class PluginLibrary
      */
     function stylesheet($name, $styles, $attachedto="")
     {
-        global $db, $mybb;
+        global $db;
 
         // Build stylesheet data.
         $tid = 1; // MyBB Master Style
@@ -517,7 +518,7 @@ class PluginLibrary
      */
     function stylesheet_delete($name, $greedy=false, $delete=true)
     {
-        global $db, $mybb;
+        global $db;
 
         // Check $name ends in .css and if not append it
         $tid = 1; // MyBB Master Style
