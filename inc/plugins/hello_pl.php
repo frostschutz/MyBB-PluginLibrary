@@ -132,7 +132,7 @@ function hello_pl_install()
      *   - compare $PL->version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL->version < 8)
+    if($PL->version < 9)
     {
         flash_message("The selected plugin could not be installed because <a href=\"http://mods.mybb.com/view/pluginlibrary\">PluginLibrary</a> is too old.", "error");
         admin_redirect("index.php?module=config-plugins");
@@ -166,7 +166,14 @@ function hello_pl_uninstall()
                           // , true /* optional, multiple groups */
         );
 
-    $PL->stylesheet_delete('test.css');
+    /**
+     * STYLESHEET DELETE
+     *
+     *   $PL->stylesheet_delete(name, greedy)
+     *
+     *   Delete one or more stylesheets.
+     */
+    $PL->stylesheet_delete('hellopl', true);
 }
 
 function hello_pl_activate()
@@ -234,14 +241,25 @@ function hello_pl_activate()
                        )
         );
 
-    $css = <<<CSS
-body{
-    background: black;
-    color: red;
-}
-CSS;
+    $css = "body { background: black; color: red; }";
 
-    $PL->stylesheet('test', $css);
+    /**
+     * STYLESHEET
+     *
+     *   $PL->stylesheet(name, styles, attachedto)
+     *
+     *   Create, update and activate a stylesheet. Prefix the name with
+     *   something unique to your plugin to avoid collisions.
+     */
+    $PL->stylesheet('hellopl_test1', $css);
+    $PL->stylesheet('hellopl_sendpm',
+                    array(
+                        'body' => array(
+                            'background' => 'black',
+                            'color' => 'red',
+                            ),
+                        ),
+                    array('private.php' => 'send'));
 }
 
 function hello_pl_deactivate()
@@ -259,6 +277,16 @@ function hello_pl_deactivate()
     $PL->cache_delete("hello_pl"
                       // , true /* optional, multiple caches */
         );
+
+    /**
+     * STYLESHEET DEACTIVATE
+     *
+     *   $PL->stylesheet_deactivate(name, greedy)
+     *
+     *   Deactivate your stylesheet so your plugin's styles won't be loaded
+     *   until your plugin is activated again.
+     */
+    $PL->stylesheet_deactivate('hellopl', true);
 }
 
 function hello_pl_edit()

@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.9: http://docutils.sourceforge.net/" />
-<title>PluginLibrary 8 for MyBB 1.6</title>
+<meta name="generator" content="Docutils 0.9.1: http://docutils.sourceforge.net/" />
+<title>PluginLibrary 9 for MyBB 1.6</title>
 <style type="text/css">
 
 /*
 :Author: David Goodger (goodger@python.org)
-:Id: $Id: html4css1.css 7056 2011-06-17 10:50:48Z milde $
+:Id: $Id: html4css1.css 7434 2012-05-11 21:06:27Z milde $
 :Copyright: This stylesheet has been placed in the public domain.
 
 Default cascading style sheet for the HTML output of Docutils.
@@ -249,9 +249,17 @@ pre.address {
   margin-top: 0 ;
   font: inherit }
 
-pre.literal-block, pre.doctest-block, pre.math {
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
   margin-left: 2em ;
   margin-right: 2em }
+
+pre.code .ln { /* line numbers */
+  color: grey;
+}
+
+.code {
+  background-color: #eeeeee
+}
 
 span.classifier {
   font-family: sans-serif ;
@@ -314,8 +322,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pluginlibrary-8-for-mybb-1-6">
-<h1 class="title">PluginLibrary 8 for MyBB 1.6</h1>
+<div class="document" id="pluginlibrary-9-for-mybb-1-6">
+<h1 class="title">PluginLibrary 9 for MyBB 1.6</h1>
 <h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
 
 <p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
@@ -350,33 +358,39 @@ also be able to use <em>PluginLibrary</em>.</p>
 <li><a class="reference internal" href="#templates-delete" id="id15">templates_delete()</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#cache" id="id16">Cache</a><ul>
-<li><a class="reference internal" href="#cache-read" id="id17">cache_read()</a></li>
-<li><a class="reference internal" href="#cache-update" id="id18">cache_update()</a></li>
-<li><a class="reference internal" href="#cache-delete" id="id19">cache_delete()</a></li>
+<li><a class="reference internal" href="#stylesheets" id="id16">Stylesheets</a><ul>
+<li><a class="reference internal" href="#stylesheet" id="id17">stylesheet()</a></li>
+<li><a class="reference internal" href="#stylesheet-delete" id="id18">stylesheet_delete()</a></li>
+<li><a class="reference internal" href="#stylesheet-deactivate" id="id19">stylesheet_deactivate()</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#corefile-edits" id="id20">Corefile Edits</a><ul>
-<li><a class="reference internal" href="#edit-core" id="id21">edit_core()</a><ul>
-<li><a class="reference internal" href="#search-patterns" id="id22">Search Patterns</a></li>
-<li><a class="reference internal" href="#debugging" id="id23">Debugging</a></li>
+<li><a class="reference internal" href="#cache" id="id20">Cache</a><ul>
+<li><a class="reference internal" href="#cache-read" id="id21">cache_read()</a></li>
+<li><a class="reference internal" href="#cache-update" id="id22">cache_update()</a></li>
+<li><a class="reference internal" href="#cache-delete" id="id23">cache_delete()</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a class="reference internal" href="#groups-and-permissions" id="id24">Groups and Permissions</a><ul>
-<li><a class="reference internal" href="#is-member" id="id25">is_member()</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#string-functions" id="id26">String functions</a><ul>
-<li><a class="reference internal" href="#url-append" id="id27">url_append()</a></li>
-<li><a class="reference internal" href="#xml-export" id="id28">xml_export()</a></li>
-<li><a class="reference internal" href="#xml-import" id="id29">xml_import()</a></li>
+<li><a class="reference internal" href="#corefile-edits" id="id24">Corefile Edits</a><ul>
+<li><a class="reference internal" href="#edit-core" id="id25">edit_core()</a><ul>
+<li><a class="reference internal" href="#search-patterns" id="id26">Search Patterns</a></li>
+<li><a class="reference internal" href="#debugging" id="id27">Debugging</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#sample-plugin" id="id30">Sample Plugin</a></li>
+<li><a class="reference internal" href="#groups-and-permissions" id="id28">Groups and Permissions</a><ul>
+<li><a class="reference internal" href="#is-member" id="id29">is_member()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#string-functions" id="id30">String functions</a><ul>
+<li><a class="reference internal" href="#url-append" id="id31">url_append()</a></li>
+<li><a class="reference internal" href="#xml-export" id="id32">xml_export()</a></li>
+<li><a class="reference internal" href="#xml-import" id="id33">xml_import()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sample-plugin" id="id34">Sample Plugin</a></li>
 </ul>
 </div>
 <div class="section" id="installation">
@@ -442,14 +456,20 @@ if(!file_exists(PLUGINLIBRARY))
 <p>If you require a specific version (for features added in a later
 version of <em>PluginLibrary</em>), in addition to the Dependency Check,
 you can also check the version number of <em>PluginLibrary</em>. The
-following example checks that <em>PluginLibrary</em> is at least version 4.</p>
+following example checks that <em>PluginLibrary</em> is at least version 9.</p>
 <pre class="literal-block">
-if($PL-&gt;version &lt; 8)
+if($PL-&gt;version &lt; 9)
 {
     flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
     admin_redirect(&quot;index.php?module=config-plugins&quot;);
 }
 </pre>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you are unsure which version of <em>PluginLibrary</em> to depend on,
+use the latest version number that is current at the time you
+publish your plugin.</p>
+</div>
 </div>
 <div class="section" id="load-pluginlibrary-on-demand">
 <h2><a class="toc-backref" href="#contents">Load PluginLibrary On Demand</a></h2>
@@ -628,12 +648,135 @@ in the Admin CP, and contain two templates <em>myplugin</em> and <em>myplugin_ex
 $PL-&gt;templates_delete('myplugin');
 </pre>
 <p>The above example deletes the template group <em>myplugin</em> as well as all templates
-that belong to this group.:</p>
+that belong to this group.</p>
 <pre class="literal-block">
 $PL-&gt;templates_delete('myplugin', true);
 </pre>
 <p>The above example deletes the template group <em>myplugin</em> as well as the groups
 <em>mypluginfoo</em> and <em>mypluginbar</em>, if they exist.</p>
+</div>
+</div>
+<div class="section" id="stylesheets">
+<h2><a class="toc-backref" href="#contents">Stylesheets</a></h2>
+<div class="section" id="stylesheet">
+<h3><a class="toc-backref" href="#contents">stylesheet()</a></h3>
+<p><strong>Description</strong>:</p>
+<blockquote>
+<p><em>void</em> <strong>stylesheet</strong> (<em>string</em> $name, <em>mixed</em> $styles, <em>mixed</em> $attachedto=&quot;&quot;)</p>
+<p>This function creates/updates/activates a stylesheet in the MyBB Master Style.
+It will be inherited by all themes, enabling the user to edit and revert
+like the official stylesheets.</p>
+</blockquote>
+<p><strong>Parameters</strong>:</p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>name</strong></dt>
+<dd>The name of the stylesheet. Should be unique, e.g. myplugin_style.</dd>
+<dt><strong>styles</strong></dt>
+<dd><p class="first">The styles for this stylesheet. This can either be a literal string,
+or an array structure of CSS [selector =&gt; [property =&gt; value]].</p>
+<pre class="last literal-block">
+array(
+    &quot;selector1&quot; =&gt; array(
+        &quot;property1&quot; =&gt; &quot;value1&quot;,
+        &quot;property2&quot; =&gt; &quot;value2&quot;,
+        ...
+        ),
+    &quot;selector2&quot; =&gt; array(
+        ...
+        ),
+    ...
+    )
+</pre>
+</dd>
+<dt><strong>attachedto</strong> (optional)</dt>
+<dd><p class="first">By default, the stylesheet is attached globally. You can attach
+to specific sites and actions. You can specify a literal attachto
+string using MyBB's &quot;site1|site2?action,action|site3&quot; format, or an array
+structure [site=&gt;[action,action]].</p>
+<pre class="last literal-block">
+array(
+    &quot;site1&quot; =&gt; 0, // all actions
+    &quot;site2&quot; =&gt; &quot;action&quot;,
+    &quot;site3&quot; =&gt; array(&quot;action&quot;, &quot;action&quot;, ...)
+    )
+</pre>
+</dd>
+</dl>
+</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$PL-&gt;stylesheet('myplugin_red', 'body { border: solid red 8px; }');
+</pre>
+<p>The above example creates a stylesheet called myplugin_red which puts
+a red border around the HTML body. The stylesheet is specified as a string.</p>
+<p>Stylesheets can also be specified as arrays:</p>
+<pre class="literal-block">
+$PL-&gt;stylesheet('myplugin_red', array('body' =&gt; array('border' =&gt; 'solid red 8px')));
+</pre>
+<p>This is equivalent to the previous example.</p>
+<p>Use the optional attachedto parameter if you want to restrict styles
+to specific sites:</p>
+<pre class="literal-block">
+$PL-&gt;stylesheet('myplugin_sendpm',
+                array('td' =&gt; array('font-size' =&gt; '2em')),
+                array('private.php' =&gt; 'send'));
+</pre>
+<p>The above example creates a stylesheet which will only be used on private.php?action=send.</p>
+</div>
+<div class="section" id="stylesheet-delete">
+<h3><a class="toc-backref" href="#contents">stylesheet_delete()</a></h3>
+<p><strong>Description</strong></p>
+<blockquote>
+<p><em>void</em> <strong>stylesheet_delete</strong> (<em>string</em> $name, <em>bool</em> $greedy=false)</p>
+<p>This function deletes one or more stylesheets, including any edits
+the user may have made.</p>
+</blockquote>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>name</strong></dt>
+<dd>The name or prefix of the stylesheet to delete.</dd>
+<dt><strong>greedy</strong> (optional)</dt>
+<dd>If set, it also deletes all stylesheets starting with name_.</dd>
+</dl>
+</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$PL-&gt;stylesheet_delete('myplugin_red');
+</pre>
+<p>The above example deletes the myplugin_red.css stylesheet.</p>
+<pre class="literal-block">
+$PL-&gt;stylesheet_delete('myplugin', true);
+</pre>
+<p>The above example deletes myplugin.css and myplugin_*.css. Useful if your plugin creates multiple stylesheets.</p>
+</div>
+<div class="section" id="stylesheet-deactivate">
+<h3><a class="toc-backref" href="#contents">stylesheet_deactivate()</a></h3>
+<p><strong>Description</strong></p>
+<blockquote>
+<p><em>void</em> <strong>stylesheet_deactivate</strong> (<em>string</em> $name, <em>bool</em> $greedy=false)</p>
+<p>This function deactivates one or more stylesheets. Allows styles to be
+deactivated along with your plugin without losing any user edits.</p>
+</blockquote>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<dl class="docutils">
+<dt><strong>name</strong></dt>
+<dd>The name or prefix of the stylesheet to delete.</dd>
+<dt><strong>greedy</strong> (optional)</dt>
+<dd>If set, it also deactivates all stylesheets starting with name_.</dd>
+</dl>
+</blockquote>
+<p><strong>Example</strong>:</p>
+<pre class="literal-block">
+$PL-&gt;stylesheet_deactivate('myplugin_red');
+</pre>
+<p>The above example deactivates the myplugin_red.css stylesheet.</p>
+<pre class="literal-block">
+$PL-&gt;stylesheet_deactivate('myplugin', true);
+</pre>
+<p>The above example deactivates all stylesheets of your plugin.</p>
 </div>
 </div>
 <div class="section" id="cache">
@@ -1252,7 +1395,7 @@ function hello_pl_install()
      *   - compare $PL-&gt;version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL-&gt;version &lt; 8)
+    if($PL-&gt;version &lt; 9)
     {
         flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;http://mods.mybb.com/view/pluginlibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
@@ -1285,11 +1428,20 @@ function hello_pl_uninstall()
     $PL-&gt;templates_delete(&quot;hellopl&quot;
                           // , true /* optional, multiple groups */
         );
+
+    /**
+     * STYLESHEET DELETE
+     *
+     *   $PL-&gt;stylesheet_delete(name, greedy)
+     *
+     *   Delete one or more stylesheets.
+     */
+    $PL-&gt;stylesheet_delete('hellopl', true);
 }
 
 function hello_pl_activate()
 {
-    global $PL;
+    global $PL, $mybb;
     $PL or require_once PLUGINLIBRARY;
 
     /**
@@ -1351,6 +1503,26 @@ function hello_pl_activate()
                        &quot;other&quot; =&gt; &quot;Another template using {\$hellopl} and {\$hellopl_example}.&quot;,
                        )
         );
+
+    $css = &quot;body { background: black; color: red; }&quot;;
+
+    /**
+     * STYLESHEET
+     *
+     *   $PL-&gt;stylesheet(name, styles, attachedto)
+     *
+     *   Create, update and activate a stylesheet. Prefix the name with
+     *   something unique to your plugin to avoid collisions.
+     */
+    $PL-&gt;stylesheet('hellopl_test1', $css);
+    $PL-&gt;stylesheet('hellopl_sendpm',
+                    array(
+                        'body' =&gt; array(
+                            'background' =&gt; 'black',
+                            'color' =&gt; 'red',
+                            ),
+                        ),
+                    array('private.php' =&gt; 'send'));
 }
 
 function hello_pl_deactivate()
@@ -1368,6 +1540,16 @@ function hello_pl_deactivate()
     $PL-&gt;cache_delete(&quot;hello_pl&quot;
                       // , true /* optional, multiple caches */
         );
+
+    /**
+     * STYLESHEET DEACTIVATE
+     *
+     *   $PL-&gt;stylesheet_deactivate(name, greedy)
+     *
+     *   Deactivate your stylesheet so your plugin's styles won't be loaded
+     *   until your plugin is activated again.
+     */
+    $PL-&gt;stylesheet_deactivate('hellopl', true);
 }
 
 function hello_pl_edit()

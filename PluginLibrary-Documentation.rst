@@ -1,5 +1,5 @@
 ==============================
- PluginLibrary 8 for MyBB 1.6
+ PluginLibrary 9 for MyBB 1.6
 ==============================
 
 Documentation for Developers
@@ -91,15 +91,20 @@ Version Check
 If you require a specific version (for features added in a later
 version of *PluginLibrary*), in addition to the Dependency Check,
 you can also check the version number of *PluginLibrary*. The
-following example checks that *PluginLibrary* is at least version 4.
+following example checks that *PluginLibrary* is at least version 9.
 
 ::
 
-  if($PL->version < 8)
+  if($PL->version < 9)
   {
       flash_message("PluginLibrary is too old.", "error");
       admin_redirect("index.php?module=config-plugins");
   }
+
+.. note::
+  If you are unsure which version of *PluginLibrary* to depend on,
+  use the latest version number that is current at the time you
+  publish your plugin.
 
 Load PluginLibrary On Demand
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -293,12 +298,147 @@ templates_delete()
   $PL->templates_delete('myplugin');
 
 The above example deletes the template group *myplugin* as well as all templates
-that belong to this group.::
+that belong to this group.
+
+::
 
   $PL->templates_delete('myplugin', true);
 
 The above example deletes the template group *myplugin* as well as the groups
 *mypluginfoo* and *mypluginbar*, if they exist.
+
+Stylesheets
+~~~~~~~~~~~
+
+stylesheet()
+++++++++++++
+
+**Description**:
+
+  *void* **stylesheet** (*string* $name, *mixed* $styles, *mixed* $attachedto="")
+
+  This function creates/updates/activates a stylesheet in the MyBB Master Style.
+  It will be inherited by all themes, enabling the user to edit and revert
+  like the official stylesheets.
+
+**Parameters**:
+
+  **name**
+    The name of the stylesheet. Should be unique, e.g. myplugin_style.
+
+  **styles**
+    The styles for this stylesheet. This can either be a literal string,
+    or an array structure of CSS [selector => [property => value]].
+
+    ::
+
+      array(
+          "selector1" => array(
+              "property1" => "value1",
+              "property2" => "value2",
+              ...
+              ),
+          "selector2" => array(
+              ...
+              ),
+          ...
+          )
+
+  **attachedto** (optional)
+    By default, the stylesheet is attached globally. You can attach
+    to specific sites and actions. You can specify a literal attachto
+    string using MyBB's "site1|site2?action,action|site3" format, or an array
+    structure [site=>[action,action]].
+
+    ::
+
+      array(
+          "site1" => 0, // all actions
+          "site2" => "action",
+          "site3" => array("action", "action", ...)
+          )
+
+**Example**::
+
+  $PL->stylesheet('myplugin_red', 'body { border: solid red 8px; }');
+
+The above example creates a stylesheet called myplugin_red which puts
+a red border around the HTML body. The stylesheet is specified as a string.
+
+Stylesheets can also be specified as arrays::
+
+  $PL->stylesheet('myplugin_red', array('body' => array('border' => 'solid red 8px')));
+
+This is equivalent to the previous example.
+
+Use the optional attachedto parameter if you want to restrict styles
+to specific sites::
+
+  $PL->stylesheet('myplugin_sendpm',
+                  array('td' => array('font-size' => '2em')),
+                  array('private.php' => 'send'));
+
+The above example creates a stylesheet which will only be used on private.php?action=send.
+
+stylesheet_delete()
++++++++++++++++++++
+
+**Description**
+
+  *void* **stylesheet_delete** (*string* $name, *bool* $greedy=false)
+
+  This function deletes one or more stylesheets, including any edits
+  the user may have made.
+
+**Parameters**
+
+  **name**
+    The name or prefix of the stylesheet to delete.
+
+  **greedy** (optional)
+    If set, it also deletes all stylesheets starting with name\_.
+
+**Example**::
+
+  $PL->stylesheet_delete('myplugin_red');
+
+The above example deletes the myplugin_red.css stylesheet.
+
+::
+
+  $PL->stylesheet_delete('myplugin', true);
+
+The above example deletes myplugin.css and myplugin_*.css. Useful if your plugin creates multiple stylesheets.
+
+stylesheet_deactivate()
++++++++++++++++++++++++
+
+**Description**
+
+  *void* **stylesheet_deactivate** (*string* $name, *bool* $greedy=false)
+
+  This function deactivates one or more stylesheets. Allows styles to be
+  deactivated along with your plugin without losing any user edits.
+
+**Parameters**
+
+  **name**
+    The name or prefix of the stylesheet to delete.
+
+  **greedy** (optional)
+    If set, it also deactivates all stylesheets starting with name\_.
+
+**Example**::
+
+  $PL->stylesheet_deactivate('myplugin_red');
+
+The above example deactivates the myplugin_red.css stylesheet.
+
+::
+
+  $PL->stylesheet_deactivate('myplugin', true);
+
+The above example deactivates all stylesheets of your plugin.
 
 Cache
 ~~~~~
