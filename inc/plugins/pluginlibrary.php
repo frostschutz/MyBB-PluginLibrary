@@ -453,7 +453,7 @@ class PluginLibrary
     }
 
     /**
-     * Add a new stylesheet
+     * Add, update or activate a stylesheet
      * @param string Name of the stylesheet - lowercase version used for cache file.
      * @param string Stylesheet content.
      * @param string The files/actions the stylesheet is attached to. For global attachment, don't include this parameter.
@@ -515,27 +515,36 @@ class PluginLibrary
      * Remove a stylesheet
      * @param string Stylesheet name
      */
-    function stylesheet_delete($name)
+    function stylesheet_delete($name, $greedy=false)
     {
         global $db, $mybb;
 
         // Check $name ends in .css and if not append it
         $tid = 1; // MyBB Master Style
-        if(substr($name, -4) != ".css")
+        if(substr($name, -4) == ".css")
         {
-            $name .= '.css';
+            $name = substr($name, 0, -4);
         }
 
         // Delete all stylesheets matching $name
         $dbname = $db->escape_string($name);
-        $query = $db->simple_select('themestylesheets', 'tid', "name='{$dbname}'");
+
+        $where = "name='{$dbname}.css'";
+
+        if($greedy)
+        {
+            $ldbname = strtr($dbname, array('=' => '==', '_' => '=_', '%' => '=%'));
+            $where .= " OR name LIKE '{$ldbname}=_%.css' ESCAPE '='";
+        }
+
+        $query = $db->simple_select('themestylesheets', 'tid,name', $where);
 
         while($stylesheet = $db->fetch_array($query))
         {
-            @unlink(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$name}");
+            @unlink(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$stylesheet['name']}");
         }
 
-        $db->delete_query('themestylesheets', "name='{$dbname}'");
+        $db->delete_query('themestylesheets', $where);
 
         $this->_update_themes_stylesheets();
     }
