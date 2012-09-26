@@ -515,7 +515,7 @@ class PluginLibrary
      * Remove a stylesheet
      * @param string Stylesheet name
      */
-    function stylesheet_delete($name, $greedy=false)
+    function stylesheet_delete($name, $greedy=false, $delete=true)
     {
         global $db, $mybb;
 
@@ -526,7 +526,7 @@ class PluginLibrary
             $name = substr($name, 0, -4);
         }
 
-        // Delete all stylesheets matching $name
+        // Query all stylesheets matching $name
         $dbname = $db->escape_string($name);
 
         $where = "name='{$dbname}.css'";
@@ -537,16 +537,37 @@ class PluginLibrary
             $where .= " OR name LIKE '{$ldbname}=_%.css' ESCAPE '='";
         }
 
-        $query = $db->simple_select('themestylesheets', 'tid,name', $where);
-
-        while($stylesheet = $db->fetch_array($query))
+        // Delete stylesheets.
+        if($delete)
         {
-            @unlink(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$stylesheet['name']}");
+            $query = $db->simple_select('themestylesheets', 'tid,name', $where);
+
+            while($stylesheet = $db->fetch_array($query))
+            {
+                @unlink(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$stylesheet['name']}");
+            }
+
+            $db->delete_query('themestylesheets', $where);
         }
 
-        $db->delete_query('themestylesheets', $where);
+        else
+        {
+            // Deactivate stylesheets.
+            $db->update_query('themestylesheets',
+                              array('attachedto' => '-'),
+                              $where);
+        }
 
         $this->_update_themes_stylesheets();
+    }
+
+    /**
+     * Deactivate stylesheets without deleting them.
+     *
+     */
+    function stylesheet_deactivate($name, $greedy=false)
+    {
+        $this->stylesheet_delete($name, $greedy, false);
     }
 
     /* --- Cache: --- */
