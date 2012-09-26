@@ -442,6 +442,17 @@ class PluginLibrary
     }
 
     /**
+     * Update stylesheet metadata.
+     *
+     */
+    function _update_themes_stylesheets()
+    {
+        $tid = 1; // MyBB Master Style
+        require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
+        update_theme_stylesheet_list($tid); // includes all children
+    }
+
+    /**
      * Add a new stylesheet
      * @param string Name of the stylesheet - lowercase version used for cache file.
      * @param string Stylesheet content.
@@ -469,10 +480,17 @@ class PluginLibrary
             'lastmodified' => TIME_NOW,
             );
 
-        // Update or insert stylesheet.
         $dbstylesheet = array_map(array($db, 'escape_string'), $stylesheet);
 
-        $query = $db->simple_select('themestylesheets', 'sid', "tid='{$tid}' AND cachefile='{$name}'");
+        // Activate children, if present.
+        $db->update_query('themestylesheets',
+                          array('attachedto' => $dbstylesheet['attachedto']),
+                          "name='{$dbstylesheet['name']}'");
+
+        // Update or insert parent stylesheet.
+        $query = $db->simple_select('themestylesheets',
+                                    'sid',
+                                    "tid='{$tid}' AND cachefile='{$name}'");
         $sid = intval($db->fetch_field($query, 'sid'));
 
         if($sid)
@@ -490,9 +508,7 @@ class PluginLibrary
         // MyBB does not have a good function for this.
         @file_put_contents(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$stylesheet['cachefile']}", $stylesheet['stylesheet']);
 
-        // Tell MyBB to update its theme stylesheet metadata.
-        require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
-        update_theme_stylesheet_list($stylesheet['tid']);
+        $this->_update_themes_stylesheets();
     }
 
     /**
@@ -504,33 +520,24 @@ class PluginLibrary
         global $db, $mybb;
 
         // Check $name ends in .css and if not append it
-        $parts = explode('.', $name);
-
-        if ($parts[count($parts) -1] != 'css')
+        $tid = 1; // MyBB Master Style
+        if(substr($name, -4) != ".css")
         {
             $name .= '.css';
         }
 
-        $themesUpdated = array();
-        // Get all stylesheets matching $name
-        $query = $db->simple_select('themestylesheets', '*', "name = '".$db->escape_string($name)."'");
-        if ($db->num_rows($query) > 0)
-        {
-            // Remove the style
-            while ($stylesheet = $db->fetch_array($query))
-            {
-                $db->delete_query('themestylesheets', 'sid = \''.(int) $stylesheet['sid'].'\'', 1);
-                @unlink(MYBB_ROOT.'cache/themes/theme'.(int) $stylesheet['tid'].'/'.$stylesheet['cachefile']);
+        // Delete all stylesheets matching $name
+        $dbname = $db->escape_string($name);
+        $query = $db->simple_select('themestylesheets', 'tid', "name='{$dbname}'");
 
-                $themesUpdated[$stylesheet['tid']] = $stylesheet['tid'];
-            }
+        while($stylesheet = $db->fetch_array($query))
+        {
+            @unlink(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$name}");
         }
 
-        require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
-        foreach ($themesUpdated as $theme)
-        {
-            update_theme_stylesheet_list($theme);
-        }
+        $db->delete_query('themestylesheets', "name='{$dbname}'");
+
+        $this->_update_themes_stylesheets();
     }
 
     /* --- Cache: --- */
