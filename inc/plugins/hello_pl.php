@@ -34,6 +34,7 @@ if(!defined("PLUGINLIBRARY"))
     define("PLUGINLIBRARY", MYBB_ROOT."inc/plugins/pluginlibrary.php");
 }
 
+$plugins->add_hook("pre_output_page", "hello_pl_world");
 $plugins->add_hook("admin_config_plugins_begin", "hello_pl_edit");
 
 function hello_pl_info()
@@ -241,8 +242,6 @@ function hello_pl_activate()
                        )
         );
 
-    $css = "body { background: black; color: red; }";
-
     /**
      * STYLESHEET
      *
@@ -251,12 +250,14 @@ function hello_pl_activate()
      *   Create, update and activate a stylesheet. Prefix the name with
      *   something unique to your plugin to avoid collisions.
      */
-    $PL->stylesheet('hellopl_test1', $css);
+    $css = "#pluginlibrary { background: #026CB1 url(images/thead_bg.gif); color: white; }";
+    $PL->stylesheet('hellopl_test', $css);
     $PL->stylesheet('hellopl_sendpm',
                     array(
-                        'body' => array(
-                            'background' => 'black',
-                            'color' => 'red',
+                        '#pluginlibrary' => array(
+                            'text-align' => 'center',
+                            'font-style' => 'italic',
+                            'border' => 'dashed red 5px',
                             ),
                         ),
                     array('private.php' => 'send'));
@@ -355,6 +356,16 @@ function hello_pl_edit()
         flash_message("The file inc/plugins/hello_pl.php could not be edited. Are the CHMOD settings correct?", "error");
         admin_redirect("index.php?module=config-plugins");
     }
+}
+
+function hello_pl_world($page)
+{
+    global $templates;
+
+    eval("\$example = \"".$templates->get("hellopl_example")."\";");
+
+    $page = str_replace("<div id=\"content\">", "<div id=\"content\"><div id=\"pluginlibrary\">Hello PluginLibrary!<p>This is a sample PluginLibrary Plugin (which can be disabled!) that displays this message on all pages.</p>{$example}</div>", $page);
+    return $page;
 }
 
 ?>
