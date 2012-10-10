@@ -445,11 +445,17 @@ class PluginLibrary
      * Update stylesheet metadata.
      *
      */
-    function _update_themes_stylesheets()
+    function _update_themes_stylesheets($stylesheet=false)
     {
         global $mybb;
         $tid = 1; // MyBB Master Style
         require_once MYBB_ROOT.$mybb->config['admin_dir'].'/inc/functions_themes.php';
+
+        if($stylesheet)
+        {
+            cache_stylesheet($stylesheet['tid'], $stylesheet['cachefile'], $stylesheet['stylesheet']);
+        }
+
         update_theme_stylesheet_list($tid); // includes all children
     }
 
@@ -505,11 +511,7 @@ class PluginLibrary
             $stylesheet['sid'] = intval($sid);
         }
 
-        // Create the stylesheet file directly.
-        // MyBB does not have a good function for this.
-        @file_put_contents(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$stylesheet['cachefile']}", $stylesheet['stylesheet']);
-
-        $this->_update_themes_stylesheets();
+        $this->_update_themes_stylesheets($stylesheet);
     }
 
     /**
@@ -545,6 +547,7 @@ class PluginLibrary
 
             while($stylesheet = $db->fetch_array($query))
             {
+                @unlink(MYBB_ROOT."cache/themes/{$stylesheet['tid']}_{$stylesheet['name']}");
                 @unlink(MYBB_ROOT."cache/themes/theme{$stylesheet['tid']}/{$stylesheet['name']}");
             }
 
