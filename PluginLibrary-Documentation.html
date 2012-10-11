@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.9.1: http://docutils.sourceforge.net/" />
-<title>PluginLibrary 9 for MyBB 1.6</title>
+<title>PluginLibrary 10 for MyBB 1.6</title>
 <style type="text/css">
 
 /*
@@ -322,8 +322,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pluginlibrary-9-for-mybb-1-6">
-<h1 class="title">PluginLibrary 9 for MyBB 1.6</h1>
+<div class="document" id="pluginlibrary-10-for-mybb-1-6">
+<h1 class="title">PluginLibrary 10 for MyBB 1.6</h1>
 <h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
 
 <p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
@@ -456,9 +456,9 @@ if(!file_exists(PLUGINLIBRARY))
 <p>If you require a specific version (for features added in a later
 version of <em>PluginLibrary</em>), in addition to the Dependency Check,
 you can also check the version number of <em>PluginLibrary</em>. The
-following example checks that <em>PluginLibrary</em> is at least version 9.</p>
+following example checks that <em>PluginLibrary</em> is at least version 10.</p>
 <pre class="literal-block">
-if($PL-&gt;version &lt; 9)
+if($PL-&gt;version &lt; 10)
 {
     flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
     admin_redirect(&quot;index.php?module=config-plugins&quot;);
@@ -1297,6 +1297,7 @@ if(!defined(&quot;PLUGINLIBRARY&quot;))
     define(&quot;PLUGINLIBRARY&quot;, MYBB_ROOT.&quot;inc/plugins/pluginlibrary.php&quot;);
 }
 
+$plugins-&gt;add_hook(&quot;pre_output_page&quot;, &quot;hello_pl_world&quot;);
 $plugins-&gt;add_hook(&quot;admin_config_plugins_begin&quot;, &quot;hello_pl_edit&quot;);
 
 function hello_pl_info()
@@ -1395,7 +1396,7 @@ function hello_pl_install()
      *   - compare $PL-&gt;version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL-&gt;version &lt; 9)
+    if($PL-&gt;version &lt; 10)
     {
         flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;http://mods.mybb.com/view/pluginlibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
@@ -1504,8 +1505,6 @@ function hello_pl_activate()
                        )
         );
 
-    $css = &quot;body { background: black; color: red; }&quot;;
-
     /**
      * STYLESHEET
      *
@@ -1514,12 +1513,14 @@ function hello_pl_activate()
      *   Create, update and activate a stylesheet. Prefix the name with
      *   something unique to your plugin to avoid collisions.
      */
-    $PL-&gt;stylesheet('hellopl_test1', $css);
+    $css = &quot;#pluginlibrary { background: #026CB1 url(images/thead_bg.gif); color: white; }&quot;;
+    $PL-&gt;stylesheet('hellopl_test', $css);
     $PL-&gt;stylesheet('hellopl_sendpm',
                     array(
-                        'body' =&gt; array(
-                            'background' =&gt; 'black',
-                            'color' =&gt; 'red',
+                        '#pluginlibrary' =&gt; array(
+                            'text-align' =&gt; 'center',
+                            'font-style' =&gt; 'italic',
+                            'border' =&gt; 'dashed red 5px',
                             ),
                         ),
                     array('private.php' =&gt; 'send'));
@@ -1618,6 +1619,16 @@ function hello_pl_edit()
         flash_message(&quot;The file inc/plugins/hello_pl.php could not be edited. Are the CHMOD settings correct?&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
     }
+}
+
+function hello_pl_world($page)
+{
+    global $templates;
+
+    eval(&quot;\$example = \&quot;&quot;.$templates-&gt;get(&quot;hellopl_example&quot;).&quot;\&quot;;&quot;);
+
+    $page = str_replace(&quot;&lt;div id=\&quot;content\&quot;&gt;&quot;, &quot;&lt;div id=\&quot;content\&quot;&gt;&lt;div id=\&quot;pluginlibrary\&quot;&gt;Hello PluginLibrary!&lt;p&gt;This is a sample PluginLibrary Plugin (which can be disabled!) that displays this message on all pages.&lt;/p&gt;{$example}&lt;/div&gt;&quot;, $page);
+    return $page;
 }
 
 ?&gt;

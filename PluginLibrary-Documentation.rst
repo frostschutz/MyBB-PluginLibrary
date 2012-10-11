@@ -1,5 +1,5 @@
 ==============================
- PluginLibrary 9 for MyBB 1.6
+ PluginLibrary 10 for MyBB 1.6
 ==============================
 
 Documentation for Developers
@@ -91,11 +91,11 @@ Version Check
 If you require a specific version (for features added in a later
 version of *PluginLibrary*), in addition to the Dependency Check,
 you can also check the version number of *PluginLibrary*. The
-following example checks that *PluginLibrary* is at least version 9.
+following example checks that *PluginLibrary* is at least version 10.
 
 ::
 
-  if($PL->version < 9)
+  if($PL->version < 10)
   {
       flash_message("PluginLibrary is too old.", "error");
       admin_redirect("index.php?module=config-plugins");
