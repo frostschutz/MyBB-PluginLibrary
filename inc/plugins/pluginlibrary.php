@@ -274,7 +274,7 @@ class PluginLibrary
 
         // Query already existing templates.
         $query = $db->simple_select('templates', 'tid,title,template',
-                                    "sid=-2 AND title='{$group['prefix']}' OR title LIKE '{$group['prefix']}=_%' ESCAPE '='");
+                                    "sid=-2 AND (title='{$group['prefix']}' OR title LIKE '{$group['prefix']}=_%' ESCAPE '=')");
 
         $templates = array();
 
