@@ -277,10 +277,29 @@ class PluginLibrary
                                     "sid=-2 AND (title='{$group['prefix']}' OR title LIKE '{$group['prefix']}=_%' ESCAPE '=')");
 
         $templates = array();
+        $duplicates = array();
 
         while($row = $db->fetch_array($query))
         {
-            $templates[$row['title']] = $row;
+            $title = $row['title'];
+
+            if(isset($templates[$title]))
+            {
+                // PluginLibrary had a bug that caused duplicated templates.
+                $duplicates[] = $row['tid'];
+                $templates[$title]['template'] = false; // force update later
+            }
+
+            else
+            {
+                $templates[$title] = $row;
+            }
+        }
+
+        // Delete duplicated master templates, if they exist.
+        if($duplicates)
+        {
+            $db->delete_query('templates', 'tid IN ('.implode(",", $duplicates).')');
         }
 
         // Update or create templates.
@@ -303,7 +322,7 @@ class PluginLibrary
                               'dateline' => TIME_NOW);
 
             // Update
-            if(array_key_exists($name, $templates))
+            if(isset($templates[$name]))
             {
                 if($templates[$name]['template'] !== $code)
                 {
@@ -311,7 +330,7 @@ class PluginLibrary
                     $db->update_query('templates', array('version' => 0), "title='{$template['title']}'");
 
                     // Update master template
-                    $db->update_query('templates', $template, "tid='{$templates[$name]['tid']}'");
+                    $db->update_query('templates', $template, "tid={$templates[$name]['tid']}");
                 }
             }
 
