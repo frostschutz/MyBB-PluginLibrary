@@ -1,6 +1,6 @@
-==============================
- PluginLibrary 10 for MyBB 1.6
-==============================
+===============================
+ PluginLibrary 11 for MyBB 1.6
+===============================
 
 Documentation for Developers
 ============================
@@ -85,27 +85,6 @@ a friendly error message to the admin, preferably including a download link.
       admin_redirect("index.php?module=config-plugins");
   }
 
-Version Check
-~~~~~~~~~~~~~
-
-If you require a specific version (for features added in a later
-version of *PluginLibrary*), in addition to the Dependency Check,
-you can also check the version number of *PluginLibrary*. The
-following example checks that *PluginLibrary* is at least version 10.
-
-::
-
-  if($PL->version < 10)
-  {
-      flash_message("PluginLibrary is too old.", "error");
-      admin_redirect("index.php?module=config-plugins");
-  }
-
-.. note::
-  If you are unsure which version of *PluginLibrary* to depend on,
-  use the latest version number that is current at the time you
-  publish your plugin.
-
 Load PluginLibrary On Demand
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -117,6 +96,27 @@ to use it. This can be done with an additional line of code.
 
   global $PL;
   $PL or require_once PLUGINLIBRARY;
+
+Version Check
+~~~~~~~~~~~~~
+
+If you require a specific version (for features added in a later
+version of *PluginLibrary*), in addition to the Dependency Check,
+you can also check the version number of *PluginLibrary*. The
+following example checks that *PluginLibrary* is at least version 11.
+
+::
+
+  if($PL->version < 11)
+  {
+      flash_message("PluginLibrary is too old.", "error");
+      admin_redirect("index.php?module=config-plugins");
+  }
+
+.. note::
+  If you are unsure which version of *PluginLibrary* to depend on,
+  use the latest version number that is current at the time you
+  publish your plugin.
 
 Function Reference
 ------------------

@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.9.1: http://docutils.sourceforge.net/" />
-<title>PluginLibrary 10 for MyBB 1.6</title>
+<title>PluginLibrary 11 for MyBB 1.6</title>
 <style type="text/css">
 
 /*
@@ -322,8 +322,8 @@ ul.auto-toc {
 </style>
 </head>
 <body>
-<div class="document" id="pluginlibrary-10-for-mybb-1-6">
-<h1 class="title">PluginLibrary 10 for MyBB 1.6</h1>
+<div class="document" id="pluginlibrary-11-for-mybb-1-6">
+<h1 class="title">PluginLibrary 11 for MyBB 1.6</h1>
 <h2 class="subtitle" id="documentation-for-developers">Documentation for Developers</h2>
 
 <p><em>PluginLibrary</em> is not a stand-alone plugin, but rather a library of
@@ -343,8 +343,8 @@ also be able to use <em>PluginLibrary</em>.</p>
 <li><a class="reference internal" href="#integration-into-your-plugin" id="id4">Integration into your Plugin</a><ul>
 <li><a class="reference internal" href="#define-pluginlibrary" id="id5">Define PLUGINLIBRARY</a></li>
 <li><a class="reference internal" href="#dependency-check" id="id6">Dependency Check</a></li>
-<li><a class="reference internal" href="#version-check" id="id7">Version Check</a></li>
-<li><a class="reference internal" href="#load-pluginlibrary-on-demand" id="id8">Load PluginLibrary On Demand</a></li>
+<li><a class="reference internal" href="#load-pluginlibrary-on-demand" id="id7">Load PluginLibrary On Demand</a></li>
+<li><a class="reference internal" href="#version-check" id="id8">Version Check</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#function-reference" id="id9">Function Reference</a><ul>
@@ -451,14 +451,24 @@ if(!file_exists(PLUGINLIBRARY))
 }
 </pre>
 </div>
+<div class="section" id="load-pluginlibrary-on-demand">
+<h2><a class="toc-backref" href="#contents">Load PluginLibrary On Demand</a></h2>
+<p>Since <em>PluginLibrary</em> is not required in every request, it is not loaded
+automatically. Instead, you have to load it on demand whenever you want
+to use it. This can be done with an additional line of code.</p>
+<pre class="literal-block">
+global $PL;
+$PL or require_once PLUGINLIBRARY;
+</pre>
+</div>
 <div class="section" id="version-check">
 <h2><a class="toc-backref" href="#contents">Version Check</a></h2>
 <p>If you require a specific version (for features added in a later
 version of <em>PluginLibrary</em>), in addition to the Dependency Check,
 you can also check the version number of <em>PluginLibrary</em>. The
-following example checks that <em>PluginLibrary</em> is at least version 10.</p>
+following example checks that <em>PluginLibrary</em> is at least version 11.</p>
 <pre class="literal-block">
-if($PL-&gt;version &lt; 10)
+if($PL-&gt;version &lt; 11)
 {
     flash_message(&quot;PluginLibrary is too old.&quot;, &quot;error&quot;);
     admin_redirect(&quot;index.php?module=config-plugins&quot;);
@@ -470,16 +480,6 @@ if($PL-&gt;version &lt; 10)
 use the latest version number that is current at the time you
 publish your plugin.</p>
 </div>
-</div>
-<div class="section" id="load-pluginlibrary-on-demand">
-<h2><a class="toc-backref" href="#contents">Load PluginLibrary On Demand</a></h2>
-<p>Since <em>PluginLibrary</em> is not required in every request, it is not loaded
-automatically. Instead, you have to load it on demand whenever you want
-to use it. This can be done with an additional line of code.</p>
-<pre class="literal-block">
-global $PL;
-$PL or require_once PLUGINLIBRARY;
-</pre>
 </div>
 </div>
 <div class="section" id="function-reference">
@@ -1396,7 +1396,7 @@ function hello_pl_install()
      *   - compare $PL-&gt;version to the version number you need.
      *   - same procedure as DEPENDENCY CHECK
      */
-    if($PL-&gt;version &lt; 10)
+    if($PL-&gt;version &lt; 11)
     {
         flash_message(&quot;The selected plugin could not be installed because &lt;a href=\&quot;http://mods.mybb.com/view/pluginlibrary\&quot;&gt;PluginLibrary&lt;/a&gt; is too old.&quot;, &quot;error&quot;);
         admin_redirect(&quot;index.php?module=config-plugins&quot;);
