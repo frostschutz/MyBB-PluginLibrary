@@ -1047,12 +1047,12 @@ like this:</p>
 <div class="section" id="debugging">
 <h4><a class="toc-backref" href="#contents">Debugging</a></h4>
 <p>If an edit does not work (correctly) and you want to find out why, you can
-get some debug information by passing the edits by reference:</p>
+get some debug information by passing the optional debug parameter:</p>
 <pre class="literal-block">
 $edits = array('search' =&gt; 'echo &quot;Hello world!&quot;;',
                'replace' =&gt; 'echo &quot;Hello PluginLibrary!&quot;;');
-$PL-&gt;edit_core('plugin_name', 'hello.php', &amp;$edits);
-print_r($edits);
+$PL-&gt;edit_core('plugin_name', 'hello.php', $edits, false, $debug);
+print_r($debug);
 </pre>
 <p>This will add a <em>matches</em> entry for each edit array, showing the byte positions
 and actually matched patterns:</p>

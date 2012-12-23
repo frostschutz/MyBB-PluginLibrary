@@ -724,12 +724,12 @@ Debugging
 `````````
 
 If an edit does not work (correctly) and you want to find out why, you can
-get some debug information by passing the edits by reference::
+get some debug information by passing the optional debug parameter::
 
     $edits = array('search' => 'echo "Hello world!";',
                    'replace' => 'echo "Hello PluginLibrary!";');
-    $PL->edit_core('plugin_name', 'hello.php', &$edits);
-    print_r($edits);
+    $PL->edit_core('plugin_name', 'hello.php', $edits, false, $debug);
+    print_r($debug);
 
 This will add a *matches* entry for each edit array, showing the byte positions
 and actually matched patterns::
