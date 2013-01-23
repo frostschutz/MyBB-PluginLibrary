@@ -1041,7 +1041,7 @@ class PluginLibrary
             // already an array, do nothing
         }
 
-        if(is_string($groups))
+        else if(is_string($groups))
         {
             $groups = explode(',', $groups);
         }
