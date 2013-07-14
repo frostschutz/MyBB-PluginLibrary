@@ -672,10 +672,11 @@ class PluginLibrary
         if($greedy)
         {
             // Collect possible additional names...
+            $names = array();
+            $name .= '_';
 
             // ...from the currently loaded cache...
             $keys = array_keys($cache->cache);
-            $name .= '_';
 
             foreach($keys as $key)
             {
