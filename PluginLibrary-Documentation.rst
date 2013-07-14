@@ -489,7 +489,7 @@ cache_update()
 **Parameters**:
 
   **name**
-    The name of the cache.
+    The name of the cache. Don't use special characters.
 
   **contents**
     The contents of the cache.
