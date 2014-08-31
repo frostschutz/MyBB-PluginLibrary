@@ -475,7 +475,7 @@ class PluginLibrary
             cache_stylesheet($stylesheet['tid'], $stylesheet['cachefile'], $stylesheet['stylesheet']);
         }
 
-        update_theme_stylesheet_list($tid); // includes all children
+        update_theme_stylesheet_list($tid, false, true); // includes all children
     }
 
     /**
