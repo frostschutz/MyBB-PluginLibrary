@@ -36,7 +36,7 @@ function pluginlibrary_info()
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
         "version"       => "12",
         "guid"          => "839e9d72e2875a51fccbc0257dfeda03",
-        "compatibility" => "16*"
+        "compatibility" => "18*"
         );
 }
 
