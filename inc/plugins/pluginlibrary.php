@@ -1351,4 +1351,3 @@ global $PL;
 $PL = new PluginLibrary();
 
 /* --- End of file. --- */
-?>

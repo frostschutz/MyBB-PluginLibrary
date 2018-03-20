@@ -367,5 +367,3 @@ function hello_pl_world($page)
     $page = str_replace("<div id=\"content\">", "<div id=\"content\"><div id=\"pluginlibrary\">Hello PluginLibrary!<p>This is a sample PluginLibrary Plugin (which can be disabled!) that displays this message on all pages.</p>{$example}</div>", $page);
     return $page;
 }
-
-?>
