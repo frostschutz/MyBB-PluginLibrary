@@ -961,7 +961,8 @@ class PluginLibrary
             return false;
         }
 
-        if(count($edits) && !count($edits[0]))
+        // Convert single edit into array of edits.
+        if(array_key_exists('search', $edits))
         {
             $edits = array($edits);
         }
