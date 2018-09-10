@@ -1,5 +1,5 @@
 ============================
- PluginLibrary 12 for MyBB 
+ PluginLibrary 13 for MyBB 
 ============================
 
 Documentation for Developers
@@ -103,13 +103,13 @@ Version Check
 If you require a specific version (for features added in a later
 version of *PluginLibrary*), in addition to the Dependency Check,
 you can also check the version number of *PluginLibrary*. The
-following example checks that *PluginLibrary* is at least version 12.
+following example checks that *PluginLibrary* is at least version 13.
 
 ::
 
-  if($PL->version < 12)
+  if($PL->version < 13)
   {
-      flash_message("PluginLibrary is too old.", "error");
+      flash_message("PluginLibrary is too old, please update.", "error");
       admin_redirect("index.php?module=config-plugins");
   }
 
