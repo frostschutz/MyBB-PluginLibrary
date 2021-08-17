@@ -902,7 +902,7 @@ class PluginLibrary
             $result[] = substr($text, $pos, $start-$pos);
 
             // insert before
-            $result[] = $this->_comment($ins, $edit['before']);
+            $result[] = $this->_comment($ins, isset($edit['before']) ? $edit['before'] : '');
 
             // original matched text
             $match = substr($text, $start, $stop-$start);
@@ -910,8 +910,8 @@ class PluginLibrary
 
             $dirty = 0;
 
-            if($edit['replace']
-               || is_string($edit['replace']) || is_array($edit['replace']))
+            if(isset($edit['replace'])
+               || isset($edit['replace']) && (is_string($edit['replace']) || is_array($edit['replace'])))
             {
                 // insert match (commented out)
                 $result[] = $this->_comment($del, $match);
@@ -930,7 +930,7 @@ class PluginLibrary
             }
 
             // insert after
-            $result[] = $this->_comment($ins, $edit['after']);
+            $result[] = $this->_comment($ins, isset($edit['after']) ? $edit['after'] : '');
 
             if($dirty && !strlen($result[count($result)-1]))
             {
