@@ -111,7 +111,7 @@ class PluginLibrary
                        'description' => $db->escape_string($description));
 
         // Check if the group already exists.
-        $query = $db->simple_select("settinggroups", "gid", "name='${group['name']}'");
+        $query = $db->simple_select("settinggroups", "gid", "name='{$group['name']}'");
 
         if($row = $db->fetch_array($query))
         {
